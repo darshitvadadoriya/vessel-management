@@ -1,0 +1,138 @@
+{% extends "/templates/dashboard.html" %}
+
+{% block head_include %}
+    <link rel="stylesheet" href="/assets/vessel/css/form.css" />
+    <script src="/assets/vessel/js/form.js"></script>
+{% endblock %}
+
+{% block page_content %}
+<div class="page-area">
+    <div class="page-title d-flex   ">
+        <h4>New User</h4>
+        <button class="btn save-btn">Save</button>
+    </div>
+
+    <form class="form-section">
+
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+              <button class="nav-link active" id="basic-info" data-toggle="tab" data-target="#basicinfo" type="button" role="tab" aria-controls="basic-info" aria-selected="true">Basic Info</button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="more-info" data-toggle="tab" data-target="#moreinfo" type="button" role="tab" aria-controls="more-info" aria-selected="false">More Info</button>
+            </li>
+          </ul>
+          <div class="tab-content" id="form-tab">
+            <div class="tab-pane fade show active" id="basicinfo" role="tabpanel" aria-labelledby="basic-info">
+              <div class="inner-form-section row">
+                    <!-- sidebar image -->
+                    <div class="col-sm-12 col-md-3 col-lg-2 justify-content-center d-flex align-content-start">
+                        <div class="upload-profile-image">
+                          <div class="edit-profile-image">
+                              <input type='file' id="upload-image" accept=".png, .jpg, .jpeg" />
+                              <label for="upload-image">
+                                <img src="/assets/vessel/files/images/edit.png" alt="edit">
+                              </label>
+                          </div>
+                          <div class="profile-image-preview">
+                              <div id="image-preview" style="background-image: url(https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1);">
+                              </div>
+                          </div>
+                      </div>
+
+                    </div>
+                    <div class="col-sm-12 col-md-9 col-lg-10">
+                        <div class="form-row">
+                            <div class="col-md-6 col-xl-4 mb-4">
+                              <label for="first-name">First Name</label>
+                              <input type="text" class="form-control" id="first-name" placeholder="Enter First Name" required>
+                            </div>
+                            <div class="col-md-6 col-xl-4 mb-4">
+                              <label for="middle-name">Middle Name</label>
+                              <input type="text" class="form-control" id="middle-name" placeholder="Enter Middle Name" required>
+                            </div>
+                            <div class="col-md-6 col-xl-4 mb-4">
+                              <label for="date-of-birth">Last Name</label>
+                              <input type="date" class="form-control" id="date-of-birth" placeholder="Zip" required>
+                            </div>
+                        
+
+                        <div class="col-md-6 col-xl-4 mb-4">
+                          <label for="email">Email</label>
+                          <input type="text" class="form-control" id="email" placeholder="Enter Email Address" required>
+                        </div>
+                        <div class="col-md-6 col-xl-4 mb-4">
+                          <label for="user-name">User Name</label>
+                          <input type="text" class="form-control" id="user-name" placeholder="Enter User Name" required>
+                        </div>
+                        <div class="col-md-6 col-xl-4 mb-4">
+                          <label for="password">Password</label>
+                          <input type="password" class="form-control" id="password" placeholder="********" required>
+                        </div>
+
+
+                        <div class="col-md-6 col-xl-4 mb-4">
+                          <label for="status">Language</label>
+                          <select class="custom-select" id="language">
+                              <option selected></option>
+                              <option value="English">English</option>
+                              <option value="Gujarati">Gujarati</option>
+                          </select>
+                      </div>
+
+                        <div class="col-md-6 col-xl-4 mb-4">
+                          <label for="status">Status</label>
+                          <select class="custom-select" id="status">
+                              <option value="0">Active</option>
+                              <option value="1">Disable</option>
+                          </select>
+                      </div>
+
+                        
+                      </div>
+                    </div>
+                  </div>
+                  
+            </div>
+
+            <div class="tab-pane fade " id="moreinfo" role="tabpanel" aria-labelledby="more-info">
+
+                
+                    <div class="form-row">
+                        <div class="col-md-4 mb-4">
+                          <label for="phone">Phone</label>
+                          <input type="number" class="form-control" id="phone" placeholder="Enter Phone No" required>
+                        </div>
+                        <div class="col-md-4 mb-4">
+                          <label for="mobile">Mobile</label>
+                          <input type="text" class="form-control" id="mobile" placeholder="Enter Mobile No" required>
+                        </div>
+                        <div class="col-md-4 mb-4">
+                          <label for="date-of-birth">Date of Birth</label>
+                          <input type="date" class="form-control" id="date-of-birth" placeholder="Zip" required>
+                        </div>
+                  
+                        <div class="col-md-8 mb-4">
+                          <label for="location">Location</label>
+                          <input type="text" class="form-control" id="location" placeholder="Enter Location" required>
+                        </div>
+                        <div class="col-md-4 mb-4">
+                            <label for="state">State</label>
+                            <select class="custom-select" id="state">
+                                <option selected></option>
+                                <option value="Gujarat">Gujarat</option>
+                                <option value="Goa">Goa</option>
+                            
+                            </select>
+                        </div>
+                        
+                      </div>
+                
+
+            </div>
+          </div>
+
+        </form>
+
+</div>
+{% endblock %}

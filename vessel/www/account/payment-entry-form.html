@@ -1,0 +1,96 @@
+{% extends "/templates/dashboard.html" %}
+
+{% block head_include %}
+    <link rel="stylesheet" href="/assets/vessel/css/form.css" />
+    <script src="/assets/vessel/js/form.js"></script>
+{% endblock %}
+
+{% block page_content %}
+<div class="page-area">
+    <div class="page-title d-flex">
+        <h4>New Company</h4>
+        <button class="btn save-btn">Save</button>
+    </div>
+
+    <form class="form-section">
+    <div class="form-area">
+        <div class="form-row">
+                <div class="col-md-6 col-xl-4 mb-4">
+                <label for="company">Company</label>
+                <input type="text" class="form-control" id="company" placeholder="Enter Company name" >
+                </div>
+                <div class="col-md-6 col-xl-4 mb-4">
+                <label for="mode-of-payment">Mode of Payment</label>
+                <input type="text" class="form-control" id="mode-of-payment" placeholder="Enter Mode Of Payment" >
+                </div>
+                <div class="col-md-6 col-xl-4 mb-4">
+                    <label for="posting-date">Posting Date</label>
+                    <input type="date" class="form-control" id="posting-date">
+                </div>
+        </div>
+
+        <hr>
+        <!-- contact Details -->
+        
+          <div class="form-section-title">
+                Payment Entries
+          </div>
+
+          <div class="table-responsive-lg">
+            <table class="table w-100">
+                <thead>
+                <thead>
+                    <tr>
+                        <th class="check"> <input type="checkbox" class="checkall" name="checkall" /></th>
+                        <th class="company-heading">Account Type</th>
+                        <th class="account-heading">Party</th>
+                        <th class="account-heading">Debit</th>
+                        <th class="account-heading">Credit</th>
+                        <th class="account-heading">Description</th>
+                        <th class="account-heading">Attachmemt</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="check"><input type="checkbox" class="checkall" name="checkall" /></td>
+                        <td>Payable</td>
+                        <td>William Robert Saini</td>
+                        <td>$ 0.00</td>
+                        <td>$ 364.00</td>
+                        <td>b=80</td>
+                        <td>files</td>
+                    </tr>
+                    <tr>
+                        <td class="check"><input type="checkbox" class="checkall" name="checkall" /></td>
+                        <td>Payable</td>
+                        <td>William Robert Saini</td>
+                        <td>$ 0.00</td>
+                        <td>$ 364.00</td>
+                        <td>b=80</td>
+                        <td>files</td>
+                    </tr>
+                    <tr>
+                        <td class="check"><input type="checkbox" class="checkall" name="checkall" /></td>
+                        <td>Payable</td>
+                        <td>William Robert Saini</td>
+                        <td>$ 0.00</td>
+                        <td>$ 364.00</td>
+                        <td>b=80</td>
+                        <td>files</td>
+                    </tr>
+                    
+                </tbody>
+
+            </table>   
+                <button class="btn btn-add float-right">+ Add Row</button> 
+            </div>
+
+
+    </div>
+
+    
+
+        </form>
+
+</div>
+{% endblock %}

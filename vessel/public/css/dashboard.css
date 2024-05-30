@@ -1,0 +1,93 @@
+/* page content */
+html,body{
+    height: 100%;
+}
+*, *::before, *::after {
+    box-sizing: border-box;
+  }
+  
+
+.page-area{
+    background-color: #f5f7fa;
+   position: relative;
+   width: -webkit-fill-available;
+   overflow: hidden;
+   padding: 20px;
+   min-height: 100%;
+}
+.page-area .page-title {
+    align-items: center;
+    justify-content: space-between;
+}
+.page-area .page-title h4{
+    font-weight: 600;
+    margin-bottom: 0;
+    color: #343C6A;
+}
+.page-container{
+    max-width: 90%;
+    margin-left: auto!important;
+    margin-right: auto!important;
+    justify-content: space-around;
+}
+.page-area .page-cards{
+    column-gap: 45px;
+}
+.card{
+    border: none;
+    border-radius: 25px;
+    padding: 20px;
+    flex-direction: row;
+    align-items: center;
+    cursor: default;
+    margin-top: 15px;
+}
+.card-content{
+    padding-left: 25px;
+}
+.page-cards .card .card-content h5{
+    font-weight: 600;
+}
+.page-cards .card .card-content .card-description{
+    color: #718EBF;
+}
+
+/* responsive */
+@media screen and (max-width:992px){
+
+    .page-container{
+        max-width: 85%;
+    }
+}
+
+@media screen and (max-width:575px){
+    .page-cards{
+        justify-content: center!important;
+    }
+}
+
+@media screen and (max-width:400px){
+    .page-area{
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+    .page-area .page-title h4 {
+        font-size: 22px;
+    }
+    .page-cards .card .card-content h5{
+        font-size: 18px;
+    }
+    .page-cards .card .card-content .card-description{
+        font-size: 14px;
+    }
+    .page-cards .card{
+        padding: 15px;
+    }
+    .card-img{
+        padding: 0;
+    }
+    .card-content{
+        padding-right: 0;
+    }
+}
+

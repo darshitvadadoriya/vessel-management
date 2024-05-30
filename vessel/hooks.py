@@ -227,3 +227,7 @@ app_license = "mit"
 # 	"Logging DocType Name": 30  # days to retain logs
 # }
 
+# website_route_rules = [
+#     {"from_route": "/webform/<path:app_path>n", "to_route": "/login"},
+#     # {"from_route": "/dashboard/dashboard", "to_route": "/dashboard"}
+# ]

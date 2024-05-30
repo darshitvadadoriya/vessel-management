@@ -1,0 +1,58 @@
+{% extends "/templates/dashboard.html" %}
+
+{% block head_include %}
+    <link rel="stylesheet" href="/assets/vessel/css/form.css" />
+    <script src="/assets/vessel/js/form.js"></script>
+{% endblock %}
+
+{% block page_content %}
+<div class="page-area">
+    <div class="page-title d-flex">
+        <h4>New Account</h4>
+        <button class="btn save-btn">Save</button>
+    </div>
+
+    <form class="form-section">
+        <div class="form-area">
+                        <div class="form-row">
+                            <div class="col-md-6 col-xl-4 mb-4">
+                              <input type="checkbox" id="is-hroup" name="is-group">
+                              <label for="id-group">Is Group</label>
+                            </div>
+                            <div class="col-md-6 col-xl-4 mb-4">
+                              <label for="parent-account">Parent Acoount</label>
+                              <input type="text" class="form-control" id="parent-account" placeholder="Enter Parent Account name" required>
+                            </div>
+                            <div class="col-md-6 col-xl-4 mb-4">
+                              <label for="account-name">Account Name</label>
+                              <input type="text" class="form-control" id="account-name" placeholder="Enter Account Name" required>
+                            </div>
+                        
+
+                        <div class="col-md-6 col-xl-4 mb-4">
+                          <label for="company">Company</label>
+                          <input type="text" class="form-control" id="company" placeholder="Enter Company Name" required>
+                        </div>
+        
+                        <div class="col-md-6 col-xl-4 mb-4">
+                          <label for="status">Account Type</label>
+                          <select class="form-control" id="language">
+                              <option selected></option>
+                              <option value="English">Payable</option>
+                          </select>
+                      </div>
+
+                        <div class="col-md-6 col-xl-4 mb-4">
+                          <label for="status">Currency</label>
+                          <select class="form-control" id="status">
+                              <option value="0">USD</option>
+                              <option value="1">INR</option>
+                          </select>
+                      </div>
+
+                    </div>
+
+        </form>
+
+</div>
+{% endblock %}
