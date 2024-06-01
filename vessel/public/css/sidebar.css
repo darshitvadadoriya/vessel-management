@@ -1,14 +1,13 @@
-html,body{
-  height: 100%;
-}
-*, *::before, *::after {
-  box-sizing: border-box;
-}
-
 
 body{
   font-family: "Inter", sans-serif;
   
+}
+html, body {
+  height: 100%;
+  width : 100%;
+  margin: 0;
+  padding: 0;
 }
 /* sidebar */
 #sidebar {
@@ -130,7 +129,7 @@ svg{
 }
 
 /* responsive */
-@media screen and (max-width:992px){
+@media screen and (max-width:1024px){
     #sidebar{
       max-width: 60px!important;
     }

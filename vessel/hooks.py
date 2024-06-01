@@ -228,6 +228,5 @@ app_license = "mit"
 # }
 
 # website_route_rules = [
-#     {"from_route": "/webform/<path:app_path>n", "to_route": "/login"},
-#     # {"from_route": "/dashboard/dashboard", "to_route": "/dashboard"}
+#     {"from_route": "/admin", "to_route": "admin"},
 # ]

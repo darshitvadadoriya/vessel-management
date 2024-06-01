@@ -10,7 +10,7 @@ $(document).ready(function () {
 
 
     // responsive
-    if($(window).width() < 992)
+    if($(window).width() < 1024)
     {
         $('#sidebar').toggleClass('active');
         $('.collapse-icon').hide()

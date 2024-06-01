@@ -1,10 +1,10 @@
-html,body{
+html, body {
     height: 100%;
-}
-*, *::before, *::after {
-    box-sizing: border-box;
-  }
-  
+    width : 100%;
+    margin: 0;
+    padding: 0;
+ }
+
 /* save button */
 .save-btn{
     background:#1814F3;
@@ -43,7 +43,7 @@ html,body{
     margin-top: 20px;
     background-color: #fff;
     border-radius: 25px;
-    min-height: calc(100% - 140px);
+    height: calc(100dvh - 185px);
 }
 .form-section hr{
     padding: 0;

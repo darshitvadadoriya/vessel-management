@@ -48,7 +48,7 @@ $(document).ready(function(){
                     $('.btn-login').val("Login")
                 },
             
-                });
+            });
         }
         e.preventDefault()
 

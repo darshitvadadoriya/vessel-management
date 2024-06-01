@@ -8,7 +8,7 @@
 {% block page_content %}
 <div class="page-area">
     <div class="page-title d-flex">
-        <h4>Company</h4>
+        <h4>Payment Entry</h4>
         <!-- button group -->
         <div class="actin-btn-group d-flex align-items-center">
         <!-- action button -->
@@ -39,22 +39,48 @@
     <div class="list-section">
         <div class="table-responsive">
             <div class="filter-section d-flex">
-                <input type="text" name="user-name" id="user-name" placeholder="Company" class="filter form-control mr-3">
+                <input type="text" name="mode-of-payment" id="mode-of-payment" placeholder="Mode of Payment" class="filter form-control mr-3">
+                <input type="date" name="posting-date" id="posting-date" placeholder="Posting Date" class="filter form-control mr-3">
             </div>
 
             <table class="table w-100">
                 <thead>
                     <tr>
                         <th class="check-box"><input type="checkbox" class="checkall" name="checkall" /></th>
+                        <th>Mode of Payment</th>
+                        <th>Posting Date</th>
                         <th>Company</th>
+                        <th>Voucher Number</th>
+                        <th>Status</th>
+
                        
                     </tr>
                 </thead>
                 <tbody>
                    <tr>
                     <td class="check-box"><input type="checkbox" class="checkall" name="checkall" /></td>
-                    <td>Uniseas Marine Ltd.</td>
+                    <td>Bank</td>
+                    <td>10/05/2024</td>
+                    <td>Metricapex LLC</td>
+                    <td>fafb81d9a9</td>
+                    <td>Draft</td>
                    </tr>
+
+                   <td class="check-box"><input type="checkbox" class="checkall" name="checkall" /></td>
+                    <td>Bank</td>
+                    <td>10/05/2024</td>
+                    <td>Metricapex LLC</td>
+                    <td>fafb81d9a9</td>
+                    <td>Draft</td>
+                   </tr>
+
+                   <td class="check-box"><input type="checkbox" class="checkall" name="checkall" /></td>
+                   <td>Bank</td>
+                   <td>10/05/2024</td>
+                   <td>Metricapex LLC</td>
+                   <td>fafb81d9a9</td>
+                   <td>Submitted</td>
+                  </tr>
                     
                     
                 </tbody>

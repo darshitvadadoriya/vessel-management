@@ -1,10 +1,9 @@
-html,body{
+html, body {
     height: 100%;
-}
-*, *::before, *::after {
-    box-sizing: border-box;
-  }
-  
+    width : 100%;
+    margin: 0;
+    padding: 0;
+ }
 
 /* add button */
 .btn-add{
@@ -37,14 +36,12 @@ html,body{
 }
 
 
-/* list section */
-.data-table-group{
-    min-height: calc(100% - 140px);
-}
 .list-section{
     margin-top: 20px;
     background-color: #fff;
     border-radius: 16px;
+    min-height: calc(100dvh - 264px)!important;
+
 }
 .list-section .filter-section{
     padding: 16px;
@@ -66,6 +63,7 @@ html,body{
 /* table section */
 .list-section table{
     width: 100%;
+    margin-bottom: 0;
 }
 .list-section table th{
     font-weight: 500;
@@ -112,7 +110,7 @@ html,body{
 }
 .pagination{
     font-weight: 500;
-    margin-top: 14px;
+    margin-top: 10px;
     float: right;
 }
 .pagination .previous-btn .page-link,.pagination .next-btn .page-link{
