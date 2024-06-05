@@ -3,13 +3,14 @@
 {% block head_include %}
     <link rel="stylesheet" href="/assets/vessel/css/form.css" />
     <script src="/assets/vessel/js/form.js"></script>
+    <script src="/assets/vessel/js/user.js"></script>
 {% endblock %}
 
 {% block page_content %}
 <div class="page-area">
     <div class="page-title d-flex   ">
         <h4>New User</h4>
-        <button class="btn save-btn">Save</button>
+        <button class="btn save-btn" id="save">Save</button>
     </div>
 
     <form class="form-section">
@@ -45,35 +46,35 @@
                         <div class="form-row">
                             <div class="col-md-6 col-xl-4 mb-4">
                               <label for="first-name">First Name</label>
-                              <input type="text" class="form-control" id="first-name" placeholder="Enter First Name" required>
+                              <input type="text" class="form-control" id="first-name" name="first_name" placeholder="Enter First Name" >
                             </div>
                             <div class="col-md-6 col-xl-4 mb-4">
                               <label for="middle-name">Middle Name</label>
-                              <input type="text" class="form-control" id="middle-name" placeholder="Enter Middle Name" required>
+                              <input type="text" class="form-control" id="middle-name" name="middle_name" placeholder="Enter Middle Name" >
                             </div>
                             <div class="col-md-6 col-xl-4 mb-4">
-                              <label for="date-of-birth">Last Name</label>
-                              <input type="date" class="form-control" id="date-of-birth" placeholder="Zip" required>
+                              <label for="last-name">Last Name</label>
+                              <input type="text" class="form-control" id="last-name" name="last_name" placeholder="Last Name" >
                             </div>
                         
 
                         <div class="col-md-6 col-xl-4 mb-4">
                           <label for="email">Email</label>
-                          <input type="text" class="form-control" id="email" placeholder="Enter Email Address" required>
+                          <input type="text" class="form-control" id="email" name="email" placeholder="Enter Email Address" >
                         </div>
                         <div class="col-md-6 col-xl-4 mb-4">
                           <label for="user-name">User Name</label>
-                          <input type="text" class="form-control" id="user-name" placeholder="Enter User Name" required>
+                          <input type="text" class="form-control" id="user-name" name="user_name" placeholder="Enter User Name" >
                         </div>
                         <div class="col-md-6 col-xl-4 mb-4">
                           <label for="password">Password</label>
-                          <input type="password" class="form-control" id="password" placeholder="********" required>
+                          <input type="password" class="form-control" id="password" name="password" placeholder="********" >
                         </div>
 
 
                         <div class="col-md-6 col-xl-4 mb-4">
                           <label for="status">Language</label>
-                          <select class="custom-select" id="language">
+                          <select class="custom-select" id="language" name="language">
                               <option selected></option>
                               <option value="English">English</option>
                               <option value="Gujarati">Gujarati</option>
@@ -82,7 +83,7 @@
 
                         <div class="col-md-6 col-xl-4 mb-4">
                           <label for="status">Status</label>
-                          <select class="custom-select" id="status">
+                          <select class="custom-select" id="status" name="status">
                               <option value="0">Active</option>
                               <option value="1">Disable</option>
                           </select>
@@ -101,24 +102,24 @@
                     <div class="form-row">
                         <div class="col-md-4 mb-4">
                           <label for="phone">Phone</label>
-                          <input type="number" class="form-control" id="phone" placeholder="Enter Phone No" required>
+                          <input type="number" class="form-control" id="phone" name="phone" placeholder="Enter Phone No" >
                         </div>
                         <div class="col-md-4 mb-4">
                           <label for="mobile">Mobile</label>
-                          <input type="text" class="form-control" id="mobile" placeholder="Enter Mobile No" required>
+                          <input type="text" class="form-control" id="mobile" name="mobile" placeholder="Enter Mobile No" >
                         </div>
                         <div class="col-md-4 mb-4">
                           <label for="date-of-birth">Date of Birth</label>
-                          <input type="date" class="form-control" id="date-of-birth" placeholder="Zip" required>
+                          <input type="date" class="form-control" id="date-of-birth" name="date_of_birth" placeholder="Zip" >
                         </div>
                   
                         <div class="col-md-8 mb-4">
                           <label for="location">Location</label>
-                          <input type="text" class="form-control" id="location" placeholder="Enter Location" required>
+                          <input type="text" class="form-control" id="location" name="location" placeholder="Enter Location" >
                         </div>
                         <div class="col-md-4 mb-4">
                             <label for="state">State</label>
-                            <select class="custom-select" id="state">
+                            <select class="custom-select" id="state" name="state">
                                 <option selected></option>
                                 <option value="Gujarat">Gujarat</option>
                                 <option value="Goa">Goa</option>

@@ -104,7 +104,7 @@ html, body {
     border-radius: 50%;
     margin-right: 8px;
 }
-.inactive-status .radio,.inactive-status{
+.inactive .radio,.inactive{
     border-color: #B4B4B4;
     color: #23232380;
 }
@@ -123,21 +123,30 @@ html, body {
     border: none;
     background: none;
     color: #1814F3;
-}
-.pagination .page-item.active .page-link{
-    border-radius: 10px;
-    background-color: #1814F3;
-    color: #ffffff;
     height: 40px;
     width: 40px;
    justify-content: center;
     align-items: center;
     display: flex;
 }
+.pagination .page-item.active .page-link{
+    border-radius: 10px;
+    background-color: #1814F3;
+    color: #ffffff;
+   
+}
 .page-link:focus{
     box-shadow: none;
 }
-
+/* disable pagination next and prev button */
+.pagination .diable-btn
+{
+    pointer-events: none;
+    opacity: 0.5;
+}
+.hide{
+    display: none;
+}
 
 /* responsive */
 @media screen and (max-width:576px){

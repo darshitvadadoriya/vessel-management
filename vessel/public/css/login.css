@@ -45,7 +45,7 @@ body{
 /* input[type="password"]::placeholder{
     line-height: 5;
 } */
-#show-hide-password{
+.show-hide-password{
     position: absolute;
     right: 50px;
     z-index: 99;
@@ -92,10 +92,16 @@ body{
     .login-container{
         max-width:75%;
     }
+    .reset-password{
+        max-width:50%;
+    }
 }
 @media screen and (max-width:1600px) and (min-width:1200px) {
     .login-container{
         max-width:50%;
+    }
+    .reset-password{
+        max-width:33%;
     }
 }
 @media screen and (max-width:767px){

@@ -3,6 +3,7 @@
 {% block head_include %}
     <link rel="stylesheet" href="/assets/vessel/css/form.css" />
     <script src="/assets/vessel/js/form.js"></script>
+    
 {% endblock %}
 
 {% block page_content %}
@@ -23,7 +24,7 @@
             </li>
           </ul>
           <div class="tab-content" id="form-tab">
-            <div class="tab-pane fade " id="customer-details" role="tabpanel" aria-labelledby="customer-details">
+            <div class="tab-pane fade show active" id="customer-details" role="tabpanel" aria-labelledby="customer-details">
               <div class="inner-form-section row">
                     <!-- sidebar image -->
                     <div class="col-sm-12 col-md-3 col-lg-2 justify-content-center d-flex align-content-start">
@@ -49,7 +50,7 @@
                             </div>
                             <div class="col-md-6 col-xl-4 mb-4">
                                 <label for="customer-type">Customer Type</label>
-                                <select class="custom-select" id="customer-type" name="customer-type" >
+                                <select class="custom-select selectpicker" id="customer-type" name="customer-type" >
                                     <option selected></option>
                                     <option value="Agent">Agent</option>
                                     <option value="Company">Company</option>
@@ -151,7 +152,7 @@
                   
             </div>
 
-            <div class="tab-pane fade show active" id="customer-accounts" role="tabpanel" aria-labelledby="customer-accounts">
+            <div class="tab-pane fade" id="customer-accounts" role="tabpanel" aria-labelledby="customer-accounts">
         
                 <div class="table-responsive-lg">
                     <table class="table w-100">

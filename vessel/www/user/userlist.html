@@ -3,12 +3,15 @@
 {% block head_include %}
     <link rel="stylesheet" href="/assets/vessel/css/list.css" />
     <script src="/assets/vessel/js/list.js"></script>
+    <script src="/assets/vessel/js/user-list.js"></script>
+    
+ 
 {% endblock %}
 
 {% block page_content %}
 <div class="page-area">
-    <div class="page-title d-flex">
-        <h4>Company</h4>
+    <div class="page-title d-flex   ">
+        <h4>User</h4>
         <!-- button group -->
         <div class="actin-btn-group d-flex align-items-center">
         <!-- action button -->
@@ -26,59 +29,57 @@
                 </div>
             </div>
             <!-- add button -->
-            <a class="btn btn-add" href="/company/new-company">
+            <a class="btn btn-add" href="/user/new-user">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
                     <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
                   </svg>
-                   Add Company
+                   Add User
                 </a>
         </div>
     </div>
 
-<section class="data-table-group">
-    <div class="list-section">
+    <section class="list-section">
         <div class="table-responsive">
             <div class="filter-section d-flex">
-                <input type="text" name="user-name" id="user-name" placeholder="Company" class="filter form-control mr-3">
+                <input type="text" name="user-name" id="user-name" placeholder="User Name" class="filter form-control mr-3">
+                <input type="text" name="status" id="status" placeholder="Status" class="filter form-control mr-3">
+                <input type="text" name="contact-no" id="contact-no" placeholder="Contact No." class="filter form-control mr-3">
             </div>
 
             <table class="table w-100">
                 <thead>
                     <tr>
                         <th class="check-box"><input type="checkbox" class="checkall" name="checkall" /></th>
-                        <th>Company</th>
-                       
+                        <th style="width: 240px;">Name</th>
+                        <th style="width: 350px;">Email</th>
+                        <th style="width: 350px;">Contact no.</th>
+                        <th style="width: 350px;">Location</th>
+                        <th style="min-width: 200px;">Status</th>
                     </tr>
                 </thead>
-                <tbody>
-                   <tr>
-                    <td class="check-box"><input type="checkbox" class="checkall" name="checkall" /></td>
-                    <td>Uniseas Marine Ltd.</td>
-                   </tr>
-                    
-                    
+                <tbody id="data-list">
+                
                 </tbody>
             </table>
         </div>
         
 
-    </div>
+    </section>
         
     <!-- pagination section -->
-<div class="pagination">
+<section class="pagination">
     <nav aria-label="Page navigation example">
-        <ul class="pagination">
-          <li class="previous-btn"><a class="page-link align-items-center d-flex" href="#"><img src="/assets/vessel/files/images/previous-page.png" alt="previous" class="mr-1"> Previous</a></li>
-          <li class="page-item active"><a class="page-link" href="#">1</a></li>
-          <li class="page-item"><a class="page-link" href="#">2</a></li>
-          <li class="page-item"><a class="page-link" href="#">3</a></li>
-          <li class="page-item"><a class="page-link" href="#">4</a></li>
-          <li class="page-item"><a class="page-link" href="#">5</a></li>
-          <li class="next-btn"><a class="page-link align-items-center d-flex" href="#">Next <img src="/assets/vessel/files/images/next-page.png" alt="next" class="ml-1"></a></li>
+        <ul class="pagination" id="pagination">
+          <li class="previous-btn"><a class="page-link align-items-center d-flex" href="javascript:void(0)"><img src="/assets/vessel/files/images/previous-page.png" alt="previous" class="mr-1"> Previous</a></li>
+            
+          
+          <!-- {% for i in range(1, user_count | int + 1) %}
+          {% set page_num = i %}
+            <li class="page-item"><a class="page-link page-num " href="javascript:void(0)" data-page="{{ page_num }}">{{ page_num }}</a></li>
+          {% endfor %} -->
+          <li class="next-btn"><a class="page-link align-items-center d-flex" href="javascript:void(0)" id="nextpage">Next <img src="/assets/vessel/files/images/next-page.png" alt="next" class="ml-1"></a></li>
         </ul>
       </nav>
-    </div>
-
 </section>
 
 </div>

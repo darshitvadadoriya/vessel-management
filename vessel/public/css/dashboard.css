@@ -32,7 +32,7 @@ html, body {
 }
 .page-area .page-cards{
     column-gap: 45px;
-    justify-content: space-between;
+    justify-content: start;
 }
 .card{
     border: none;
@@ -44,7 +44,7 @@ html, body {
     margin-top: 15px;
     
 }
-.card:hover{
+.page-area .page-cards .card:hover{
     border: 1px solid #1814F3;
     background: url("/assets/vessel/files/images/card-hover-arrow.png");
     background-repeat: no-repeat;
