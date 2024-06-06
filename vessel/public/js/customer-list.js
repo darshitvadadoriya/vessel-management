@@ -88,19 +88,19 @@ $(document).ready(function(){
          $("#data-list").empty();
 
         $.ajax({
-            url: "/api/resource/User", 
+            url: "/api/resource/Customer", 
             type: "GET", 
             dataType: "json",
             data: {
-                fields: JSON.stringify(["full_name", "email", "mobile_no", "location", "enabled", "user_image"]),
+                fields: JSON.stringify(["image","customer_name", "customer_type"]),
                 filters: JSON.stringify(filters),
                 limit_start:data_limit_start,
                 limit_page_length: 10
             },
             success: function(response) {
-                console.log(response+"======================");
+                console.log(JSON.stringify(response));
                 $.each(response.data,function(i,data){
-                    var user_profile = data.user_image ? window.location.origin + data.user_image : window.location.origin + "/assets/vessel/files/images/default_user.jpg";
+                    var user_profile = data.image ? window.location.origin + data.image : window.location.origin + "/assets/vessel/files/images/default_user.jpg";
                     
                     $('tbody').append(` <tr>
                     <td class="check-box"><input type="checkbox" class="check" name="check" /></td>
@@ -109,15 +109,15 @@ $(document).ready(function(){
                             <img src="${user_profile}">
                         </div>
                         <div class="user-name">
-                        ${data.full_name ? data.full_name : " "}
+                        ${data.customer_name ? data.customer_name : " "}
                         </div>
                     </td>
-                    <td>${data.email ? data.email : " "}</td>
-                    <td>${data.mobile_no ? data.mobile_no : " "}</td>
-                    <td>${data.location ? data.location : " "}</td>
+                    <td>${data.customer_type ? data.customer_type : " "}</td>
+                    <td></td>
+                    <td></td>
                     <td class="d-flex ${data.enabled === 1 ? '' : 'inactive'}">
                         <div><div class="radio"></div></div>
-                    <div> ${data.enabled === 1 ? "Active" : "Inactive"} </div>
+                    <div>  </div>
                     </td>
                 </tr>`)
                     
