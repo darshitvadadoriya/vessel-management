@@ -1,7 +1,11 @@
-{% extends "/templates/dashboard.html" %} {% block head_include %}
-<link rel="stylesheet" href="/assets/vessel/css/list.css" />
-<script src="/assets/vessel/js/list.js"></script>
-{% endblock %} {% block page_content %}
+{% extends "/templates/dashboard.html" %} 
+{% block head_include %}
+  <link rel="stylesheet" href="/assets/vessel/css/list.css" />
+  <script src="/assets/vessel/js/list.js"></script>
+  <script src="/assets/vessel/js/account-list.js"></script>
+{% endblock %}
+
+{% block page_content %}
 <div class="page-area">
   <div class="page-title d-flex">
     <h4>Account</h4>
@@ -93,8 +97,8 @@
             <th></th>
           </tr>
         </thead>
-        <tbody>
-          <tr>
+        <tbody id="data-list">
+          <!-- <tr>
             <td class="check-box">
               <input type="checkbox" class="check" name="check" />
             </td>
@@ -105,159 +109,25 @@
             <td class="check-box">
               <input type="checkbox" class="check" name="check" />
             </td>
-          </tr>
+          </tr> -->
 
-          <tr>
-            <td class="check-box">
-              <input type="checkbox" class="check" name="check" />
-            </td>
-            <td>Debtors International</td>
-            <td>Metricapex LLC</td>
-            <td>Current Assets - CC</td>
-            <td>Bank</td>
-            <td class="check-box">
-              <input type="checkbox" class="check" name="check" />
-            </td>
-          </tr>
-
-          <tr>
-            <td class="check-box">
-              <input type="checkbox" class="check" name="check" />
-            </td>
-            <td>Debtors International</td>
-            <td>Metricapex LLC</td>
-            <td>Current Assets - CC</td>
-            <td>Bank</td>
-            <td class="check-box">
-              <input type="checkbox" class="check" name="check" />
-            </td>
-          </tr>
-
-          <tr>
-            <td class="check-box">
-              <input type="checkbox" class="check" name="check" />
-            </td>
-            <td>Debtors International</td>
-            <td>Metricapex LLC</td>
-            <td>Current Assets - CC</td>
-            <td>Bank</td>
-            <td class="check-box">
-              <input type="checkbox" class="check" name="check" />
-            </td>
-          </tr>
-
-          <tr>
-            <td class="check-box">
-              <input type="checkbox" class="check" name="check" />
-            </td>
-            <td>Debtors International</td>
-            <td>Metricapex LLC</td>
-            <td>Current Assets - CC</td>
-            <td>Bank</td>
-            <td class="check-box">
-              <input type="checkbox" class="check" name="check" />
-            </td>
-          </tr>
-
-          <tr>
-            <td class="check-box">
-              <input type="checkbox" class="check" name="check" />
-            </td>
-            <td>Debtors International</td>
-            <td>Metricapex LLC</td>
-            <td>Current Assets - CC</td>
-            <td>Bank</td>
-            <td class="check-box">
-              <input type="checkbox" class="check" name="check" />
-            </td>
-          </tr>
-
-          <tr>
-            <td class="check-box">
-              <input type="checkbox" class="check" name="check" />
-            </td>
-            <td>Debtors International</td>
-            <td>Metricapex LLC</td>
-            <td>Current Assets - CC</td>
-            <td>Bank</td>
-            <td class="check-box">
-              <input type="checkbox" class="check" name="check" />
-            </td>
-          </tr>
-
-          <tr>
-            <td class="check-box">
-              <input type="checkbox" class="check" name="check" />
-            </td>
-            <td>Debtors International</td>
-            <td>Metricapex LLC</td>
-            <td>Current Assets - CC</td>
-            <td>Bank</td>
-            <td class="check-box">
-              <input type="checkbox" class="check" name="check" />
-            </td>
-          </tr>
-
-          <tr>
-            <td class="check-box">
-              <input type="checkbox" class="check" name="check" />
-            </td>
-            <td>Debtors International</td>
-            <td>Metricapex LLC</td>
-            <td>Current Assets - CC</td>
-            <td>Bank</td>
-            <td class="check-box">
-              <input type="checkbox" class="check" name="check" />
-            </td>
-          </tr>
-
-          <tr>
-            <td class="check-box">
-              <input type="checkbox" class="check" name="check" />
-            </td>
-            <td>Debtors International</td>
-            <td>Metricapex LLC</td>
-            <td>Current Assets - CC</td>
-            <td>Bank</td>
-            <td class="check-box">
-              <input type="checkbox" class="check" name="check" />
-            </td>
-          </tr>
+          
         </tbody>
       </table>
     </div>
   </section>
 
-  <!-- pagination section -->
-  <section class="pagination">
-    <nav aria-label="Page navigation example">
+  
+ <!-- pagination section -->
+ <div class="pagination" id="pagination">
+  <nav>
       <ul class="pagination">
-        <li class="previous-btn">
-          <a class="page-link align-items-center d-flex" href="#"
-            ><img
-              src="/assets/vessel/files/images/previous-page.png"
-              alt="previous"
-              class="mr-1"
-            />
-            Previous</a
-          >
-        </li>
-        <li class="page-item active"><a class="page-link" href="#">1</a></li>
-        <li class="page-item"><a class="page-link" href="#">2</a></li>
-        <li class="page-item"><a class="page-link" href="#">3</a></li>
-        <li class="page-item"><a class="page-link" href="#">4</a></li>
-        <li class="page-item"><a class="page-link" href="#">5</a></li>
-        <li class="next-btn">
-          <a class="page-link align-items-center d-flex" href="#"
-            >Next
-            <img
-              src="/assets/vessel/files/images/next-page.png"
-              alt="next"
-              class="ml-1"
-          /></a>
-        </li>
+        <li class="previous-btn"><a class="page-link align-items-center d-flex" href="javascript:void(0)"><img src="/assets/vessel/files/images/previous-page.png" alt="previous" class="mr-1"> Previous</a></li>
+        
+        <li class="next-btn"><a class="page-link align-items-center d-flex" href="javascript:void(0)" id="nextpage">Next <img src="/assets/vessel/files/images/next-page.png" alt="next" class="ml-1"></a></li>
       </ul>
     </nav>
-  </section>
+  </div>
+  
 </div>
 {% endblock %}

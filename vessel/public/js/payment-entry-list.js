@@ -7,7 +7,7 @@ $(document).ready(function(){
         // get count of records
         function get_count(filters){
             $.ajax({
-                url: "/api/resource/Customer", 
+                url: "/api/resource/Account", 
                 type: "GET", 
                 dataType: "json",
                 data: {
@@ -72,31 +72,31 @@ $(document).ready(function(){
          $("#data-list").empty();
 
         $.ajax({
-            url: "/api/resource/Customer", 
+            url: "/api/resource/Account", 
             type: "GET", 
             dataType: "json",
             data: {
-                fields: JSON.stringify(["image","customer_name", "customer_type"]),
+                fields: JSON.stringify(["name","company","parent_account","account_type","is_group"]),
                 filters: JSON.stringify(filters),
                 order_by: "modified desc",
                 limit_start:data_limit_start,
                 limit_page_length: 10
             },
             success: function(response) {
+                console.log(response);
                 $.each(response.data,function(i,data){
-                    var customer_profile = data.image ? window.location.origin + data.image : window.location.origin + "/assets/vessel/files/images/default_user.jpg";
-                    
+                                      
                     $('tbody').append(` <tr>
                     <td class="check-box"><input type="checkbox" class="check" name="check" /></td>
-                    <td class="d-flex align-items-center">
-                        <div class="profile-image mr-2">
-                            <img src="${customer_profile}">
-                        </div>
-                        <div class="user-name">
-                        ${data.customer_name ? data.customer_name : " "}
-                        </div>
+
+                    <td>${data.name}</td>
+                    <td>${data.company}</td>
+                    <td>${data.parent_account}</td>
+                    <td>${data.account_type}</td>
+                    <td class="check-box">
+                        <input type="checkbox" class="check" name="check" ${data.is_group === 1 ? 'checked' : ''} />
                     </td>
-                    <td>${data.customer_type ? data.customer_type : " "}</td>
+                    
                    
                 </tr>`)
                     
@@ -137,7 +137,7 @@ $(document).ready(function(){
               data_limit_start = prev_page * 10 - 10;
               
            //   get filtered data from this function and call filtered data dunction
-            customer_filters() //always set before the get filter from url bexause set filter in url using this function 
+            account_filters() //always set before the get filter from url bexause set filter in url using this function 
             show_filtered_list(data_limit_start,get_filter_from_urls()) //get_filter_from_urls() get filters data from url
 
             
@@ -158,7 +158,7 @@ $(document).ready(function(){
           window.history.pushState({}, '', '?page='+next_page);
           data_limit_start = next_page * 10 - 10;
         //   get filtered data from this function and call filtered data dunction
-          customer_filters() //always set before the get filter from url bexause set filter in url using this function 
+          account_filters() //always set before the get filter from url bexause set filter in url using this function 
           show_filtered_list(data_limit_start,get_filter_from_urls())  //get_filter_from_urls() get filters data from url
           
          // disable next button
@@ -177,6 +177,10 @@ $(document).ready(function(){
         
         const lastpage = $(".next-btn .page-link").data("lastpage")
         const current_page_num =  page_number()
+
+        console.log("lastpage====="+ lastpage);
+        console.log("current_page_num====="+ current_page_num);
+
         if(lastpage == current_page_num)
         {
             $('.next-btn').addClass('diable-btn');
@@ -218,7 +222,7 @@ $(document).ready(function(){
     function updatePagination(current_page) {
         current_page = page_number()
         let start_page, end_page;
-        var total_pages = parseInt(localStorage.getItem('total_pages'), 10);
+        var total_pages = parseInt(localStorage.getItem('total_pages'));
     
         // Determine the range of pages to display
         if (total_pages <= 5) {
@@ -278,7 +282,7 @@ $(document).ready(function(){
         var data_limit_start = page_num * 10 - 10;
         
         //   get filtered data from this function and call filtered data dunction
-        customer_filters() //always set before the get filter from url bexause set filter in url using this function 
+        account_filters() //always set before the get filter from url bexause set filter in url using this function 
         
         show_filtered_list(data_limit_start,get_filter_from_urls())  //get_filter_from_urls() get filters data from url
     
@@ -292,9 +296,10 @@ $(document).ready(function(){
 
    
     
-     // Handle filter customername
-     $('#customer-name').on('input', function() {
-        customer_filters() //always set before the get filter from url bexause set filter in url using this function 
+     // Handle filter accounts
+     $('#account-name, #company').on('input', function() {
+        
+        account_filters() //always set before the get filter from url bexause set filter in url using this function 
         var field_filter_data = get_filter_from_urls()
         show_filtered_list(0,field_filter_data)
         get_count(field_filter_data)
@@ -304,14 +309,18 @@ $(document).ready(function(){
 
 
 
-    function customer_filters(){
+    function account_filters(){
         var filters = [];
     
         // Add name filter if not empty
-        var customer_name_filter = $('#customer-name').val().trim();
+        var account_name_filter = $('#account-name').val().trim();
+        var company_filter = $('#company').val().trim();
     
-        if (customer_name_filter !== '') {
-            filters.push('customer_name=' + encodeURIComponent('%' + customer_name_filter + '%'));
+        if (account_name_filter !== '') {
+            filters.push('name=' + encodeURIComponent('%' + account_name_filter + '%'));
+        }
+        if (company_filter !== '') {
+            filters.push('company=' + encodeURIComponent('%' + company_filter + '%'));
         }
     
         // Construct the query string
@@ -325,7 +334,7 @@ $(document).ready(function(){
             // Remove the leading '?' and split the parameters
             var existingParamsArray = existingParams.substring(1).split('&');
             // Filter out the existing parameters which are not related to filtering
-            existingParamsArray = existingParamsArray.filter(param => !param.startsWith('customer_name='));
+            existingParamsArray = existingParamsArray.filter(param => !param.startsWith('name=') && !param.startsWith('company='));
             // Join the existing parameters with the new ones
             queryString = existingParamsArray.join('&') + (queryString ? (existingParamsArray.length > 0 ? '&' : '') + queryString : '');
         }
@@ -365,7 +374,8 @@ $(document).ready(function(){
       
         urlParams.forEach((value, key) => {
             if (key !== "page" && key !== null) {
-                key === "customer_name" ? $("#customer-name").val(value.replaceAll("%","")) : null;
+                key === "name" ? $("#account-name").val(value.replaceAll("%","")) : null;
+                key === "company" ? $("#company").val(value.replaceAll("%","")) : null;
               }
         });        
       }

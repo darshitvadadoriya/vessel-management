@@ -219,6 +219,10 @@ html, body {
     width: 500px;
 
 }
+/* for mandatory field */
+.red{
+    color: red;
+}
 
 
 /* responsive  */

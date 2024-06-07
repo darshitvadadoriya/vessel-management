@@ -54,7 +54,7 @@
                         <th style="min-width: 100px;">Status</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="data-list">
                     <!-- <tr>
                         <td class="check-box"><input type="checkbox" class="check" name="check" /></td>
                         <td class="d-flex align-items-center">
@@ -65,15 +65,11 @@
                                 Jeffery E. Rauscher
                             </div>
                         </td>
-                        <td>Bunker Supplier</td>
+                        <td>Bunker Supplier</td>    
                         <td>Australia</td>
                         <td>Christopher Lucas</td>
                         <td>Active</td>
-                    </tr> -->
-                    
-                   
-                    
-                    
+                    </tr> -->                              
                     
                 </tbody>
             </table>
@@ -83,19 +79,39 @@
     </section>
         
     <!-- pagination section -->
-<section class="pagination">
-    <nav aria-label="Page navigation example">
+    <div class="pagination" id="pagination">
+    <nav>
         <ul class="pagination">
-          <li class="previous-btn"><a class="page-link align-items-center d-flex" href="#"><img src="/assets/vessel/files/images/previous-page.png" alt="previous" class="mr-1"> Previous</a></li>
-          <li class="page-item active"><a class="page-link" href="#">1</a></li>
-          <li class="page-item"><a class="page-link" href="#">2</a></li>
-          <li class="page-item"><a class="page-link" href="#">3</a></li>
-          <li class="page-item"><a class="page-link" href="#">4</a></li>
-          <li class="page-item"><a class="page-link" href="#">5</a></li>
-          <li class="next-btn"><a class="page-link align-items-center d-flex" href="#">Next <img src="/assets/vessel/files/images/next-page.png" alt="next" class="ml-1"></a></li>
+          <li class="previous-btn"><a class="page-link align-items-center d-flex" href="javascript:void(0)"><img src="/assets/vessel/files/images/previous-page.png" alt="previous" class="mr-1"> Previous</a></li>
+          
+          <li class="next-btn"><a class="page-link align-items-center d-flex" href="javascript:void(0)" id="nextpage">Next <img src="/assets/vessel/files/images/next-page.png" alt="next" class="ml-1"></a></li>
         </ul>
       </nav>
-</section>
+    </div>
+
+
 
 </div>
 {% endblock %}
+
+
+
+
+
+
+
+
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 

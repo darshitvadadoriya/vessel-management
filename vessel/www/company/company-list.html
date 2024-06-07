@@ -3,6 +3,8 @@
 {% block head_include %}
     <link rel="stylesheet" href="/assets/vessel/css/list.css" />
     <script src="/assets/vessel/js/list.js"></script>
+    <script src="/assets/vessel/js/company-list.js"></script>
+
 {% endblock %}
 
 {% block page_content %}
@@ -35,11 +37,10 @@
         </div>
     </div>
 
-<section class="data-table-group">
     <div class="list-section">
         <div class="table-responsive">
             <div class="filter-section d-flex">
-                <input type="text" name="user-name" id="user-name" placeholder="Company" class="filter form-control mr-3">
+                <input type="text" name="company-name" id="company-name" placeholder="Company" class="filter form-control mr-3">
             </div>
 
             <table class="table w-100">
@@ -50,11 +51,11 @@
                        
                     </tr>
                 </thead>
-                <tbody>
-                   <tr>
+                <tbody id="data-list">
+                   <!-- <tr>
                     <td class="check-box"><input type="checkbox" class="checkall" name="checkall" /></td>
                     <td>Uniseas Marine Ltd.</td>
-                   </tr>
+                   </tr> -->
                     
                     
                 </tbody>
@@ -63,23 +64,20 @@
         
 
     </div>
+
         
     <!-- pagination section -->
-<div class="pagination">
-    <nav aria-label="Page navigation example">
+<div class="pagination" id="pagination">
+    <nav>
         <ul class="pagination">
-          <li class="previous-btn"><a class="page-link align-items-center d-flex" href="#"><img src="/assets/vessel/files/images/previous-page.png" alt="previous" class="mr-1"> Previous</a></li>
-          <li class="page-item active"><a class="page-link" href="#">1</a></li>
-          <li class="page-item"><a class="page-link" href="#">2</a></li>
-          <li class="page-item"><a class="page-link" href="#">3</a></li>
-          <li class="page-item"><a class="page-link" href="#">4</a></li>
-          <li class="page-item"><a class="page-link" href="#">5</a></li>
-          <li class="next-btn"><a class="page-link align-items-center d-flex" href="#">Next <img src="/assets/vessel/files/images/next-page.png" alt="next" class="ml-1"></a></li>
+          <li class="previous-btn"><a class="page-link align-items-center d-flex" href="javascript:void(0)"><img src="/assets/vessel/files/images/previous-page.png" alt="previous" class="mr-1"> Previous</a></li>
+          
+          <li class="next-btn"><a class="page-link align-items-center d-flex" href="javascript:void(0)" id="nextpage">Next <img src="/assets/vessel/files/images/next-page.png" alt="next" class="ml-1"></a></li>
         </ul>
       </nav>
     </div>
 
-</section>
+
 
 </div>
 {% endblock %}

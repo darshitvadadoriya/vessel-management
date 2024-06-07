@@ -7,7 +7,7 @@ $(document).ready(function(){
         // get count of records
         function get_count(filters){
             $.ajax({
-                url: "/api/resource/Customer", 
+                url: "/api/resource/Company", 
                 type: "GET", 
                 dataType: "json",
                 data: {
@@ -72,11 +72,11 @@ $(document).ready(function(){
          $("#data-list").empty();
 
         $.ajax({
-            url: "/api/resource/Customer", 
+            url: "/api/resource/Company", 
             type: "GET", 
             dataType: "json",
             data: {
-                fields: JSON.stringify(["image","customer_name", "customer_type"]),
+                fields: JSON.stringify(["company_name"]),
                 filters: JSON.stringify(filters),
                 order_by: "modified desc",
                 limit_start:data_limit_start,
@@ -89,14 +89,11 @@ $(document).ready(function(){
                     $('tbody').append(` <tr>
                     <td class="check-box"><input type="checkbox" class="check" name="check" /></td>
                     <td class="d-flex align-items-center">
-                        <div class="profile-image mr-2">
-                            <img src="${customer_profile}">
-                        </div>
                         <div class="user-name">
-                        ${data.customer_name ? data.customer_name : " "}
+                        ${data.company_name ? data.company_name : " "}
                         </div>
                     </td>
-                    <td>${data.customer_type ? data.customer_type : " "}</td>
+                    
                    
                 </tr>`)
                     
@@ -293,7 +290,7 @@ $(document).ready(function(){
    
     
      // Handle filter customername
-     $('#customer-name').on('input', function() {
+     $('#company-name').on('input', function() {
         customer_filters() //always set before the get filter from url bexause set filter in url using this function 
         var field_filter_data = get_filter_from_urls()
         show_filtered_list(0,field_filter_data)
@@ -308,10 +305,10 @@ $(document).ready(function(){
         var filters = [];
     
         // Add name filter if not empty
-        var customer_name_filter = $('#customer-name').val().trim();
+        var company_name_filter = $('#company-name').val().trim();
     
-        if (customer_name_filter !== '') {
-            filters.push('customer_name=' + encodeURIComponent('%' + customer_name_filter + '%'));
+        if (company_name_filter !== '') {
+            filters.push('company_name=' + encodeURIComponent('%' + company_name_filter + '%'));
         }
     
         // Construct the query string
@@ -325,7 +322,7 @@ $(document).ready(function(){
             // Remove the leading '?' and split the parameters
             var existingParamsArray = existingParams.substring(1).split('&');
             // Filter out the existing parameters which are not related to filtering
-            existingParamsArray = existingParamsArray.filter(param => !param.startsWith('customer_name='));
+            existingParamsArray = existingParamsArray.filter(param => !param.startsWith('company_name='));
             // Join the existing parameters with the new ones
             queryString = existingParamsArray.join('&') + (queryString ? (existingParamsArray.length > 0 ? '&' : '') + queryString : '');
         }
@@ -365,7 +362,7 @@ $(document).ready(function(){
       
         urlParams.forEach((value, key) => {
             if (key !== "page" && key !== null) {
-                key === "customer_name" ? $("#customer-name").val(value.replaceAll("%","")) : null;
+                key === "company_name" ? $("#company-name").val(value.replaceAll("%","")) : null;
               }
         });        
       }

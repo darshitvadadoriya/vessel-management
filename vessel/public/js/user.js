@@ -1,31 +1,37 @@
 $(document).ready(function(){
     $('#save').click(function(){
-        console.log("aaaaaaa");
-    //    var test =  $("form").serialize();
-    //    console.log(test);
+   
         
     var formDataArray = $('form').serializeArray();
-        var formDataObject = {};
+        var form_data = {};
         $.each(formDataArray, function(index, field) {
            
-          formDataObject[field.name] = field.value;
+            form_data[field.name] = field.value;
         });
-        console.log(formDataObject);
+        console.log(form_data);
 
 
-        $.ajax({
-            url: "/api/resource/User",
-            type: "POST",
-            dataType: "json",
-            data: {
-            usr: username,
-            pwd: password,
-            },
-            success: function (data) {
-                window.location.href = "/app"
-                // set verifying status
-                $('#login').val("Login")
-            },
-        })
+
+
+    create_user(form_data)
+
+    function create_user(form_data){
+            $.ajax({
+                url: "/api/resource/User",
+                type: "POST",
+                dataType: "json",
+                data:JSON.stringify(form_data),
+                success: function (data) {
+                    console.log(data);
+                    console.log("ENTERED.................")
+                },
+                error: function(xhr, status, error) {
+                    // Handle the error response here
+                    console.error('Error: ' + error); // Print the error to the console
+                    console.error('Status: ' + status); // Print the status to the console
+                    console.dir(xhr); // Print the XHR object for more details
+                }
+            })
+      }
     })
 })

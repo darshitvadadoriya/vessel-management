@@ -20,7 +20,7 @@ $(document).ready(function(){
                     var page_count = response.data[0].count;
                     // page count per page data length wise
                     var page_no = Math.ceil(page_count / 10);
-                    console.log("PAGE====== NO"+page_no);
+
                     // if only one page then hide pagination
                    $('#pagination').toggleClass("hide", page_no === 1 || page_no === 0);
 
@@ -33,8 +33,8 @@ $(document).ready(function(){
                     $("#nextpage").attr("data-lastpage", page_no);
                     localStorage.removeItem("total_pages")
                     localStorage.setItem("total_pages",page_no)
-                    // default page is 1
-                    updatePagination(page_no);
+                    // default page is 0
+                    updatePagination(0);
                    
                 }
                 
@@ -54,32 +54,17 @@ $(document).ready(function(){
         filters = get_filter_from_urls()
        if(page_no != undefined)
        {
-            data_limit_start = page_no * 10 -9;
+            data_limit_start = page_no * 10 - 10;
             // show_list(data_limit_start)
             show_filtered_list(data_limit_start, filters);
             get_count(filters)
        }
        else{
             // show_list(1)
-            show_filtered_list(1, filters);
+            show_filtered_list(0, filters);
        }
     
-     
-       
-
-
-    // $("#status").on('change', function() {
-    //     var status = $("#status").val();
-       
-    //     // update query parameter
-    //     //  updateQueryParam('username', status);
-         
-    //      filters = [["username","=",status ]];
-    //      show_filtered_list(1,filters)
-    //      get_count(filters)
-    //  });
    
-    
        
     
 
@@ -98,7 +83,6 @@ $(document).ready(function(){
                 limit_page_length: 10
             },
             success: function(response) {
-                console.log(response+"======================");
                 $.each(response.data,function(i,data){
                     var user_profile = data.user_image ? window.location.origin + data.user_image : window.location.origin + "/assets/vessel/files/images/default_user.jpg";
                     
@@ -155,7 +139,7 @@ $(document).ready(function(){
               current_page = page_number()
               var prev_page = parseInt(current_page) - 1
               window.history.pushState({}, '', '?page='+prev_page);
-              data_limit_start = prev_page * 10 - 9;
+              data_limit_start = prev_page * 10 - 10;
               
            //   get filtered data from this function and call filtered data dunction
             user_filters() //always set before the get filter from url bexause set filter in url using this function 
@@ -177,7 +161,7 @@ $(document).ready(function(){
           var next_page = parseInt(current_page) + 1
           
           window.history.pushState({}, '', '?page='+next_page);
-          data_limit_start = next_page * 10 - 9;
+          data_limit_start = next_page * 10 - 10;
         //   get filtered data from this function and call filtered data dunction
           user_filters() //always set before the get filter from url bexause set filter in url using this function 
           show_filtered_list(data_limit_start,get_filter_from_urls())  //get_filter_from_urls() get filters data from url
@@ -298,7 +282,7 @@ $(document).ready(function(){
         // get page number from data-page attribute
         var page_num = $(this).data("page");
         window.history.pushState({}, '', '?page=' + page_num);
-        var data_limit_start = page_num * 10 - 9;
+        var data_limit_start = page_num * 10 - 10;
         
         //   get filtered data from this function and call filtered data dunction
         user_filters() //always set before the get filter from url bexause set filter in url using this function 
@@ -315,13 +299,23 @@ $(document).ready(function(){
 
    
     
-     // Handle filter changes
+     // Handle filter username and contact
      $('#user-name, #contact-no').on('input', function() {
         user_filters() //always set before the get filter from url bexause set filter in url using this function 
         var field_filter_data = get_filter_from_urls()
-        show_filtered_list(1,field_filter_data)
+        show_filtered_list(0,field_filter_data)
         get_count(field_filter_data)
         
+
+    });
+
+
+     // Handle filter username and contact
+     $('#status').on('change', function() {
+        user_filters() //always set before the get filter from url bexause set filter in url using this function 
+        var status_filter = get_filter_from_urls()
+        show_filtered_list(0,status_filter)
+        get_count(status_filter)
 
     });
 
@@ -332,11 +326,16 @@ $(document).ready(function(){
         // Add name filter if not empty
         var user_name_filter = $('#user-name').val().trim();
         var contact_no_filter = $('#contact-no').val().trim();
+        var user_status = $('#status').val()
+        console.log(user_status+"USER STATUS============");
         if (user_name_filter !== '') {
             filters.push('username=' + encodeURIComponent('%' + user_name_filter + '%'));
         }
         if (contact_no_filter !== '') {
             filters.push('mobile_no=' + encodeURIComponent('%' + contact_no_filter + '%'));
+        }
+        if (user_status) {
+            filters.push('enabled=' + encodeURIComponent('%' + user_status + '%'));
         }
     
         // Construct the query string
@@ -350,7 +349,7 @@ $(document).ready(function(){
             // Remove the leading '?' and split the parameters
             var existingParamsArray = existingParams.substring(1).split('&');
             // Filter out the existing parameters which are not related to filtering
-            existingParamsArray = existingParamsArray.filter(param => !param.startsWith('username=') && !param.startsWith('mobile_no='));
+            existingParamsArray = existingParamsArray.filter(param => !param.startsWith('username=') && !param.startsWith('mobile_no=') && !param.startsWith('enabled='));
             // Join the existing parameters with the new ones
             queryString = existingParamsArray.join('&') + (queryString ? (existingParamsArray.length > 0 ? '&' : '') + queryString : '');
         }
@@ -392,6 +391,7 @@ $(document).ready(function(){
             if (key !== "page" && key !== null) {
                 key === "username" ? $("#user-name").val(value.replaceAll("%","")) : null;
                 key === "mobile_no" ? $("#contact-no").val(value.replaceAll("%","")) : null;
+                key === "enabled" ? $("#status").val(value.replaceAll("%","")):null;
               }
         });        
       }
