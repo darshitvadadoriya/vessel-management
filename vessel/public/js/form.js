@@ -1,5 +1,7 @@
 $(document).ready(function(){
  
+    
+
     $("#upload-image").change(function() {
         previewimage(this);
     });

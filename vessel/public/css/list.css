@@ -78,7 +78,7 @@ html, body {
     padding: 16px;
 }
 .list-section table td{
-    padding: 14px;
+    padding: 13px;
     border-top: none;
     vertical-align: baseline;
     align-items: center;
@@ -96,6 +96,9 @@ html, body {
     border-radius: 50%;
     object-fit: cover;
     object-position: center center;
+}
+.list-section table td a{
+    color: #212529;
 }
 
 

@@ -45,7 +45,7 @@ html, body {
     
 }
 .page-area .page-cards .card:hover{
-    border: 1px solid #1814F3;
+    outline: 1px solid #1814F3;
     background: url("/assets/vessel/files/images/card-hover-arrow.png");
     background-repeat: no-repeat;
     background-position: 95% 20px;

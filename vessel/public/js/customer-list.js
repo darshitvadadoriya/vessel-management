@@ -76,7 +76,7 @@ $(document).ready(function(){
             type: "GET", 
             dataType: "json",
             data: {
-                fields: JSON.stringify(["image","customer_name", "customer_type"]),
+                fields: JSON.stringify(["name","image","customer_name", "customer_type","custom_person_in_charge","custom_country","disabled"]),
                 filters: JSON.stringify(filters),
                 order_by: "modified desc",
                 limit_start:data_limit_start,
@@ -87,16 +87,23 @@ $(document).ready(function(){
                     var customer_profile = data.image ? window.location.origin + data.image : window.location.origin + "/assets/vessel/files/images/default_user.jpg";
                     
                     $('tbody').append(` <tr>
-                    <td class="check-box"><input type="checkbox" class="check" name="check" /></td>
+                    <td class="check-box"><input type="checkbox" class="check" name="check" id="${data.name}" data-userid="${data.name}"/></td>
                     <td class="d-flex align-items-center">
                         <div class="profile-image mr-2">
                             <img src="${customer_profile}">
                         </div>
-                        <div class="user-name">
-                        ${data.customer_name ? data.customer_name : " "}
+                        <div class="user-name"><a href="/logistic/customer/${data.name}">
+                             ${data.customer_name ? data.customer_name : " "}
+                        </a>
                         </div>
                     </td>
                     <td>${data.customer_type ? data.customer_type : " "}</td>
+                    <td>${data.custom_person_in_charge ? data.custom_person_in_charge : " "}</td>
+                    <td>${data.custom_country ? data.custom_country : " "}</td>
+                     <td class="d-flex ${data.disabled === 1 ? 'inactive' : 'Active'}">
+                        
+                    <div> ${data.disabled === 1 ? "Inactive" : "Active"} </div>
+                    </td>
                    
                 </tr>`)
                     

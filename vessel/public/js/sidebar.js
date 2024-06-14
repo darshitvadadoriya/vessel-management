@@ -18,7 +18,8 @@ $(document).ready(function () {
 
     // active page highlit title effect
     $('#sidebar ul li').click(function(){
-        $('#sidebar ul .active-page').removeClass('active-page');
-        $(this).addClass('active-page');
+        // $('#sidebar ul .active-page').toggleClass('active-page');
+        console.log($(this))
+        $(this).toggleClass('active-page');
     })
 });

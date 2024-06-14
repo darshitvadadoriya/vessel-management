@@ -3,14 +3,14 @@
 {% block head_include %}
     <link rel="stylesheet" href="/assets/vessel/css/form.css" />
     <script src="/assets/vessel/js/form.js"></script>
-    <script src="/assets/vessel/js/customer.js"></script>
+    <script src="/assets/vessel/js/updatecustomer.js"></script>
     
 {% endblock %}
 
 {% block page_content %}
 <div class="page-area">
     <div class="page-title d-flex   ">
-        <h4>New Customer</h4>
+        <h4 id="page_title"></h4>
         <button class="btn save-btn" id="save">Save</button>
     </div>
 
@@ -37,8 +37,8 @@
                               </label>
                           </div>
                           <div class="profile-image-preview">
-                              <div id="image-preview" style="background-image: url(https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1);">
-                              </div>
+                             <div id="image-preview" style="background-image: url(/assets/vessel/files/images/default_user.jpg);">
+                            </div>
                           </div>
                       </div>
 
@@ -47,7 +47,7 @@
                         <div class="form-row">
                             <div class="col-md-6 col-xl-4 mb-4">
                               <label for="customer_name">Customer Name <span class="red">*</span></label>
-                              <input type="text" class="form-control" id="customer_name" name="customer_name" placeholder="Enter Customer Name" >
+                              <input type="text" class="form-control" id="customer_name" name="customer_name" >
                             </div>
                             <div class="col-md-6 col-xl-4 mb-4">
                                 <label for="customer_type">Customer Type <span class="red">*</span></label>
@@ -60,8 +60,10 @@
                             </div>
                             <div class="col-md-6 col-xl-4 mb-4">
                                 <label for="country">Country</label>
-                                <select class="form-select custom-select" id="country" name="custom_country" data-searchable="true">
-                                    <option></option>
+                                <select class="custom-select" id="country" name="country" >
+                                    <option selected></option>
+                                    <option value="India">India</option>
+                                    <option value="India">India</option>
                                 </select>
                             </div>
                         
@@ -72,11 +74,11 @@
                         </div>
                         <div class="col-md-6 col-xl-4 mb-4">
                           <label for="remarks">Remarks</label>
-                          <input type="text" class="form-control" id="remarks" name="custom_remarks" placeholder="Enter Remsrks" >
+                          <input type="text" class="form-control" id="remarks" name="remarks" placeholder="Enter Remsrks" >
                         </div>
                         <div class="col-md-6 col-xl-4 mb-4">
                             <label for="status">Status</label>
-                            <select class="custom-select" id="status" name="disabled">
+                            <select class="custom-select" id="status" name="status">
                                 <option value="0">Active</option>
                                 <option value="1">Disable</option>
                             </select>
@@ -104,19 +106,6 @@
                             <label>Phone</label>
                             <div class="card" name="phone" id="customer_phone">
                           
-                                    <div class="row w-100 justify-content-between phone_row">
-                                        <div class="phone">617-555-4978</div>
-                                        <div class="delete"><img src="/assets/vessel/files/images/delete.png" alt="delete"></div>
-                                    </div>
-                                    <div class="row w-100 justify-content-between phone_row">
-                                        <div class="phone">617-555-4978</div>
-                                        <div class="delete"><img src="/assets/vessel/files/images/delete.png" alt="delete"></div>
-                                    </div>
-                                    <div class="row w-100 justify-content-between phone_row">
-                                        <div class="phone">617-555-4978</div>
-                                        <div class="delete"><img src="/assets/vessel/files/images/delete.png" alt="delete"></div>
-                                    </div>
-                                    
                                     <div class="row w-100 d-flex justify-content-between add-contact-details" id="customer_phone_input">
                                         <input type="number" class="form-control" id="phone_no_value" placeholder="Enter Phone No">
                                         <div class="btn btn-add" id="add_phone">+ Add Phone</div>
@@ -130,16 +119,6 @@
                         <div class="col-lg-6 col-xl-4 details-area">
                             <label>Email</label>
                             <div class="card" id="customer_email" name="phone">
-                          
-                                    <div class="row w-100 justify-content-between email_row">
-                                        <div class="email">mark@abcxyz.com</div>
-                                        <div class="delete"><img src="/assets/vessel/files/images/delete.png" alt="delete"></div>
-                                    </div>
-                                    <div class="row w-100 justify-content-between email_row">
-                                        <div class="email">william@abcxyz.com</div>
-                                        <div class="delete"><img src="/assets/vessel/files/images/delete.png" alt="delete"></div>
-                                    </div>
-                                    
                                     <div class="row w-100 d-flex justify-content-between add-contact-details" id="customer_email_input">
                                         <input type="email" id="email_address_value" class="form-control" placeholder="Enter Email Address">
                                         <div class="btn btn-add" id="add_email">+ Add Email</div>
@@ -163,7 +142,20 @@
                             </tr>
                         </thead>
                         <tbody id="account_table">
-                            
+                            <tr>
+                                <!-- <td class="check"><input type="checkbox" class="checkbox" name="checkbox" /></td>
+                                <td>
+                                   <select class="company" class="form-select" data-searchable="true">
+                                   
+                                   </select>
+                                </td>
+                                <td>
+                                   
+                                    <select class="account" class="form-select" data-searchable="true">
+                                        
+                                   </select>
+                                </td> -->
+                            </tr>
                             
                         </tbody>
 
@@ -176,6 +168,7 @@
             
             
           </div>
+          <input type="hidden" id="user_id">
 
         </form>
 

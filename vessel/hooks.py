@@ -230,10 +230,10 @@ app_license = "mit"
 website_route_rules = [
     {"from_route": "/admin", "to_route": "/admin/admin"},
     {"from_route": "/user/new-user", "to_route": "/user/user"},
-    {"from_route": "/user/user-list", "to_route": "/user/userlist"},
+    {"from_route": "/user", "to_route": "/user/userlist"},
     {"from_route": "/logistic", "to_route": "/logistic/logistic"},
-    {"from_route": "/logistic/new-customer", "to_route": "/customer/customer"},
-    {"from_route": "/logistic/customer-list", "to_route": "/customer/customer-list"},
+    {"from_route": "/logistic/customer/new-customer", "to_route": "/customer/customer"},
+    {"from_route": "/logistic/customer", "to_route": "/customer/customer-list"},
     {"from_route": "/account", "to_route": "/account/account"},
     {"from_route": "/account/account-list", "to_route": "/account/account-list"},
     {"from_route": "/account/new-account", "to_route": "/account/account-form"},
@@ -242,5 +242,7 @@ website_route_rules = [
     {"from_route": "/company/new-company", "to_route": "/company/company-form"},
     {"from_route": "/analytics", "to_route": "/analytics/analytics"},
     {"from_route": "/login", "to_route": "/login/login"},
+    {"from_route": "/user/<name>", "to_route": "/user/updateuser"},
+    {"from_route": "/logistic/customer/<name>", "to_route": "/customer/updatecustomer"},
     
 ]

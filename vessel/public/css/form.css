@@ -27,14 +27,34 @@ html, body {
     border-radius: 8px;
     color: #1814F3;
     border: 1px solid #F2F4F7;
+    align-items: center;
+    display: flex;
 }
 .btn-add:hover{
     color:#1814F3;
     border-color:#1814F3;
 }
-.btn-add:focus{
+.btn-add:focus,.btn-add:focus{
     box-shadow: none;
 }
+
+/* delete button */
+.btn-delete{
+    font-weight: 600;
+    height: 48px;
+    font-size: 16px;
+    border-radius: 8px;
+    color:#ec645e;
+    border:1px solid #ffdad8;
+    align-items: center;
+    display: flex;
+}
+.btn-delete:hover{
+    color:#ec645e;
+    border-color:#ec645e;
+}
+
+
 
 
 /* form start */
@@ -43,7 +63,7 @@ html, body {
     margin-top: 20px;
     background-color: #fff;
     border-radius: 25px;
-    height: calc(100dvh - 185px);
+    min-height: calc(100dvh - 185px);
 }
 .form-section hr{
     padding: 0;
@@ -90,10 +110,10 @@ html, body {
     border-radius: 8px;
     height: 50px;
 }
-.form-control:focus,.custom-select:focus
+.form-control:focus,.custom-select:focus,.form-select.focus
 {
-    border-color: #1814F3;
-    box-shadow: none;
+    border-color: #1814F3!important;
+    box-shadow: none!important;
 }
 
 /* upload image and preview */
@@ -147,6 +167,7 @@ html, body {
     min-height: 100px;
     border-radius: 8px;
     color: #4D5461;
+    outline: none;
     border: 1px solid #DFEAF2;
 }
 .contact-details .details-area label{
@@ -224,6 +245,11 @@ html, body {
     color: red;
 }
 
+/* error message */
+.error-message{
+    color: red;
+    font-size: 14px;
+}
 
 /* responsive  */
 
