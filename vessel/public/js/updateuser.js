@@ -118,18 +118,7 @@ $(document).ready(function () {
         console.log(updated_form_data)
 
 
-        // date validation
-        function parseDate(date) {
-            console.log(date)
-            if (!date) {
-                throw new Error('Date argument is undefined or null.');
-            }
-            var splt_date = date.split(/[\/-]/); // Split by slash or dash
-            console.log(new Date(splt_date[2], splt_date[0] - 1, splt_date[1]))
-            return new Date(splt_date[2], splt_date[0] - 1, splt_date[1]);
-        }
-        
-        
+      //get today date
         var today = new Date();
         var today_date = today.getFullYear() + '-' + ('0' + (today.getMonth() + 1)).slice(-2) + '-' + ('0' + today.getDate()).slice(-2);
         
@@ -229,8 +218,7 @@ $(document).ready(function () {
                 },
                 error: function (xhr, status, error) {
                     // Handle the error response here
-                    console.error('Error: ' + error); // Print the error to the console
-                    console.error('Status: ' + status); // Print the status to the console
+                  
                     console.dir(xhr); // Print the XHR object for more details
 
 

@@ -8,6 +8,7 @@ $(document).ready(function(){
      var phone_list=[]
      var email_list=[] 
      var account_lst = []
+     var customer_contact = []
 
     //  country select field
     var countryoptions =  new UseBootstrapSelect(document.getElementById("country"));
@@ -44,8 +45,6 @@ $(document).ready(function(){
         // on click delete icon to delete particular clicked row
         $(document).on('click', '.delete', function () {
             $(this).parent().remove()
-            $(".checkall").prop("checked","false");
-            add_row()
         })
 
 
@@ -120,6 +119,8 @@ $(document).ready(function(){
                 $(this).parent().parent().remove()
             }
         });
+        $(".checkall").prop("checked","false"); //uncheck main checkbox
+        
     })
 
    
@@ -138,165 +139,208 @@ $(document).ready(function(){
         form_data["country"] = countryoptions.getValue()
 
 
+        
+        // account table grouping data
         account_lst = []
-    // account table grouping data
-    $('#account_table tr').each(function(index) {
-        var companyvalue = $("#company_id" + index).val();
-        var accountvalue = $("#account_id" + index).val();
-        account_lst.push({'company':companyvalue,"account":accountvalue})
-    });
+        $('#account_table tr').each(function(index) {
+            var companyvalue = $("#company_id" + index).val();
+            var accountvalue = $("#account_id" + index).val();
+            if(index==0 && companyvalue=="")
+            {
+                 console.log("first row is blank") //if first row is blank default
+            }
+            else{
+                account_list()
+            }
+            function account_list()
+            {
+                if (!companyvalue || !accountvalue) {
+                    notyf.error({
+                        message:"Selecting a company and an account is mandatory.",
+                        duration:5000
+                    })
+                    return false;  // stop loop
+                }
+                else{
+                    account_lst.push({'company':companyvalue,"account":accountvalue})
+                }
+            }
 
-    console.log(account_lst);
+        });
+        if(account_lst)
+        {
+            form_data["accounts"] = account_lst
+        }
+    
 
 
 
 
-    //     // phone section data
-       
+        // phone section data
+        $("#customer_phone .phone_row").each(function(i, data) {
+            var phone_no = $(data).find(".phone").text();
+            phone_list.push(phone_no); // Store each phone number with a key like "phone0", "phone1", etc.
+        });
 
-    //     $("#customer_phone .phone_row").each(function(i, data) {
-    //         var phone_no = $(data).find(".phone").text();
-    //         phone_list.push(phone_no); // Store each phone number with a key like "phone0", "phone1", etc.
-    //     });
+        // form_data["phone"] = phone_list
+        console.log(phone_list); 
 
-    //     // form_data["phone"] = phone_list
-    //     console.log(phone_list); 
-
-    //      // phone section data
+         // phone section data
          
 
-    //      $("#customer_email .email_row").each(function(i, data) {
-    //          var email_data = $(data).find(".email").text();
-    //          email_list.push(email_data); // Store each phone number with a key like "phone0", "phone1", etc.
-    //      });
+         $("#customer_email .email_row").each(function(i, data) {
+             var email_data = $(data).find(".email").text();
+             email_list.push(email_data); // Store each phone number with a key like "phone0", "phone1", etc.
+         });
  
-    //     //  form_data["email"] = email_list
-    //      console.log(form_data); 
+        //  form_data["email"] = email_list
+         console.log(form_data); 
 
 
-    //     // error handler 
-    //     // check customer name and customer type is filled
+        // error handler 
+        // check customer name and customer type is filled
 
-    //     if (!form_data['customer_name']) {
-    //         $('#customer_name_error').remove(); // Remove any existing error message
-    //         $('#customer_name').after('<span id="customer_name_error" class="error-message">Please first name is mandatory.</span>');
-    //     }
-    //     else if (!form_data['customer_type']) {
-    //         $('#customer_type_error').remove(); // Remove any existing error message
-    //         $('#customer_type').after('<span id="customer_type_error" class="error-message">Please email is mandatory.</span>');
-    //     }
-    //     else {
-    //         if (files.length > 0 ) {
-    //             var file_data = files[0]
-    //              upload_file(file_data); // Pass the first file to the upload_file function
-    //          } else {
-    //              create_customer(form_data) // save data without image
-    //          }
-    //     }
-    //     console.log(form_data);
+        if (!form_data['customer_name']) {
+            $('#customer_name_error').remove(); // Remove any existing error message
+            $('#customer_name').after('<span id="customer_name_error" class="error-message">Please first name is mandatory.</span>');
+        }
+        else if (!form_data['customer_type']) {
+            $('#customer_type_error').remove(); // Remove any existing error message
+            $('#customer_type').after('<span id="customer_type_error" class="error-message">Please email is mandatory.</span>');
+        }
+        else {
+            if (files.length > 0 ) {
+                var file_data = files[0]
+                 upload_file(file_data); // Pass the first file to the upload_file function
+             } else {
+                 create_customer(form_data) // save data without image
+             }
+        }
+        console.log(form_data);
 
-    //     $("#customer_name").on("input", function () {
-    //         $('#customer_name_error').remove(); // Remove customer name error message
-    //     })
-    //     $("#customer_type").on("input", function () {
-    //         $('#customer_type_error').remove(); // Remove customer_type error message
-    //     })
+        $("#customer_name").on("input", function () {
+            $('#customer_name_error').remove(); // Remove customer name error message
+        })
+        $("#customer_type").on("input", function () {
+            $('#customer_type_error').remove(); // Remove customer_type error message
+        })
 
 
-    //     function upload_file(files) {
-    //         console.log(files)
-    //         var file_data = new FormData();
-    //         file_data.append('file', files);
-    //         file_data.append('file_name', files.name);
-    //         file_data.append('file_url', "/file/"+files.name);
+        function upload_file(files) {
+            console.log(files)
+            var file_data = new FormData();
+            file_data.append('file', files);
+            file_data.append('file_name', files.name);
+            file_data.append('file_url', "/file/"+files.name);
     
             
-    //         $.ajax({
-    //             url: "/api/method/upload_file",
-    //             type: "POST",
-    //             processData: false,
-    //             contentType: false,
-    //             data:file_data, // Assuming form_data contains a file object
-    //             success: function (response) {
-    //                 var profile_image_url = response.message.file_url
-    //                 form_data["image"] = profile_image_url;
-    //                 create_customer(form_data)
-    //             },
-    //             error: function (xhr, status, error) {
-    //                 // Handle the error response here
-    //                 console.error('Error: ' + error); // Print the error to the console
-    //                 console.error('Status: ' + status); // Print the status to the console
-    //                 console.dir(xhr); // Print the XHR object for more details
+            $.ajax({
+                url: "/api/method/upload_file",
+                type: "POST",
+                processData: false,
+                contentType: false,
+                data:file_data, // Assuming form_data contains a file object
+                success: function (response) {
+                    var profile_image_url = response.message.file_url
+                    form_data["image"] = profile_image_url;
+                    create_customer(form_data)
+                },
+                error: function (xhr, status, error) {
+                    // Handle the error response here
+                    console.error('Error: ' + error); // Print the error to the console
+                    console.error('Status: ' + status); // Print the status to the console
+                    console.dir(xhr); // Print the XHR object for more details
             
                     
-    //             }
-    //         })
-    //     }
+                }
+            })
+        }
 
 
-    //     function create_customer(form_data) {
-    //         $.ajax({
-    //             url: "/api/resource/Customer",
-    //             type: "POST",
-    //             dataType: "json",
-    //             data: JSON.stringify(form_data),
-    //             success: function (data) {
+        function create_customer(form_data) {
+            $.ajax({
+                url: "/api/resource/Customer",
+                type: "POST",
+                dataType: "json",
+                data: JSON.stringify(form_data),
+                success: function (data) {
 
-    //                 console.log(data);
-    //                 var customer_id = data.data.name
-    //                 customer_name = data.data.customer_name
-                   
-    //                 console.log("ENTERED.................")
+                    var customer_id = data.data.name
+                    customer_name = data.data.customer_name
                     
-    //                 var customer_contact = {
-    //                     "customer_name": customer_name,  
-    //                     "phone": phone_list,             
-    //                     "email": email_list              
-    //                 }
-    //                 $.ajax({
-    //                     url: "/api/method/vessel.api.customer.create_contact",
-    //                     type: "POST",
-    //                     dataType: "json",
-    //                     contentType: "application/json",
-    //                     data: JSON.stringify(customer_contact),
-    //                     success: function(response) {
-    //                         notyf.success({
-    //                             message: "New customer created",
-    //                             duration: 5000
-    //                         })
-    //                     },
-                    
-    //                     error: function (xhr, status, error) {
-                      
-    //                         console.dir(xhr); // Print the XHR object for more details
-    //                         if (xhr.responseJSON.exc_type == "DuplicateEntryError") {
-    //                             notyf.error({
-    //                                 message: "customer already added",
-    //                                 duration: 5000
-    //                             })
-    //                         }
-    //                     }
-    //                 })
+                    customer_contact = {
+                        "customer_name": customer_name,  
+                        "phone": phone_list,             
+                        "email": email_list              
+                    }
+                    create_contact(customer_contact)
+                    notyf.success({
+                        message: "New customer created",
+                        duration: 5000
+                    })
 
-    //             },
-    //             error: function (xhr, status, error) {
-    //                 // Handle the error response here
-    //                 console.error('Error: ' + error); // Print the error to the console
-    //                 console.error('Status: ' + status); // Print the status to the console
-    //                 console.dir(xhr); // Print the XHR object for more details
-    //                 if (xhr.responseJSON.exc_type == "DuplicateEntryError") {
-    //                     notyf.error({
-    //                         message: "customer already added",
-    //                         duration: 5000
-    //                     })
-    //                 }
-    //             }
-    //         })
-    //     }
+                },
+                error: function (xhr, status, error) {
+                    console.dir(xhr); // Print the XHR object for more details
+                    if (xhr.responseJSON.exc_type == "DuplicateEntryError") {
+                        notyf.error({
+                            message: "customer already added",
+                            duration: 5000
+                        })
+                    }
+                }
+            })
+        }
 
     })
 
 
+
+    function create_contact(customer_contact){
+        $.ajax({
+            url: "/api/method/vessel.api.customer.create_contact",
+            type: "POST",
+            dataType: "json",
+            contentType: "application/json",
+            data: JSON.stringify(customer_contact),
+            success: function(response) {
+              
+            },
+        
+            error: function (xhr, status, error) {
+          
+                if (xhr.responseJSON.exc_type == "DuplicateEntryError") {
+                    notyf.error({
+                        message: "customer already added",
+                        duration: 5000
+                    })
+                }
+            }
+        })
+    }
+
+    function create_contact(customer_contact){
+        $.ajax({
+            url: "/api/method/vessel.api.customer.create_contact",
+            type: "POST",
+            dataType: "json",
+            contentType: "application/json",
+            data: JSON.stringify(customer_contact),
+            success: function(response) {
+               
+            },
+        
+            error: function (xhr, status, error) {
+          
+                if (xhr.responseJSON.exc_type == "DuplicateEntryError") {
+                    notyf.error({
+                        message: "customer already added",
+                        duration: 5000
+                    })
+                }
+            }
+        })
+    }
 
      // load country select box
      get_country()

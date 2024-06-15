@@ -4,8 +4,19 @@ $(document).ready(function () {
     // Create an instance of Notyf
     var notyf = new Notyf();
     var files = []
-    var account
+    var phone_list=[]
+    var email_list=[] 
+    var phone_data_list 
+    var email_data_list 
+    var customer_accounts
     var company
+    var company_list_data
+    var account_list_data
+    var company_id
+    var account_id
+    var account_lst = []
+
+    var old_form_data = {};
 
 
 
@@ -49,33 +60,33 @@ $(document).ready(function () {
 
     // onclick add row to new row add in table
     $("#add_new_row").click(function () {
-        add_row()
+        add_row("","")
 
     })
 
-    add_row()
+    // add_row()
     // add row button to add new row in account table
-    function add_row(){
-            var company_id = "company_id" + $('#customer-accounts tbody tr').length
-            var account_id = "account_id" + $('#customer-accounts tbody tr').length
+    function add_row(companyvalue,accountvalue){
+             company_id = "company_id" + $('#customer-accounts tbody tr').length
+             account_id = "account_id" + $('#customer-accounts tbody tr').length
 
             $("#account_table").append(`<tr class="select-accounts">
-            <td class="check"><input type="checkbox" class="checkbox" name="checkbox" /></td>
-            <td>
-                <select class="company form-select" id="${company_id}" data-searchable="true">
-                     <option></option>
-                </select>
-            </td>
-            <td>
-                
-                <select class="account form-select" id="${account_id}" data-searchable="true">
-                <option></option>
-                </select>
-            </td>
-        </tr>`)
+                <td class="check"><input type="checkbox" class="checkbox" name="checkbox" /></td>
+                <td>
+                    <select class="company form-select" id="${company_id}" data-searchable="true">
+                        <option>${companyvalue}</option>
+                    </select>
+                </td>
+                <td>
+                    
+                    <select class="account form-select" id="${account_id}" data-searchable="true">
+                    <option>${accountvalue}</option>
+                    </select>
+                </td>
+            </tr>`)
 
-            var company_list_data = new UseBootstrapSelect(document.getElementById(company_id));
-            var account_list_data = new UseBootstrapSelect(document.getElementById(account_id));
+            company_list_data = new UseBootstrapSelect(document.getElementById(company_id));
+            account_list_data = new UseBootstrapSelect(document.getElementById(account_id));
 
 
             get_company(function (data) {
@@ -97,7 +108,7 @@ $(document).ready(function () {
                     }, company_name)
                 }, 500)
             }
-
+            console.log(company_id);
             // change company value to get company wise account list
             document.getElementById(company_id).addEventListener('change', function () {
                 $("#" + account_id).empty()
@@ -132,18 +143,16 @@ $(document).ready(function () {
     function get_customer(name) {
 
         $.ajax({
-            url: "/api/resource/Customer",
+            url: "/api/resource/Customer/"+name,
             type: "GET",
             dataType: "json",
-            data: {
-                filters: JSON.stringify([["name", "=", name]]),
-                fields: JSON.stringify(["name", "image", "customer_name", "customer_type", "disabled", "custom_person_in_charge", "custom_country", "custom_remarks"])
-            },
+            
             success: function (data) {
-                var customer_info = data.data[0]
+                var customer_info = data.data
 
 
                 customer_id = customer_info.name
+                customer_accounts = customer_info.accounts
                 var customer_profile_img = customer_info.image && customer_info.image.includes("https") ? customer_info.image : (customer_info.image ? window.location.origin + customer_info.image : window.location.origin + "/assets/vessel/files/images/default_user.jpg")
 
 
@@ -156,6 +165,19 @@ $(document).ready(function () {
                 $("#person_in_charge").val(customer_info.custom_person_in_charge)
                 $("#remarks").val(customer_info.custom_remarks)
                 $("#status").val(customer_info.disabled)
+
+                
+                $.each(customer_accounts,function(index,data){
+                        add_row(data.company,data.account)                 
+                })
+
+
+                var old_form_data_list = $('form').serializeArray();
+
+                $.each(old_form_data_list, function (index, field) {
+
+                    old_form_data[field.name] = field.value;
+                });
 
             },
             error: function (xhr, status, error) {
@@ -180,10 +202,11 @@ $(document).ready(function () {
             },
             success: function (data) {
 
-                console.log(data.message.emails);
-                var email_data_list = data.message.emails
-                var phone_data_list = data.message.phones
+                 email_data_list = data.message.emails
+                 phone_data_list = data.message.phones
 
+                console.log(email_data_list)
+                console.log(phone_data_list)
                 $.each(phone_data_list, function (i, data) {
                     $(`<div class="row w-100 justify-content-between phone_row">
                                         <div class="phone">${data}</div>
@@ -258,18 +281,85 @@ $(document).ready(function () {
 
 
 
-    //    $('#save').click(function () {
+       $('#save').click(function () {
 
 
-    //        var form_data_list = $('form').serializeArray();
-    //        var form_data = {};
-    //        $.each(form_data_list, function (index, field) {
+              // Serialize the current form data
+            var form_data_list = $('form').serializeArray();
+            var form_data = {};
 
-    //            form_data[field.name] = field.value;
-    //        });
-    //        console.log(form_data)
+            $.each(form_data_list, function (index, field) {
+                form_data[field.name] = field.value;
+            });
 
 
+        // Compare old form data with current form data and store updated fields
+        var updated_form_data = {};
+
+        $.each(form_data, function (key, value) {
+
+            if (old_form_data[key] !== value) {
+                updated_form_data[key] = value;
+            }
+        });
+
+        console.log(updated_form_data);
+
+        // phone section data
+        $("#customer_phone .phone_row").each(function(i, data) {
+            var phone_no = $(data).find(".phone").text();
+            if (!phone_list.includes(phone_no) && !phone_data_list.includes(phone_no)) {
+                phone_list.push(phone_no); // push unique value in phone_list
+            }
+        });
+
+        // form_data["phone"] = phone_list
+        console.log(phone_list); 
+
+            //email data
+         $("#customer_email .email_row").each(function(i, data) {
+             var email_data = $(data).find(".email").text();
+             if (!email_list.includes(email_data) && !email_data_list.includes(email_data)) {
+                email_list.push(email_data); // push unique value in email_list
+            }
+         });
+         console.log(email_list); 
+
+
+
+
+
+             // account table grouping data
+            // account_lst = []
+            // $('#account_table tr').each(function(index) {
+            //     var companyvalue = $("#company_id" + index).val();
+            //     var accountvalue = $("#account_id" + index).val();
+            //     if(index==0 && companyvalue=="")
+            //     {
+            //         console.log("first row is blank") //if first row is blank default
+            //     }
+            //     else{
+            //         account_list()
+            //     }
+            //     function account_list()
+            //     {
+            //         if (!companyvalue || !accountvalue) {
+            //             notyf.error({
+            //                 message:"Selecting a company and an account is mandatory.",
+            //                 duration:5000
+            //             })
+            //             return false;  // stop loop
+            //         }
+            //         else{
+            //             account_lst.push({'company':companyvalue,"account":accountvalue})
+            //         }
+            //     }
+
+            // });
+            // if(account_lst)
+            // {
+            //     form_data["accounts"] = account_lst
+            // }
 
 
 
@@ -387,7 +477,7 @@ $(document).ready(function () {
     //                    })
     //                }
     //            }
-    //        })
+           })
     //    }
 
 
