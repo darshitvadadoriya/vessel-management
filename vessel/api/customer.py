@@ -3,7 +3,8 @@ import json
 
 @frappe.whitelist()
 def get_contact(doctype,doc_name):
-   
+    print(doc_name)
+    print("\n\n\n\n\n\n\n\n\n")
     results = frappe.db.sql("""
         SELECT 
             contact.name AS contact_name,
@@ -37,8 +38,82 @@ def get_contact(doctype,doc_name):
             'emails': emails,
             'phones': phones
         }
-
     return contacts_dict
+
+
+
+@frappe.whitelist()
+def update_contact_email_ids(contact_name, new_email_ids):
+    
+    email_ids = json.loads(new_email_ids) # getting from client side email list
+
+    # get the contact document
+    contact = frappe.get_doc("Contact", contact_name)
+    email_addresses = {email_dict['email_ids'] for email_dict in email_ids} #getting from client side processed list
+    existing_email_ids = {email_row.email_id for email_row in contact.email_ids} # getting from database
+    added = False 
+
+    # check if email in in database list than add new
+    for new_email in email_ids:
+        email_id = new_email.get("email_ids")
+        try:
+            print(email_id)
+            if email_id not in existing_email_ids:
+                contact.append("email_ids",{
+                    "email_id": email_id,
+                })
+                added = True
+        except Exception as e:
+            print(f"Error processing email: {e}") 
+    
+    for email in existing_email_ids:
+        if email not in email_addresses:
+            email_id_tab = frappe.db.get_value('Contact Email', {'email_id': email,"parent":contact_name},"name")
+            frappe.delete_doc("Contact Email",email_id_tab)   
+    if added:
+        contact.save()
+        
+    else:
+        return "No changes available"
+        
+
+@frappe.whitelist()
+def update_contact_phone_nos(contact_name, new_phone_nos):
+    
+    contact_name = json.loads(contact_name)
+    phone_nos = json.loads(new_phone_nos) # getting from client side email list
+
+    # get the contact document
+    contact = frappe.get_doc("Contact", contact_name)
+    phone_nos_list = {phone_dict['phone_nos'] for phone_dict in phone_nos} #getting from client side processed list
+    existing_phone_nos = {phone_row.phone for phone_row in contact.phone_nos} # getting from database
+    added = False 
+
+    # check if email in in database list than add new
+    for new_phone in phone_nos:
+        phone_no = new_phone.get("phone_nos")
+        
+        try:
+            if phone_no not in existing_phone_nos:
+                contact.append("phone_nos",{
+                    "phone": phone_no,
+                })
+                added = True
+        except Exception as e:
+            print(f"Error processing phone: {e}") 
+    
+    # if emails delete from ui to delete email in db
+    for phone in existing_phone_nos:
+        if phone not in phone_nos_list:
+            phone_nos_tab = frappe.db.get_value('Contact Phone', {'phone': phone,"parent":contact_name},"name")
+            frappe.delete_doc("Contact Phone",phone_nos_tab)   
+    if added:
+        contact.save()
+        
+    else:
+        frappe.msgprint(f"No changes made to contact in phone.")
+
+    
 
 
 
@@ -63,6 +138,7 @@ def create_contact(customer_name,phone,email):
     })
     
     doc.insert()
+
 
 
 

@@ -3,6 +3,7 @@
 {% block head_include %}
     <link rel="stylesheet" href="/assets/vessel/css/list.css" />
     <script src="/assets/vessel/js/list.js"></script>
+    <script src="/assets/vessel/js/payment-entry-list.js"></script>
 {% endblock %}
 
 {% block page_content %}
@@ -26,7 +27,7 @@
                 </div>
             </div>
             <!-- add button -->
-            <a class="btn btn-add" href="/account/new-payment-entry">
+            <a class="btn btn-add" href="/accounts/payment-entry/new-payment-entry">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
                     <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
                   </svg>
@@ -39,7 +40,7 @@
     <div class="list-section">
         <div class="table-responsive">
             <div class="filter-section d-flex">
-                <input type="text" name="mode-of-payment" id="mode-of-payment" placeholder="Mode of Payment" class="filter form-control mr-3">
+                <input type="text" name="mode_of_payment" id="mode_of_payment" placeholder="Mode of Payment" class="filter form-control mr-3">
                 <input type="date" name="posting-date" id="posting-date" placeholder="Posting Date" class="filter form-control mr-3">
             </div>
 
@@ -56,31 +57,8 @@
                        
                     </tr>
                 </thead>
-                <tbody>
-                   <tr>
-                    <td class="check-box"><input type="checkbox" class="checkall" name="checkall" /></td>
-                    <td>Bank</td>
-                    <td>10/05/2024</td>
-                    <td>Metricapex LLC</td>
-                    <td>fafb81d9a9</td>
-                    <td>Draft</td>
-                   </tr>
-
-                   <td class="check-box"><input type="checkbox" class="checkall" name="checkall" /></td>
-                    <td>Bank</td>
-                    <td>10/05/2024</td>
-                    <td>Metricapex LLC</td>
-                    <td>fafb81d9a9</td>
-                    <td>Draft</td>
-                   </tr>
-
-                   <td class="check-box"><input type="checkbox" class="checkall" name="checkall" /></td>
-                   <td>Bank</td>
-                   <td>10/05/2024</td>
-                   <td>Metricapex LLC</td>
-                   <td>fafb81d9a9</td>
-                   <td>Submitted</td>
-                  </tr>
+                <tbody id="data-list">
+                  
                     
                     
                 </tbody>
@@ -90,22 +68,17 @@
 
     </div>
         
-    <!-- pagination section -->
-<div class="pagination">
-    <nav aria-label="Page navigation example">
+ 
+ <!-- pagination section -->
+ <div class="pagination" id="pagination">
+    <nav>
         <ul class="pagination">
-          <li class="previous-btn"><a class="page-link align-items-center d-flex" href="#"><img src="/assets/vessel/files/images/previous-page.png" alt="previous" class="mr-1"> Previous</a></li>
-          <li class="page-item active"><a class="page-link" href="#">1</a></li>
-          <li class="page-item"><a class="page-link" href="#">2</a></li>
-          <li class="page-item"><a class="page-link" href="#">3</a></li>
-          <li class="page-item"><a class="page-link" href="#">4</a></li>
-          <li class="page-item"><a class="page-link" href="#">5</a></li>
-          <li class="next-btn"><a class="page-link align-items-center d-flex" href="#">Next <img src="/assets/vessel/files/images/next-page.png" alt="next" class="ml-1"></a></li>
+          <li class="previous-btn"><a class="page-link align-items-center d-flex" href="javascript:void(0)"><img src="/assets/vessel/files/images/previous-page.png" alt="previous" class="mr-1"> Previous</a></li>
+          
+          <li class="next-btn"><a class="page-link align-items-center d-flex" href="javascript:void(0)" id="nextpage">Next <img src="/assets/vessel/files/images/next-page.png" alt="next" class="ml-1"></a></li>
         </ul>
       </nav>
     </div>
-
-</section>
 
 </div>
 {% endblock %}

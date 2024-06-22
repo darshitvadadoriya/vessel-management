@@ -8,13 +8,14 @@ html, body {
   width : 100%;
   margin: 0;
   padding: 0;
+  transition: none;
 }
 /* sidebar */
 #sidebar {
   position: fixed;
   width: 200px;
   height: 100%;
-  transition: all 0.2s;
+  /* transition: all 0.2s; */
   background: #ffffff;
   border-right: 1px solid #E6EFF5;
 }
@@ -46,14 +47,13 @@ html, body {
   padding-top: 10px;
   padding-bottom: 10px;
   color:#1814F3;
-  transition: all 0.3s;
+  /* transition: all 0.3s; */
 }
 svg{
-  transition: all 0.3s;
+  /* transition: all 0.3s; */
 }
 #sidebar .sidebar-icon svg{
-  transition: all 0.3s;
-  position:absolute;
+  /* transition: all 0.3s; */
   left:20px;
 }
 .sidebar-item-title{
@@ -79,7 +79,7 @@ svg{
 
 #sidebar ul li:before{
   margin-right: 17px;
-  transition: all 0.35s ease;
+  /* transition: all 0.35s ease; */
   top: 0;
   display: block;
   height: 50px;
@@ -112,14 +112,14 @@ svg{
   bottom: 30px;
   cursor: pointer;
   margin-left: 20px;
-  transition: display 0.3s ease;
+  /* transition: display 0.3s ease; */
 }
 .active #sidebarcollapse{
   transform: rotateY(180deg)
 }
 .active .collapse-title{
   display: none;
-  transition: all 0.3s ease;
+  /* transition: all 0.3s ease; */
 }
 
 /* responsive */

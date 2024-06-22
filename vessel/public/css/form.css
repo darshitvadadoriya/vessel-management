@@ -34,7 +34,7 @@ html, body {
     color:#1814F3;
     border-color:#1814F3;
 }
-.btn-add:focus,.btn-add:focus{
+.btn:focus{
     box-shadow: none;
 }
 
@@ -52,6 +52,16 @@ html, body {
 .btn-delete:hover{
     color:#ec645e;
     border-color:#ec645e;
+}
+
+/* action button */
+.btn-form-action
+{
+    width: 36px;
+    height: 38px;
+    border: 1px solid #B7C1C8;
+    padding: 0;
+    border-radius: 8px;
 }
 
 
@@ -105,12 +115,20 @@ html, body {
     margin-right: -15px;
     margin-left: -15px;
 }
-.form-control,.custom-select{
-    border: 1px solid #DFEAF2;
+.form-control{
+    height: 50px;
     border-radius: 8px;
+}
+.form-select{
+    border: 1px solid #DFEAF2!important;
+    border-radius: 8px!important;
     height: 50px;
 }
-.form-control:focus,.custom-select:focus,.form-select.focus
+.tab-select{
+    border:none!important;
+    height: 30px!important;
+}
+.form-control:focus,.form-select:focus,.form-select.focus
 {
     border-color: #1814F3!important;
     box-shadow: none!important;
@@ -240,6 +258,32 @@ html, body {
     width: 500px;
 
 }
+#payment_entry_details td{
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+#payment_entry_details .form-control{
+    border-radius: none;
+    height: 40px;
+}
+/* empty table  */
+#empty_table {
+    height: 100px;
+}
+select {
+    text-indent: 5px;
+  }
+table td{
+    vertical-align: middle!important;
+}
+
+/* hide number type input arrow */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
 /* for mandatory field */
 .red{
     color: red;
@@ -249,6 +293,24 @@ html, body {
 .error-message{
     color: red;
     font-size: 14px;
+}
+
+
+/* custom selectbpx css override */
+.ss-content{
+    height: auto!important;
+    border: solid 1px #DFEAF2!important;
+}
+.ss-content .ss-search input:focus{
+    box-shadow: none;
+}
+.ss-content .ss-list .ss-option{
+    border-radius: 8px;
+}
+
+.ss-content .ss-list .ss-option:hover{
+    background-color: #ffffff00;
+    color: #4d4d4d;
 }
 
 /* responsive  */

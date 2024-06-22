@@ -4,6 +4,7 @@
     <link rel="stylesheet" href="/assets/vessel/css/list.css" />
     <script src="/assets/vessel/js/list.js"></script>
     <script src="/assets/vessel/js/customer-list.js"></script>
+    
 {% endblock %}
 
 {% block page_content %}
@@ -22,8 +23,8 @@
                 </button>
 
                 <div class="dropdown-menu" aria-labelledby="action-button">
-                <a class="dropdown-item" href="#">Delete</a>
-                <a class="dropdown-item" href="#">Export</a>
+                <a class="dropdown-item" id="delete">Delete</a>
+               
                 </div>
             </div>
             <!-- add button -->
@@ -54,22 +55,7 @@
                         <th style="min-width: 100px;">Status</th>
                     </tr>
                 </thead>
-                <tbody id="data-list">
-                    <!-- <tr>
-                        <td class="check-box"><input type="checkbox" class="check" name="check" /></td>
-                        <td class="d-flex align-items-center">
-                            <div class="profile-image mr-2">
-                                <img src="https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="user">
-                            </div>
-                            <div class="user-name">
-                                Jeffery E. Rauscher
-                            </div>
-                        </td>
-                        <td>Bunker Supplier</td>    
-                        <td>Australia</td>
-                        <td>Christopher Lucas</td>
-                        <td>Active</td>
-                    </tr> -->                              
+                <tbody id="data-list">                   
                     
                 </tbody>
             </table>

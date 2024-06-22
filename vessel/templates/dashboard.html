@@ -30,7 +30,12 @@
     <!-- cdn for select box -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/use-bootstrap-select@2.1.1/dist/use-bootstrap-select.min.css">
     <script src="https://cdn.jsdelivr.net/npm/use-bootstrap-select@2.1.1/dist/use-bootstrap-select.min.js"></script>   
-    
+
+   
+    <!-- jquery editable selectboc plugin -->
+    <script src="https://unpkg.com/slim-select@latest/dist/slimselect.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/slim-select@latest/dist/slimselect.css" />
+
 
     {% block head_include %}
       {{head_include}}
@@ -63,7 +68,7 @@
  
         <div id="sidebar">
           <div class="sidebar-header">
-            <a class="navbar-brand" href="#"
+            <a class="navbar-brand" href="/admin"
               ><img src="/files/uniseas_marine.png" alt="Uniseas Marine"
             /></a>
           </div>
@@ -73,6 +78,7 @@
                 class="active"
                 data-toggle="tooltip" data-placement="top" title="Tooltip on top"
               >
+              <a href="/admin">
                 <svg
                   width="24"
                   height="24"
@@ -94,11 +100,13 @@
                     </clipPath>
                   </defs>
                 </svg>
+              </a>
 
                 <a href="/admin" class="sidebar-item-title">Admin</a>
               </li>
 
               <li data-toggle="tooltip" data-placement="top" title="Logistics">
+                <a href="/logistic">
                 <svg
                   width="24"
                   height="24"
@@ -113,11 +121,13 @@
                     d="M1.1106 23.3203C0.968591 23.0359 0.945281 22.7068 1.04579 22.4053C1.1463 22.1037 1.36241 21.8545 1.64663 21.7122L4.298 20.3859C5.13053 19.9696 6.04855 19.7529 6.97934 19.7529C7.91014 19.7529 8.82815 19.9696 9.66069 20.3859L10.1667 20.6389C10.6664 20.8888 11.2174 21.0189 11.776 21.0189C12.3347 21.0189 12.8857 20.8888 13.3853 20.6389L13.8914 20.3859C14.7239 19.9696 15.6419 19.7529 16.5727 19.7529C17.5035 19.7529 18.4215 19.9696 19.2541 20.3859L21.9054 21.7122C22.0512 21.7795 22.182 21.8755 22.29 21.9943C22.398 22.1132 22.481 22.2525 22.5342 22.4041C22.5873 22.5556 22.6095 22.7163 22.5993 22.8766C22.5892 23.0368 22.5469 23.1934 22.4751 23.3371C22.4033 23.4807 22.3034 23.6085 22.1812 23.7128C22.0591 23.817 21.9173 23.8957 21.7641 23.9442C21.611 23.9926 21.4497 24.0098 21.2898 23.9947C21.1299 23.9796 20.9747 23.9325 20.8334 23.8563L18.182 22.5312C17.6824 22.2813 17.1314 22.1512 16.5727 22.1512C16.0141 22.1512 15.4631 22.2813 14.9634 22.5312L14.4574 22.7842C13.6248 23.2005 12.7068 23.4172 11.776 23.4172C10.8452 23.4172 9.92722 23.2005 9.09468 22.7842L8.58863 22.5312C8.08898 22.2813 7.538 22.1512 6.97934 22.1512C6.42068 22.1512 5.8697 22.2813 5.37005 22.5312L2.71989 23.8563C2.57903 23.9268 2.42566 23.9689 2.26854 23.9801C2.11143 23.9913 1.95364 23.9714 1.8042 23.9217C1.65475 23.8719 1.51658 23.7932 1.39757 23.69C1.27856 23.5868 1.18105 23.4611 1.1106 23.3203Z"
                   />
                 </svg>
+                </a>
 
                 <a href="/logistic" class="sidebar-item-title">Logistics</a>
               </li>
 
               <li data-toggle="tooltip" data-placement="top" title="Accounts">
+                <a href="/accounts">
                 <svg
                   width="24"
                   height="24"
@@ -142,11 +152,13 @@
                     </clipPath>
                   </defs>
                 </svg>
+                </a>
 
-                <a href="/account" class="sidebar-item-title">Accounts</a>
+                <a href="/accounts" class="sidebar-item-title">Accounts</a>
               </li>
 
               <li data-toggle="tooltip" data-placement="top" title="Analytics">
+                <a href="/analytics">
                 <svg
                   width="24"
                   height="24"
@@ -168,6 +180,7 @@
                     </clipPath>
                   </defs>
                 </svg>
+                </a>
 
                 <a href="/analytics" class="sidebar-item-title">Analytics</a>
               </li>
@@ -235,6 +248,7 @@
 
 
     <section class="page-section">
+      <div class="hidden" id="logged_in_user"></div>
           <!-- Navbar -->
           <nav class="navbar">
             <!-- breadcrumbs -->
@@ -256,10 +270,10 @@
                 <!-- user profile -->
                 <div class="dropdown user-profile">
                   
-                    <img src="https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="user profile" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-                    <a class="dropdown-item" href="#">Profile</a>
-                    <a class="dropdown-item" href="/api/method/logout">Logout</a>
+                    <img src="/assets/vessel/files/images/default_user.jpg  " alt="user profile" id="profile" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <div class="dropdown-menu dropdown-menu-right" aria-labelledby="profiloe">
+                    <a class="dropdown-item" href="#" id="profile-page">Profile</a>
+                    <a class="dropdown-item" id="logout">Logout</a>
                   </div>
                 </div>
             </div>

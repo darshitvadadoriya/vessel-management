@@ -27,6 +27,34 @@ $(document).ready(function () {
     });
 
 
+            // get languages
+    get_language()
+    function get_language() {
+
+       $.ajax({
+           url: "/api/resource/Language",
+           type: "GET",
+           dataType: "json",
+           data: {
+               fields: JSON.stringify(["name","language_name"]),
+               limit_page_length: "None"
+           },
+           success: function (data) {
+               var language = data.data
+               
+               $.each(language,function(i,language){
+                   
+                   $("#language").append(`<option value=${language.name}>${language.language_name}-${language.name}</option>`)
+               })
+
+           },
+           error: function (xhr, status, error) {
+               // Handle the error response here
+               console.dir(xhr); // Print the XHR object for more details
+
+           }
+       })
+   }
 
     // get user data 
     var url = window.location.href
@@ -41,11 +69,11 @@ $(document).ready(function () {
             dataType: "json",
             data: {
                 filters: JSON.stringify([["name", "=", name]]),
-                fields: JSON.stringify(["name", "user_image", "email", "first_name", "full_name", "middle_name", "last_name", "username", "language", "enabled", "location", "phone", "mobile_no", "birth_date"])
+                fields: JSON.stringify(["name", "user_image", "email", "first_name", "full_name", "middle_name", "last_name", "username", "language", "enabled", "location", "phone", "mobile_no", "birth_date","interest"])
             },
             success: function (data) {
                 var user_info = data.data[0]
-                
+                console.log(user_info);
                 user_image = user_info.user_image
                 user_id = user_info.name
                 var user_profile_img = user_info.user_image && user_info.user_image.includes("https") ? user_info.user_image : (user_info.user_image ? window.location.origin + user_info.user_image : window.location.origin + "/assets/vessel/files/images/default_user.jpg")
@@ -65,7 +93,7 @@ $(document).ready(function () {
                 $("#mobile").val(user_info.mobile_no)
                 $("#location").val(user_info.location)
                 $("#date_of_birth").val(user_info.birth_date)
-                $("#state").val(user_info.state)
+                $("#state").val(user_info.interest)
 
 
 
@@ -197,7 +225,7 @@ $(document).ready(function () {
                     // delete old file
                     $.ajax({
                         type: 'DELETE',
-                        url: '/api/method/vessel.www.user.updateuser.delete_old_file',
+                        url: '/api/method/vessel.api.updateuser.delete_old_file',
                         data: {
                             file_url: user_image,
                             attached_to_name: user_id,
@@ -206,13 +234,10 @@ $(document).ready(function () {
                         },
                         success: function(deleteResponse) {
                             console.log(deleteResponse);
-                            console.log('File deleted successfully.');
-                            // Handle success
                         },
                         error: function(xhr, status, error) {
-                            console.error('Failed to delete file:', error);
                             console.dir(xhr)
-                            // Handle error
+                            
                         }
                     });
                 },
@@ -261,5 +286,48 @@ $(document).ready(function () {
             })
         }
     })
+
+
+
+   $("#delete").click(function(){
+
+    if($("#logged_in_user").text() != $("#email").val())
+    {
+        // delete file
+        $.ajax({
+        url: "/api/resource/User/" + user_id,
+        type: "DELETE",
+        dataType: "json",
+        
+        success: function (data) {
+            console.log(data);
+            notyf.success({
+                message: "Deleted record  successfully",
+                duration: 5000
+            })
+            setTimeout(() => {
+                    window.location.href = "/user"
+            }, 3000);
+
+        },
+        error: function (xhr, status, error) {
+            // Handle the error response here
+            console.dir(xhr); // Print the XHR object for more details
+            
+        }
+    })
+    }
+    else{
+        notyf.error({
+            message: "Logged In User can not be deleted",
+            duration: 5000
+        })
+    }
+   
+  })
+
+
+
+    
 
 })

@@ -3,6 +3,8 @@ $(document).ready(function(){
     // set global variable for show current page
     var current_page = 1
     var filters = [];
+    // Create an instance of Notyf
+    var notyf = new Notyf();
 
         // get count of records
         function get_count(filters){
@@ -65,7 +67,48 @@ $(document).ready(function(){
     
    
        
-    
+       
+// bulk delete records
+function bulk_delete(delete_list) {
+    $.ajax({
+        url: "/api/method/vessel.api.delete.bulk_delete",
+        type: "POST",
+        contentType: "application/json",
+        dataType: "json",
+        data: JSON.stringify({
+            doctype: "Account",
+            delete_list: delete_list,
+        }),
+        success: function (response) {
+            console.log(response);
+            
+            if (response.message == true) {
+                notyf.success({
+                        message:"Data deleted successfully",
+                        duration:3000
+                });
+
+                setTimeout(()=>{
+                    window.location.href= "/accounts/account"
+                },2000)
+            }
+
+        },
+        error: function (xhr, status, error) {
+            console.dir(xhr);
+            console.log(JSON.parse(JSON.parse(xhr.responseJSON._server_messages)[0]).message);
+            var error_msg = JSON.parse(JSON.parse(xhr.responseJSON._server_messages)[0]).message.replace(/<a([^>]*)>/g, '<div style="font-weight: bold; color: white;">')
+            .replace(/<\/a>/g, '</div>');
+            
+            notyf.error({
+                message:error_msg,
+                duration:10000
+        });
+        }
+    });
+}
+
+
 
     function show_filtered_list(data_limit_start,filters){
          // clear table data after move next page
@@ -87,14 +130,14 @@ $(document).ready(function(){
                 $.each(response.data,function(i,data){
                                       
                     $('tbody').append(` <tr>
-                    <td class="check-box"><input type="checkbox" class="check" name="check" /></td>
+                    <td class="check-box"><input type="checkbox" class="check" name="check" id="${data.name}" data-userid="${data.name}"/></td>
 
-                    <td>${data.name}</td>
+                    <td><a href="/accounts/account/${data.name}">${data.name}</a></td>
                     <td>${data.company}</td>
                     <td>${data.parent_account}</td>
                     <td>${data.account_type}</td>
                     <td class="check-box">
-                        <input type="checkbox" class="check" name="check" ${data.is_group === 1 ? 'checked' : ''} />
+                        <input type="checkbox" class="is_group" name="check" ${data.is_group === 1 ? 'checked' : ''} />
                     </td>
                     
                    
@@ -383,5 +426,34 @@ $(document).ready(function(){
 
     //   set onload if fielter is available to set in particulat fields
     get_filter_data()
+
+
+       // on click delete to get checked data list
+   $(document).on("click","#delete", function () {
+    if(selected_list.length!=0)
+    {
+        swal({
+            title: "Are you sure?",
+            text: "Are you sure want to delete data?",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+        .then((willDelete) => {
+            if (willDelete) {
+                var delete_list = []
+                // get checked list from localstorage
+                console.log(selected_list);
+                $.each(selected_list, function (index, delete_item) {
+                    console.log(delete_item);
+                    delete_list.push(delete_item.id)
+        
+                })
+                console.log(delete_list)
+                bulk_delete(delete_list)
+            } 
+        });
+    }    
+})
 
 })

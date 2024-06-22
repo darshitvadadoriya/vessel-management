@@ -1,8 +1,13 @@
+
+
 $(document).ready(function(){
 
     // set global variable for show current page
     var current_page = 1
     var filters = [];
+
+    // Create an instance of Notyf
+    var notyf = new Notyf();
 
         // get count of records
         function get_count(filters){
@@ -120,6 +125,42 @@ $(document).ready(function(){
     }
 
 
+
+    function bulk_delete(delete_list) {
+            $.ajax({
+                url: "/api/method/vessel.api.delete.bulk_delete",
+                type: "POST",
+                contentType: "application/json",
+                dataType: "json",
+                data: JSON.stringify({
+                    doctype: "Customer",
+                    delete_list: delete_list,
+                }),
+                success: function (response) {
+                    console.log(response);
+                   
+                    if (response.message == true) {
+
+                        notyf.success({
+                           message:"Data deleted successfully",
+                           duration:3000
+                    });
+
+                    setTimeout(()=>{
+                        window.location.href= "/logistic/customer"
+                   },2000)
+                    }
+                    
+        
+                },
+                error: function (xhr, status, error) {
+                    console.dir(xhr);
+                }
+            });
+        }
+
+
+
     // get page number from url
     function page_number(){
         const urlParams = new URLSearchParams(window.location.search);
@@ -184,11 +225,16 @@ $(document).ready(function(){
         
         const lastpage = $(".next-btn .page-link").data("lastpage")
         const current_page_num =  page_number()
+        const total_page =  localStorage.getItem("total_pages")
         if(lastpage == current_page_num)
         {
             $('.next-btn').addClass('diable-btn');
             $('.previous-btn').removeClass('diable-btn');
-        }  
+        } 
+        else if(total_page == current_page_num) {
+            $('.next-btn').addClass('diable-btn');
+            $('.previous-btn').removeClass('diable-btn');   
+        }
         else if(current_page_num == 1){
             $('.previous-btn').addClass('diable-btn');
             $('.next-btn').removeClass('diable-btn');
@@ -299,13 +345,16 @@ $(document).ready(function(){
 
    
     
-     // Handle filter customername
+     // handle filter customername
+     let timer;
      $('#customer-name').on('input', function() {
-        customer_filters() //always set before the get filter from url bexause set filter in url using this function 
-        var field_filter_data = get_filter_from_urls()
-        show_filtered_list(0,field_filter_data)
-        get_count(field_filter_data)
-        
+        clearTimeout(timer); // Clear previous timer for not every time to load on system ( reduce load on server filter time)
+        timer = setTimeout(() => {
+            customer_filters() //always set before the get filter from url bexause set filter in url using this function 
+            var field_filter_data = get_filter_from_urls()
+            show_filtered_list(0,field_filter_data)
+            get_count(field_filter_data)
+        },500)
 
     });
 
@@ -381,4 +430,34 @@ $(document).ready(function(){
     //   set onload if fielter is available to set in particulat fields
     get_filter_data()
 
+        
+    
+    // on click delete to get checked data list
+        $(document).on("click","#delete", function () {
+            if(selected_list.length!=0)
+            {
+                swal({
+                    title: "Are you sure?",
+                    text: "Are you sure want to delete data?",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                })
+                .then((willDelete) => {
+                    if (willDelete) {
+                        var delete_list = []
+                        // get checked list from localstorage
+                        $.each(selected_list, function (index, delete_item) {
+                            delete_list.push(delete_item.id)
+                
+                        })
+                        console.log(delete_list)
+                        bulk_delete(delete_list)
+                    } 
+                });
+            }    
+        })
+      
 })
+
+

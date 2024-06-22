@@ -8,7 +8,7 @@ html, body {
     position: relative;
 	width: calc(100% - 200px);
     left: 200px;
-	transition: all .3s ease;
+	transition: none;
     min-height: 100%;
     overflow: auto;
     background: #f5f7fa;
@@ -26,10 +26,19 @@ html, body {
     background-color: #ffffff;
     border-bottom: 1px solid #E6EFF5;
 }
-.navbar .breadcrumbs{
+.navbar .breadcrumbs,.navbar .breadcrumbs a{
     font-weight: 600;
     font-size: 18px;
     color: #343C6A;
+    text-transform: capitalize;
+}
+.navbar .breadcrumbs .arrow{
+    color: #B7C1C8;
+}
+.navbar .breadcrumbs .last-breadcrumb{
+    pointer-events: none;
+    opacity: 0.5;
+    text-transform: none;
 }
 
 /* profile-section */
@@ -81,9 +90,16 @@ html, body {
     overflow: visible;
     z-index: 10000!important;
 }
+.hidden{
+    display: none;
+}
 
 /* responsive */
-
+@media screen and (max-width:767px){
+    .navbar .breadcrumbs{
+        font-size: 16px;
+    }
+  }
 @media screen and (max-width:767px){
     .breadcrumbs{
       display: none;

@@ -1,5 +1,4 @@
-// Create an instance of Notyf
-var notyf = new Notyf();
+
 
 $(document).ready(function () {
 
@@ -8,6 +7,9 @@ $(document).ready(function () {
     var filters = [];
     var page_no
     var data_limit_start = 0
+
+    // Create an instance of Notyf
+    var notyf = new Notyf();
 
 
     // get count of records
@@ -52,21 +54,26 @@ $(document).ready(function () {
     // bulk delete records
     function bulk_delete(delete_list) {
         $.ajax({
-            url: "/api/method/vessel.www.user.userlist.delete_user",
+            url: "/api/method/vessel.api.delete.bulk_delete",
             type: "POST",
             contentType: "application/json",
             dataType: "json",
             data: JSON.stringify({
-                user_lst: delete_list,
+                doctype: "User",
+                delete_list: delete_list,
             }),
             success: function (response) {
                 console.log(response);
-                // window.location.href= "/user/user-list"
+                
                 if (response.message == true) {
-                    console.log("aaaaa")
-                    notyf.success(
-                        "Password reset instructions have been sent to your email"
-                    );
+                    notyf.success({
+                            message:"Data deleted successfully",
+                            duration:3000
+                    });
+
+                    setTimeout(()=>{
+                        window.location.href= "/user"
+                    },2000)
                 }
 
             },
@@ -335,7 +342,7 @@ $(document).ready(function () {
     // Handle filter username and contact
     let timer;
     $('#user-name, #contact-no').on('input', function () {
-        clearTimeout(timer); // Clear previous timer for not every time to load on system (inshot reduce load on server filter time)
+        clearTimeout(timer); // Clear previous timer for not every time to load on system ( reduce load on server filter time)
         timer = setTimeout(() => {
             console.log($("#user-name"));
             user_filters(); // Always set before getting filter from URL
@@ -374,7 +381,7 @@ $(document).ready(function () {
         if (contact_no_filter !== '') {
             filters.push('mobile_no=' + encodeURIComponent('%' + contact_no_filter + '%'));
         }
-        if (user_status) {
+        if (user_status!== '') {
             filters.push('enabled=' + encodeURIComponent('%' + user_status + '%'));
         }
 
@@ -440,37 +447,34 @@ $(document).ready(function () {
     get_filter_data()
 
 
+        // on click delete to get checked data list
+        $(document).on("click","#delete", function () {
+            if(selected_list.length!=0)
+            {
+                swal({
+                    title: "Are you sure?",
+                    text: "Are you sure want to delete data?",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                })
+                .then((willDelete) => {
+                    if (willDelete) {
+                        var delete_list = []
+                        // get checked list from localstorage
+                        $.each(selected_list, function (index, delete_item) {
+                            delete_list.push(delete_item.id)
+                
+                        })
+                        console.log(delete_list)
+                        bulk_delete(delete_list)
+                    } 
+                });
+            }    
+        })
 
     
 
 
 });
 
-// bulk delete records
-export default function bulk_delete(delete_list) {
-    $.ajax({
-        url: "/api/method/vessel.www.user.userlist.delete_user",
-        type: "POST",
-        contentType: "application/json",
-        dataType: "json",
-        data: JSON.stringify({
-            user_lst: delete_list,
-        }),
-        success: function (response) {
-            console.log(response);
-           
-            if (response.message == true) {
-                notyf.success(
-                    "Data deleted successfully"
-                );
-            }
-            setTimeout(()=>{
-                 window.location.href= "/user"
-            },2000)
-
-        },
-        error: function (xhr, status, error) {
-            console.dir(xhr);
-        }
-    });
-}

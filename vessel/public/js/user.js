@@ -7,6 +7,35 @@ $(document).ready(function () {
         files = $(this)[0].files;        
     });
 
+    // get languages
+    get_language()
+     function get_language() {
+
+        $.ajax({
+            url: "/api/resource/Language",
+            type: "GET",
+            dataType: "json",
+            data: {
+                fields: JSON.stringify(["name","language_name"]),
+                limit_page_length: "None"
+            },
+            success: function (data) {
+                var language = data.data
+                
+                $.each(language,function(i,language){
+                    
+                    $("#language").append(`<option value=${language.name}>${language.language_name}-${language.name}</option>`)
+                })
+
+            },
+            error: function (xhr, status, error) {
+                // Handle the error response here
+                console.dir(xhr); // Print the XHR object for more details
+
+            }
+        })
+    }
+
 
    
 
@@ -20,24 +49,51 @@ $(document).ready(function () {
 
             form_data[field.name] = field.value;
         });
+        console.log(form_data);
 
 
         // Error handler 
         // check first_name nad email address is filled
 
+        let mobile_no = form_data['mobile_no'];
+        let phone = form_data['mobile_no'];
         if (!form_data['first_name']) {
-            $('#first_name_error').remove(); // Remove any existing error message
-            $('#first_name').after('<span id="first_name_error" class="error-message">Please first name is mandatory.</span>');
+                $('#first_name_error').remove(); // Remove any existing error message
+                $('#first_name').after('<span id="first_name_error" class="error-message">Please first name is mandatory.</span>');
         }
+        else if(validateEmail(email) == false)
+            {
+                $('#email_error').remove(); // Remove any existing error message
+                $('#email').after('<span id="email_error" class="error-message">Please enter valid email address.</span>');
+            }
         else if (!form_data['email']) {
             $('#email_error').remove(); // Remove any existing error message
             $('#email').after('<span id="email_error" class="error-message">Please email is mandatory.</span>');
         }
+        // else if (form_data['phone'] != "") {
+        //     if (form_data['phone'].length != 10) {
+        //         $('#phone_error').remove(); // Remove any existing error message
+        //         $('#phone').after('<span id="phone_error" class="error-message">Valid only 10 digits in mobile.</span>');
+        //     }
+        // }
+        // else if (form_data['mobile_no'] != "") {
+        //     console.log("Mobile number length is:", typeof(form_data['mobile_no'].length));
+        //     if (form_data['mobile_no'].length != 10) {
+        //         console.log("under 10 digit");
+        //         $('#mobile_no_error').remove(); // Remove any existing error message
+        //         $('#mobile_no').after('<span id="mobile_no_error" class="error-message">Valid only 10 digits in mobile.</span>');
+        //     } 
+        // }           
         else {
-            // create_user(form_data)
+            if (files.length > 0 ) {
+                var file_data = files[0]
+                 upload_file(file_data); // Pass the first file to the upload_file function
+             } else {
+                 create_user(form_data) // save data without image
+             }
         }
-        console.log(form_data);
-
+        
+        
         $("#first_name").on("input", function () {
             $('#first_name_error').remove(); // Remove first name error message
         })
@@ -46,12 +102,7 @@ $(document).ready(function () {
         })
 
 
-        if (files.length > 0 ) {
-           var file_data = files[0]
-            upload_file(file_data); // Pass the first file to the upload_file function
-        } else {
-            create_user(form_data) // save data without image
-        }
+     
 
         function upload_file(files) {
             console.log(files)
@@ -94,7 +145,11 @@ $(document).ready(function () {
 
                     console.log(data.data.name);
                     var user_id = data.data.name
-                    window.location.href = "/user/"+user_id
+                   
+                    setTimeout(() => {
+                        window.location.href = "/user/"+user_id
+                    }, 2000);
+                    
                     console.log("ENTERED.................")
                     notyf.success({
                         message: "User created successfully",
@@ -106,10 +161,19 @@ $(document).ready(function () {
                     // Handle the error response here
                     console.error('Error: ' + error); // Print the error to the console
                     console.error('Status: ' + status); // Print the status to the console
+                    console.dir(xhr)
+                    var error = JSON.stringify(xhr.responseJSON._server_messages)
+                    console.log(error.message)
                     console.dir(xhr.responseJSON.exc_type); // Print the XHR object for more details
                     if (xhr.responseJSON.exc_type == "DuplicateEntryError") {
                         notyf.error({
                             message: "User already added",
+                            duration: 5000
+                        })
+                    }
+                    if (xhr.responseJSON.exc_type == "UniqueValidationError") {
+                        notyf.error({
+                            message: "Please mobile no set unique",
                             duration: 5000
                         })
                     }
@@ -120,6 +184,12 @@ $(document).ready(function () {
 
 
 
-   
+    // email validation
+  function validateEmail(email) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (emailRegex.test(email) == false || email == "") {
+      return "please entre valid address";
+    }
+  }
 
 })

@@ -10,9 +10,8 @@ $(document).ready(function(){
      var account_lst = []
      var customer_contact = []
 
-    //  country select field
-    var countryoptions =  new UseBootstrapSelect(document.getElementById("country"));
-     
+    //  country select field 
+  
  
     //  upload customer image
      $('#upload-image').change(function () {
@@ -23,23 +22,63 @@ $(document).ready(function(){
 
     // on click add email to add new row
     $("#add_email").click(function(){
-        var customer_email = $("#email_address_value").val()
-        console.log(customer_email)
-        $(`<div class="row w-100 justify-content-between email_row">
-                <div class="email">${customer_email}</div>
-                <div class="delete"><img src="/assets/vessel/files/images/delete.png" alt="delete"></div>
-            </div>`).insertBefore("#customer_email_input")
-        $("#email_address_value").val("")
+        var email_value = $("#email_address_value").val()
+        if(email_value=="")
+            {
+                $('#email_address_error').remove();
+                $('#customer_email_input').append('<span id="email_address_error" class="error-message">Please enter email address.</span>');
+                $('#customer_email_input').css({"padding-bottom":"0"})
+                
+            }
+            else if(validateEmail(email_value)){    
+                $('#email_address_error').remove();
+                $('#customer_email_input').append('<span id="email_address_error" class="error-message">Please enter valid email address.</span>');
+            }
+            else{
+                $('#email_address_error').remove();
+                $('#customer_phone_input').css({"padding-bottom":"15px"})
+                var customer_email = $("#email_address_value").val()
+                console.log(customer_email)
+                $(`<div class="row w-100 justify-content-between email_row">
+                        <div class="email">${customer_email}</div>
+                        <div class="delete"><img src="/assets/vessel/files/images/delete.png" alt="delete"></div>
+                    </div>`).insertBefore("#customer_email_input")
+                $("#email_address_value").val("")
+
+            }
+       
     })
 
     // on click add phone to add new row
     $("#add_phone").click(function(){
-        var phone_no_value = $("#phone_no_value").val()
-        $(`<div class="row w-100 justify-content-between phone_row">
-                <div class="phone">${phone_no_value}</div>
-                <div class="delete"><img src="/assets/vessel/files/images/delete.png" alt="delete"></div>
-            </div>`).insertBefore("#customer_phone_input")
-        $("#phone_no_value").val("")
+        var phone_value = $("#phone_no_value").val()
+        if(phone_value=="")
+        {
+            $('#phone_no_error').remove();
+            $('#customer_phone_input').append('<span id="phone_no_error" class="error-message">Please enter phone no.</span>');
+            $('#customer_phone_input').css({"padding-bottom":"0"})
+            
+        }
+        else if(phone_value.length!=10)
+            {
+                $('#phone_no_error').remove();
+                $('#customer_phone_input').append('<span id="phone_no_error" class="error-message">Please allow only 10 digits.</span>');
+                
+                
+            }
+        else
+        {
+            $('#phone_no_error').remove();
+            $('#customer_phone_input').css({"padding-bottom":"15px"})
+            var phone_no_value = $("#phone_no_value").val()
+            $(`<div class="row w-100 justify-content-between phone_row">
+                    <div class="phone">${phone_no_value}</div>
+                    <div class="delete"><img src="/assets/vessel/files/images/delete.png" alt="delete"></div>
+                </div>`).insertBefore("#customer_phone_input")
+            $("#phone_no_value").val("")
+        }
+
+       
     })
 
         // on click delete icon to delete particular clicked row
@@ -61,53 +100,58 @@ $(document).ready(function(){
                 var account_id = "account_id" + $('#customer-accounts tbody tr').length
 
                 $("#account_table").append(`<tr class="select-accounts">
-                <td class="check"><input type="checkbox" class="checkbox" name="checkbox" /></td>
-                <td>
-                    <select class="company form-select" id="${company_id}" data-searchable="true">
+                    <td class="check"><input type="checkbox" class="checkbox" name="checkbox" /></td>
+                    <td>
+                       
+                    <select id="${company_id}" class="company form-select form-control tab-select">
                         <option></option>
-                    </select>
-                </td>
-                <td>
-                    
-                    <select class="account form-select" id="${account_id}" data-searchable="true">
-                    <option></option>
-                    </select>
-                </td>
-            </tr>`)
-
-                var company_list_data = new UseBootstrapSelect(document.getElementById(company_id));
-                var account_list_data = new UseBootstrapSelect(document.getElementById(account_id));
+                     </select>
+                    </td>
+                    <td>
+                        
+                        <select class="account form-select form-control tab-select ${account_id}" id="${account_id}" data-searchable="true">
+                               <option></option> 
+                     </select>
+                    </td>
+                </tr>`)
 
 
-                get_company(function (data) {
-                    data.forEach(function (company) {
-                        company_list_data.addOption(company.name, company.name)
-                    })
+            
+                get_company(function(data) {
+                    data.forEach(function(company) {
+                        $("#" + company_id).append(`<option value="${company.name}">${company.name}</option>`);
+                    });
                 });
-
-                var companyval = $("#" + company_id).val()
-
-                set_account(companyval)
+            
+                var companyval = $("#" + company_id).val();
+            
+                set_account(companyval);
+            
                 function set_account(company_name) {
-
+                    $("#" + account_id).empty()
                     setTimeout(() => {
                         get_account(function (data) {
+                            console.log(data);
+                                console.log($("#"+account_id));
                             data.forEach(function (account) {
-                                account_list_data.addOption(account.name, account.name)
+                                $("#"+account_id).append(`<option value="${account.name}">${account.name}</option>`)
                             })
                         }, company_name)
-                    }, 500)
+                       
+                        
+                    }, 200)
                 }
-
-                // change company value to get company wise account list
-                document.getElementById(company_id).addEventListener('change', function () {
-                    $("#" + account_id).empty()
-                    var cange_companyval = $("#" + company_id).val()
-                    set_account(cange_companyval)
-                })
+            
+                document.getElementById(company_id).addEventListener('change', function() {
+                    $("#" + account_id).empty();
+                    var change_companyval = $("#" + company_id).val();
+                    console.log(change_companyval);
+                    set_account(change_companyval);
+                });
         }
+    
 
-
+        
 
 
     // onclick delete row get checked checkbpx
@@ -136,7 +180,7 @@ $(document).ready(function(){
             form_data[field.name] = field.value;
         });
         // set country in object
-        form_data["country"] = countryoptions.getValue()
+        form_data["custom_country"] = $("#country").val()
 
 
         
@@ -274,6 +318,9 @@ $(document).ready(function(){
                         "email": email_list              
                     }
                     create_contact(customer_contact)
+                    setTimeout(() => {
+                        window.location.href = "/logistic/customer/"+customer_id
+                    }, 2000);
                     notyf.success({
                         message: "New customer created",
                         duration: 5000
@@ -304,7 +351,9 @@ $(document).ready(function(){
             contentType: "application/json",
             data: JSON.stringify(customer_contact),
             success: function(response) {
-              
+                setTimeout(() => {
+                    window.location.href = "/logistic/customer/"+customer_id
+                }, 2000);
             },
         
             error: function (xhr, status, error) {
@@ -355,9 +404,10 @@ $(document).ready(function(){
             },
             success: function (data) {
                 var country_list = data.data
+                
                 country_list.forEach(function(country,i){
                     // countryoptions
-                    countryoptions.addOption(country.name,country.name)
+                    $("#country").append(`<option value="${country.name}">${country.name}</option>`)
                 })
 
                
@@ -401,7 +451,7 @@ $(document).ready(function(){
             dataType: "json",
             data: {
                 fields: JSON.stringify(["name"]),
-                filters: JSON.stringify([["company", "=", companyval]]),
+                filters: JSON.stringify([["company", "=", companyval],["is_group", "=", "0"]]),
                 limit_page_length: "None"
             },
             success: function (data) {
@@ -424,5 +474,16 @@ $(document).ready(function(){
             $(this).prop("checked", isChecked);
         });
     })
+
+
+    // email validation
+  function validateEmail(email) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (emailRegex.test(email) == false || email == "") {
+      return "please entre valid address";
+    }
+  }
+
+    
 
 })

@@ -1,10 +1,10 @@
-import bulk_delete from './user-list.js';
+
 
 $(document).ready(function () {
 
     
     
-    var selected_list = []; //for store selected id for bulk delete
+    window.selected_list = []; //for store selected id for bulk delete
 
     
 
@@ -41,6 +41,7 @@ $(document).ready(function () {
     // check all checkbox on click one checkboc
     $(".checkall").click(function () {
         var isChecked = $(this).prop("checked");
+        console.log(isChecked);
         $(".check").each(function () {
             $(this).prop("checked", isChecked);
         });
@@ -154,31 +155,9 @@ $(document).ready(function () {
     }
 
     
-        // on click delete to get checked data list
-    $(document).on("click","#delete", function () {
-        if(selected_list.length!=0)
-        {
-            swal({
-                title: "Are you sure?",
-                text: "Are you sure want to delete data?",
-                icon: "warning",
-                buttons: true,
-                dangerMode: true,
-            })
-            .then((willDelete) => {
-                if (willDelete) {
-                    var delete_list = []
-                    // get checked list from localstorage
-                    $.each(selected_list, function (index, delete_item) {
-                        delete_list.push(delete_item.id)
-            
-                    })
-                    console.log(delete_list)
-                    bulk_delete(delete_list)
-                } 
-            });
-        }    
-    })
+    
 
 
 })
+
+

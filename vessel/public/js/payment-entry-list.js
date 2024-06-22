@@ -3,11 +3,13 @@ $(document).ready(function(){
     // set global variable for show current page
     var current_page = 1
     var filters = [];
+    // Create an instance of Notyf
+    var notyf = new Notyf();
 
         // get count of records
         function get_count(filters){
             $.ajax({
-                url: "/api/resource/Account", 
+                url: "/api/resource/Journal Entry", 
                 type: "GET", 
                 dataType: "json",
                 data: {
@@ -65,18 +67,59 @@ $(document).ready(function(){
     
    
        
-    
+       
+// bulk delete records
+function bulk_delete(delete_list) {
+    $.ajax({
+        url: "/api/method/vessel.api.delete.bulk_delete",
+        type: "POST",
+        contentType: "application/json",
+        dataType: "json",
+        data: JSON.stringify({
+            doctype: "Account",
+            delete_list: delete_list,
+        }),
+        success: function (response) {
+            console.log(response);
+            
+            if (response.message == true) {
+                notyf.success({
+                        message:"Data deleted successfully",
+                        duration:3000
+                });
+
+                setTimeout(()=>{
+                    window.location.href= "/accounts/payment-entry"
+                },2000)
+            }
+
+        },
+        error: function (xhr, status, error) {
+            console.dir(xhr);
+            console.log(JSON.parse(JSON.parse(xhr.responseJSON._server_messages)[0]).message);
+            var error_msg = JSON.parse(JSON.parse(xhr.responseJSON._server_messages)[0]).message.replace(/<a([^>]*)>/g, '<div style="font-weight: bold; color: white;">')
+            .replace(/<\/a>/g, '</div>');
+            
+            notyf.error({
+                message:error_msg,
+                duration:10000
+        });
+        }
+    });
+}
+
+
 
     function show_filtered_list(data_limit_start,filters){
          // clear table data after move next page
          $("#data-list").empty();
 
         $.ajax({
-            url: "/api/resource/Account", 
+            url: "/api/resource/Journal Entry", 
             type: "GET", 
             dataType: "json",
             data: {
-                fields: JSON.stringify(["name","company","parent_account","account_type","is_group"]),
+                fields: JSON.stringify(["name","mode_of_payment","posting_date","company","docstatus"]),
                 filters: JSON.stringify(filters),
                 order_by: "modified desc",
                 limit_start:data_limit_start,
@@ -87,15 +130,14 @@ $(document).ready(function(){
                 $.each(response.data,function(i,data){
                                       
                     $('tbody').append(` <tr>
-                    <td class="check-box"><input type="checkbox" class="check" name="check" /></td>
+                    <td class="check-box"><input type="checkbox" class="check" name="check" id="${data.name}" data-userid="${data.name}"/></td>
 
-                    <td>${data.name}</td>
+                    <td><a href="/accounts/payment-entry/${data.name}">${data.name}</a></td>
                     <td>${data.company}</td>
-                    <td>${data.parent_account}</td>
-                    <td>${data.account_type}</td>
-                    <td class="check-box">
-                        <input type="checkbox" class="check" name="check" ${data.is_group === 1 ? 'checked' : ''} />
-                    </td>
+                    <td>${data.posting_date}</td>
+                    <td>${data.mode_of_payment}</td>
+                    <td>${data.docstatus}</td>
+                   
                     
                    
                 </tr>`)
@@ -297,7 +339,7 @@ $(document).ready(function(){
    
     
      // Handle filter accounts
-     $('#account-name, #company').on('input', function() {
+     $('#mode_of_payment').on('input', function() {
         
         account_filters() //always set before the get filter from url bexause set filter in url using this function 
         var field_filter_data = get_filter_from_urls()
@@ -313,15 +355,13 @@ $(document).ready(function(){
         var filters = [];
     
         // Add name filter if not empty
-        var account_name_filter = $('#account-name').val().trim();
-        var company_filter = $('#company').val().trim();
+        var mode_of_payment = $('#mode_of_payment').val().trim();
+        
     
-        if (account_name_filter !== '') {
-            filters.push('name=' + encodeURIComponent('%' + account_name_filter + '%'));
+        if (mode_of_payment !== '') {
+            filters.push('name=' + encodeURIComponent('%' + mode_of_payment + '%'));
         }
-        if (company_filter !== '') {
-            filters.push('company=' + encodeURIComponent('%' + company_filter + '%'));
-        }
+        
     
         // Construct the query string
         var queryString = filters.join("&")    
@@ -334,7 +374,7 @@ $(document).ready(function(){
             // Remove the leading '?' and split the parameters
             var existingParamsArray = existingParams.substring(1).split('&');
             // Filter out the existing parameters which are not related to filtering
-            existingParamsArray = existingParamsArray.filter(param => !param.startsWith('name=') && !param.startsWith('company='));
+            existingParamsArray = existingParamsArray.filter(param => !param.startsWith('mode_of_payment='));
             // Join the existing parameters with the new ones
             queryString = existingParamsArray.join('&') + (queryString ? (existingParamsArray.length > 0 ? '&' : '') + queryString : '');
         }
@@ -374,8 +414,8 @@ $(document).ready(function(){
       
         urlParams.forEach((value, key) => {
             if (key !== "page" && key !== null) {
-                key === "name" ? $("#account-name").val(value.replaceAll("%","")) : null;
-                key === "company" ? $("#company").val(value.replaceAll("%","")) : null;
+                key === "mode_of_payment" ? $("#mode_of_payment").val(value.replaceAll("%","")) : null;
+                
               }
         });        
       }
@@ -383,5 +423,34 @@ $(document).ready(function(){
 
     //   set onload if fielter is available to set in particulat fields
     get_filter_data()
+
+
+       // on click delete to get checked data list
+   $(document).on("click","#delete", function () {
+    if(selected_list.length!=0)
+    {
+        swal({
+            title: "Are you sure?",
+            text: "Are you sure want to delete data?",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+        .then((willDelete) => {
+            if (willDelete) {
+                var delete_list = []
+                // get checked list from localstorage
+                console.log(selected_list);
+                $.each(selected_list, function (index, delete_item) {
+                    console.log(delete_item);
+                    delete_list.push(delete_item.id)
+        
+                })
+                console.log(delete_list)
+                bulk_delete(delete_list)
+            } 
+        });
+    }    
+})
 
 })

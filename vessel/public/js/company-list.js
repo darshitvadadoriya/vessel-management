@@ -3,6 +3,8 @@ $(document).ready(function(){
     // set global variable for show current page
     var current_page = 1
     var filters = [];
+      // Create an instance of Notyf
+      var notyf = new Notyf();
 
         // get count of records
         function get_count(filters){
@@ -66,6 +68,40 @@ $(document).ready(function(){
    
        
     
+// bulk delete records
+function bulk_delete(delete_list) {
+    $.ajax({
+        url: "/api/method/vessel.api.delete.bulk_delete",
+        type: "POST",
+        contentType: "application/json",
+        dataType: "json",
+        data: JSON.stringify({
+            doctype: "Company",
+            delete_list: delete_list,
+        }),
+        success: function (response) {
+            console.log(response);
+            
+            if (response.message == true) {
+                notyf.success({
+                        message:"Data deleted successfully",
+                        duration:3000
+                });
+
+                setTimeout(()=>{
+                    window.location.href= "/accounts/company"
+                },2000)
+            }
+
+        },
+        error: function (xhr, status, error) {
+            console.dir(xhr);
+        }
+    });
+}
+
+
+
 
     function show_filtered_list(data_limit_start,filters){
          // clear table data after move next page
@@ -84,13 +120,13 @@ $(document).ready(function(){
             },
             success: function(response) {
                 $.each(response.data,function(i,data){
-                    var customer_profile = data.image ? window.location.origin + data.image : window.location.origin + "/assets/vessel/files/images/default_user.jpg";
+                
                     
                     $('tbody').append(` <tr>
-                    <td class="check-box"><input type="checkbox" class="check" name="check" /></td>
+                    <td class="check-box"><input type="checkbox" class="check" name="check" id="${data.company_name}" data-userid="${data.name}"/></td>
                     <td class="d-flex align-items-center">
                         <div class="user-name">
-                        ${data.company_name ? data.company_name : " "}
+                        ${data.company_name}
                         </div>
                     </td>
                     
@@ -102,8 +138,6 @@ $(document).ready(function(){
             },
             error: function(xhr, status, error) {
                 // Handle the error response here
-                console.error('Error: ' + error); // Print the error to the console
-                console.error('Status: ' + status); // Print the status to the console
                 console.dir(xhr); // Print the XHR object for more details
             }
         });
@@ -370,5 +404,35 @@ $(document).ready(function(){
 
     //   set onload if fielter is available to set in particulat fields
     get_filter_data()
+
+
+   // on click delete to get checked data list
+   $(document).on("click","#delete", function () {
+    if(selected_list.length!=0)
+    {
+        swal({
+            title: "Are you sure?",
+            text: "Are you sure want to delete data?",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+        .then((willDelete) => {
+            if (willDelete) {
+                var delete_list = []
+                // get checked list from localstorage
+                console.log(selected_list);
+                $.each(selected_list, function (index, delete_item) {
+                    console.log(delete_item);
+                    delete_list.push(delete_item.id)
+        
+                })
+                console.log(delete_list)
+                bulk_delete(delete_list)
+            } 
+        });
+    }    
+})
+
 
 })

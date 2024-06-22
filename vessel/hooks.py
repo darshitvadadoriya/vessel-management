@@ -13,6 +13,7 @@ app_license = "mit"
 # app_include_css = "/assets/vessel/css/vessel.css"
 # app_include_js = "/assets/vessel/js/vessel.js"
 
+
 # include js, css files in header of web template
 # web_include_css = "/assets/vessel/css/vessel.css"
 # web_include_js = "/assets/vessel/js/vessel.js"
@@ -234,15 +235,18 @@ website_route_rules = [
     {"from_route": "/logistic", "to_route": "/logistic/logistic"},
     {"from_route": "/logistic/customer/new-customer", "to_route": "/customer/customer"},
     {"from_route": "/logistic/customer", "to_route": "/customer/customer-list"},
-    {"from_route": "/account", "to_route": "/account/account"},
-    {"from_route": "/account/account-list", "to_route": "/account/account-list"},
-    {"from_route": "/account/new-account", "to_route": "/account/account-form"},
-    {"from_route": "/account/payment-entry-list", "to_route": "/account/payment-entry-list"},
-    {"from_route": "/account/new-payment-entry", "to_route": "/account/payment-entry-form"},
-    {"from_route": "/company/new-company", "to_route": "/company/company-form"},
+    {"from_route": "/accounts", "to_route": "/account/account"},
+    {"from_route": "/accounts/account", "to_route": "/account/account-list"},
+    {"from_route": "/accounts/account/new-account", "to_route": "/account/account-form"},
+    {"from_route": "/accounts/payment-entry", "to_route": "/account/payment-entry-list"},
+    {"from_route": "/accounts/payment-entry/new-payment-entry", "to_route": "/account/payment-entry-form"},
+    {"from_route": "/account/company/new-company", "to_route": "/company/company-form"},
+    {"from_route": "/accounts/company", "to_route": "/company/company-list"},
     {"from_route": "/analytics", "to_route": "/analytics/analytics"},
     {"from_route": "/login", "to_route": "/login/login"},
     {"from_route": "/user/<name>", "to_route": "/user/updateuser"},
     {"from_route": "/logistic/customer/<name>", "to_route": "/customer/updatecustomer"},
+    {"from_route": "/accounts/account/<name>", "to_route": "/account/updateaccount"},
+    {"from_route": "/accounts/payment-entry/<name>", "to_route": "/account/update-payment-entry"},
     
 ]
