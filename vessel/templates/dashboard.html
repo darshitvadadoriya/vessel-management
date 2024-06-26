@@ -32,11 +32,8 @@
     <script src="https://cdn.jsdelivr.net/npm/use-bootstrap-select@2.1.1/dist/use-bootstrap-select.min.js"></script>   
 
    
-    <!-- jquery editable selectboc plugin -->
-    <script src="https://unpkg.com/slim-select@latest/dist/slimselect.min.js"></script>
-    <link rel="stylesheet" href="https://unpkg.com/slim-select@latest/dist/slimselect.css" />
-
-
+    <!-- jquery custom select select plugin -->
+ 
     {% block head_include %}
       {{head_include}}
     {% endblock %}
@@ -64,7 +61,9 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
   </head>
   <body>
-
+    <div class="overlay">
+      <div class="overlay-content"></div>
+    </div>
  
         <div id="sidebar">
           <div class="sidebar-header">

@@ -145,6 +145,23 @@ html, body {
 .page-link:focus{
     box-shadow: none;
 }
+
+/* status view for draft,submitted,cancelled */
+.draft,.cancel,.submit{
+    padding: 3px;
+    border-radius: 40px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+.draft,.cancel{
+    background-color: #fff0f0;
+    color: #e06030;
+}
+.submit{
+    background-color: #e4f5e9;
+    color: #1c794c;
+}
+
 /* disable pagination next and prev button */
 .pagination .diable-btn
 {

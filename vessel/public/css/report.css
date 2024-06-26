@@ -16,7 +16,8 @@
     margin-top: 20px;
     background-color: #fff;
     border-radius: 16px;
-    min-height: calc(100dvh - 180px)!important;
+    min-height: calc(100dvh - 180px);
+    
 
 }
 .report-section .filter-section{
@@ -180,6 +181,7 @@
   .report-summary .green {
     color: #078E05!important;
   }
+  
   
 
   /* profit and loss Chart */

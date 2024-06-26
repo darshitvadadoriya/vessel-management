@@ -136,10 +136,7 @@ function bulk_delete(delete_list) {
                     <td>${data.company}</td>
                     <td>${data.posting_date}</td>
                     <td>${data.mode_of_payment}</td>
-                    <td>${data.docstatus}</td>
-                   
-                    
-                   
+                    <td>${data.docstatus === 1 ? '<span class="submit">Submitted</span>' : data.docstatus === 0 ? '<span class="draft">Draft</span>' : data.docstatus === 2 ? '<span class="cancel">Cancelled</span>' : ''}</td>                   
                 </tr>`)
                     
                 })
@@ -179,7 +176,7 @@ function bulk_delete(delete_list) {
               data_limit_start = prev_page * 10 - 10;
               
            //   get filtered data from this function and call filtered data dunction
-            account_filters() //always set before the get filter from url bexause set filter in url using this function 
+            payment_entry_filters() //always set before the get filter from url bexause set filter in url using this function 
             show_filtered_list(data_limit_start,get_filter_from_urls()) //get_filter_from_urls() get filters data from url
 
             
@@ -200,7 +197,7 @@ function bulk_delete(delete_list) {
           window.history.pushState({}, '', '?page='+next_page);
           data_limit_start = next_page * 10 - 10;
         //   get filtered data from this function and call filtered data dunction
-          account_filters() //always set before the get filter from url bexause set filter in url using this function 
+          payment_entry_filters() //always set before the get filter from url bexause set filter in url using this function 
           show_filtered_list(data_limit_start,get_filter_from_urls())  //get_filter_from_urls() get filters data from url
           
          // disable next button
@@ -324,7 +321,7 @@ function bulk_delete(delete_list) {
         var data_limit_start = page_num * 10 - 10;
         
         //   get filtered data from this function and call filtered data dunction
-        account_filters() //always set before the get filter from url bexause set filter in url using this function 
+        payment_entry_filters() //always set before the get filter from url bexause set filter in url using this function 
         
         show_filtered_list(data_limit_start,get_filter_from_urls())  //get_filter_from_urls() get filters data from url
     
@@ -334,37 +331,43 @@ function bulk_delete(delete_list) {
         updatePagination(page_num);
     });
 
-
+// ============= Pagination END ==============
 
    
     
      // Handle filter accounts
-     $('#mode_of_payment').on('input', function() {
-        
-        account_filters() //always set before the get filter from url bexause set filter in url using this function 
-        var field_filter_data = get_filter_from_urls()
-        show_filtered_list(0,field_filter_data)
-        get_count(field_filter_data)
+     let timer;
+     $('#mode_of_payment,#posting_date').on('input', function() {
+        clearTimeout(timer); // Clear previous timer for not every time to load on system ( reduce load on server filter time)
+        timer = setTimeout(() => {
+            payment_entry_filters() //always set before the get filter from url bexause set filter in url using this function 
+            var field_filter_data = get_filter_from_urls()
+            show_filtered_list(0,field_filter_data)
+            get_count(field_filter_data)
+        },500)
         
 
     });
 
 
 
-    function account_filters(){
+    function payment_entry_filters() {
         var filters = [];
     
         // Add name filter if not empty
         var mode_of_payment = $('#mode_of_payment').val().trim();
-        
+        var posting_date = $('#posting_date').val();
     
         if (mode_of_payment !== '') {
-            filters.push('name=' + encodeURIComponent('%' + mode_of_payment + '%'));
+            filters.push('mode_of_payment=' + encodeURIComponent(mode_of_payment));
         }
-        
+        if (posting_date !== '') {
+            filters.push('posting_date=' + encodeURIComponent(posting_date));
+        }
     
         // Construct the query string
-        var queryString = filters.join("&")    
+        var queryString = filters.join('&');
+    
         // Get the base URL
         var baseUrl = window.location.pathname;
     
@@ -373,12 +376,11 @@ function bulk_delete(delete_list) {
         if (existingParams.length > 0) {
             // Remove the leading '?' and split the parameters
             var existingParamsArray = existingParams.substring(1).split('&');
-            // Filter out the existing parameters which are not related to filtering
-            existingParamsArray = existingParamsArray.filter(param => !param.startsWith('mode_of_payment='));
+            // Filter out the existing parameters which are related to filtering
+            existingParamsArray = existingParamsArray.filter(param => !param.startsWith('mode_of_payment=') && !param.startsWith('posting_date='));
             // Join the existing parameters with the new ones
-            queryString = existingParamsArray.join('&') + (queryString ? (existingParamsArray.length > 0 ? '&' : '') + queryString : '');
+            queryString = existingParamsArray.join('&') + (queryString ? '&' + queryString : '');
         }
-        
     
         // Construct the new URL
         var newUrl = baseUrl + (queryString ? '?' + queryString : '');
@@ -386,6 +388,7 @@ function bulk_delete(delete_list) {
         // Update the URL using pushState
         window.history.pushState({ path: newUrl }, '', newUrl);
     }
+    
     
 
 
@@ -415,6 +418,7 @@ function bulk_delete(delete_list) {
         urlParams.forEach((value, key) => {
             if (key !== "page" && key !== null) {
                 key === "mode_of_payment" ? $("#mode_of_payment").val(value.replaceAll("%","")) : null;
+                key === "posting_date" ? $("#posting_date").val(value.replaceAll("%","")) : null;
                 
               }
         });        

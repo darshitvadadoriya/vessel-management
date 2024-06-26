@@ -2,6 +2,7 @@
 
 {% block head_include %}
     <link rel="stylesheet" href="/assets/vessel/css/report.css" />
+    <script src="/assets/vessel/js/reports/balance-summary.js"></script>
 {% endblock %}
 
 {% block page_content %}
@@ -31,39 +32,43 @@
 
     <div class="report-section">
         <div class="table-responsive">
+            
             <div class="filter-section d-flex row">
-                <input type="text" name="customer" id="customer" placeholder="Customer" class="filter form-control mr-3">
+                <input type="text" name="customer" id="customer_name" placeholder="Customer" class="filter form-control mr-3">
                 <input type="text" name="company" id="company" placeholder="Company" class="filter form-control mr-3">
-                <input type="date" name="from-date" id="from-date" placeholder="From Date" class="filter form-control mr-3">
-                <input type="date" name="to-date" id="to-date" placeholder="To Date" class="filter form-control mr-3">
+                <input type="date" name="from_date" id="from_date" placeholder="From Date" class="filter form-control mr-3">
+                <input type="date" name="to_date" id="to_date" placeholder="To Date" class="filter form-control mr-3">
             </div>
-
-            <table class="table w-100">
+            
+          
+                
+                    <table class="table w-100">
                 <thead>
                     <tr class="table-heading-row">
                         <th class="check-box"><input type="checkbox" class="checkall" name="checkall" /></th>
                         <th style="width: 52px;"></th>
-                        <th style="width:200px">Transaction Date</th>
-                        <th style="width:250px">Description</th>
-                        <th style="width:200px">Debit</th>
-                        <th style="width:200px">Credit</th>
-                        <th style="width:200px">Balance</th>
-                        <th>Attachment</th>                      
+                        <th style="width:200px" id="transaction_date">Transaction Date</th>
+                        <th style="width:250px" id="description">Description</th>
+                        <th style="width:200px" id="debit">Debit</th>
+                        <th style="width:200px" id="credit">Credit</th>
+                        <th style="width:200px" id="balance">Balance</th>
+                        <th id="attachments">Attachment</th>                      
                     </tr>
+                    <tr class="report-filter">
+                        <td class="check-box disable-report-filter"><input type="text" class="form-control" /></td>
+                        <td class="disable-report-filter"><input type="text" class="form-control" /></td>
+                        <td><input type="text" class="form-control transaction_date"/></td>
+                        <td><input type="text" class="form-control description" /></td>
+                        <td><input type="text" class="form-control debit" /></td>
+                        <td><input type="text" class="form-control credit" /></td>
+                        <td><input type="text" class="form-control balance" /></td>
+                        <td><input type="text" class="form-control attachments" style="width:250px"/></td>
+                       </tr>
                 </thead>
-                <tbody>
-                   <tr class="report-filter">
-                    <td class="check-box disable-report-filter"><input type="text" class="form-control" /></td>
-                    <td class="disable-report-filter"><input type="text" class="form-control" /></td>
-                    <td><input type="text" class="form-control" /></td>
-                    <td><input type="text" class="form-control" /></td>
-                    <td><input type="text" class="form-control" /></td>
-                    <td><input type="text" class="form-control" /></td>
-                    <td><input type="text" class="form-control" /></td>
-                    <td><input type="text" class="form-control" style="width:250px"/></td>
-                   </tr>
-
-                   <tr>
+            
+                <tbody id="report_data">
+                  
+                   <!-- <tr>
                    <td class="check-box"><input type="checkbox" class="checkall" name="checkall" /></td>
                    <td>1</td>
                     <td>28-04-2024</td>
@@ -108,7 +113,7 @@
                     </tr>
 
 
-
+ -->
 
 
 

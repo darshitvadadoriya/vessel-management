@@ -302,6 +302,9 @@ $(document).ready(function(){
 
 
         function create_customer(form_data) {
+            $(".overlay").show()
+            $(".overlay-content").text("Please Wait....")
+
             $.ajax({
                 url: "/api/resource/Customer",
                 type: "POST",
@@ -319,6 +322,7 @@ $(document).ready(function(){
                     }
                     create_contact(customer_contact)
                     setTimeout(() => {
+                        $(".overlay").hide()
                         window.location.href = "/logistic/customer/"+customer_id
                     }, 2000);
                     notyf.success({
@@ -328,6 +332,8 @@ $(document).ready(function(){
 
                 },
                 error: function (xhr, status, error) {
+                    $(".overlay").hide()
+                    
                     console.dir(xhr); // Print the XHR object for more details
                     if (xhr.responseJSON.exc_type == "DuplicateEntryError") {
                         notyf.error({
@@ -451,7 +457,7 @@ $(document).ready(function(){
             dataType: "json",
             data: {
                 fields: JSON.stringify(["name"]),
-                filters: JSON.stringify([["company", "=", companyval],["is_group", "=", "0"]]),
+                filters: JSON.stringify([["company", "=", companyval],["account_type", "in", ["Payable","Receivable","Bank"]],["is_group", "=", "0"]]),
                 limit_page_length: "None"
             },
             success: function (data) {

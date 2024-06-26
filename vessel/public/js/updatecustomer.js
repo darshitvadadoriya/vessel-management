@@ -559,6 +559,8 @@ $(document).ready(function () {
 
 
         function update_customer(updated_form_data) {
+            $(".overlay").show()
+            $(".overlay-content").text("Please Wait....")
             $.ajax({
                 url: "/api/resource/Customer/" + customer_id,
                 type: "PUT",
@@ -566,8 +568,10 @@ $(document).ready(function () {
                 data: JSON.stringify(updated_form_data),
                 success: function (data) {
 
-                    console.log(data);
-                    console.log("ENTERED.................")
+                    setTimeout(() => {
+                        $(".overlay").hide()
+                        window.location.reload()
+                    }, 3000);
                     notyf.success({
                         message: "Update customer successfully",
                         duration: 5000

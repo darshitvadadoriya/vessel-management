@@ -60,6 +60,10 @@ html, body {
 .page-cards .card .card-content .card-description{
     color: #718EBF;
 }
+/* for hide any thing using js */
+.hide{ 
+    display: none;
+}
 
 /* responsive */
 @media screen and (max-width:992px){
