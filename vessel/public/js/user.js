@@ -42,7 +42,7 @@ $(document).ready(function () {
 
     $('#save').click(function () {
 
-
+        
         var form_data_list = $('form').serializeArray();
         var form_data = {};
         $.each(form_data_list, function (index, field) {
@@ -55,8 +55,7 @@ $(document).ready(function () {
         // Error handler 
         // check first_name nad email address is filled
 
-        let mobile_no = form_data['mobile_no'];
-        let phone = form_data['mobile_no'];
+        let email = form_data['email'];
         if (!form_data['first_name']) {
                 $('#first_name_error').remove(); // Remove any existing error message
                 $('#first_name').after('<span id="first_name_error" class="error-message">Please first name is mandatory.</span>');
@@ -70,20 +69,20 @@ $(document).ready(function () {
             $('#email_error').remove(); // Remove any existing error message
             $('#email').after('<span id="email_error" class="error-message">Please email is mandatory.</span>');
         }
-        // else if (form_data['phone'] != "") {
-        //     if (form_data['phone'].length != 10) {
-        //         $('#phone_error').remove(); // Remove any existing error message
-        //         $('#phone').after('<span id="phone_error" class="error-message">Valid only 10 digits in mobile.</span>');
-        //     }
-        // }
-        // else if (form_data['mobile_no'] != "") {
-        //     console.log("Mobile number length is:", typeof(form_data['mobile_no'].length));
-        //     if (form_data['mobile_no'].length != 10) {
-        //         console.log("under 10 digit");
-        //         $('#mobile_no_error').remove(); // Remove any existing error message
-        //         $('#mobile_no').after('<span id="mobile_no_error" class="error-message">Valid only 10 digits in mobile.</span>');
-        //     } 
-        // }           
+        else if (form_data['phone'] != "") {
+            if (form_data['phone'].length != 10) {
+                $('#phone_error').remove(); // Remove any existing error message
+                $('#phone').after('<span id="phone_error" class="error-message">Valid only 10 digits in mobile.</span>');
+            }
+        }
+        else if (form_data['mobile_no'] != "") {
+            console.log("Mobile number length is:", form_data['mobile_no'].length);
+            if (form_data['mobile_no'].length != 10) {
+                console.log("under 10 digit");
+                $('#mobile_no_error').remove(); // Remove any existing error message
+                $('#mobile_no').after('<span id="mobile_no_error" class="error-message">Valid only 10 digits in mobile.</span>');
+            } 
+        }           
         else {
             if (files.length > 0 ) {
                 var file_data = files[0]
@@ -136,6 +135,8 @@ $(document).ready(function () {
 
 
         function create_user(form_data) {
+            $(".overlay").show()
+            $(".overlay-content").text("Please Wait....")
             $.ajax({
                 url: "/api/resource/User",
                 type: "POST",
@@ -147,10 +148,11 @@ $(document).ready(function () {
                     var user_id = data.data.name
                    
                     setTimeout(() => {
+                        $(".overlay").hide()
                         window.location.href = "/user/"+user_id
-                    }, 2000);
+                    }, 1500);
                     
-                    console.log("ENTERED.................")
+        
                     notyf.success({
                         message: "User created successfully",
                         duration: 5000
@@ -159,24 +161,13 @@ $(document).ready(function () {
                 },
                 error: function (xhr, status, error) {
                     // Handle the error response here
-                    console.error('Error: ' + error); // Print the error to the console
-                    console.error('Status: ' + status); // Print the status to the console
-                    console.dir(xhr)
-                    var error = JSON.stringify(xhr.responseJSON._server_messages)
-                    console.log(error.message)
-                    console.dir(xhr.responseJSON.exc_type); // Print the XHR object for more details
-                    if (xhr.responseJSON.exc_type == "DuplicateEntryError") {
-                        notyf.error({
-                            message: "User already added",
-                            duration: 5000
-                        })
-                    }
-                    if (xhr.responseJSON.exc_type == "UniqueValidationError") {
-                        notyf.error({
-                            message: "Please mobile no set unique",
-                            duration: 5000
-                        })
-                    }
+                    $(".overlay").hide()
+                    var error_msg = xhr.responseJSON.exception.split(":")[1]       
+                            
+                    notyf.error({
+                        message:error_msg,
+                        duration:5000
+                    });
                 }
             })
         }
@@ -188,7 +179,7 @@ $(document).ready(function () {
   function validateEmail(email) {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (emailRegex.test(email) == false || email == "") {
-      return "please entre valid address";
+      return false;
     }
   }
 

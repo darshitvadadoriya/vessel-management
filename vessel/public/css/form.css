@@ -1,13 +1,18 @@
-html, body {
+html,
+body {
     height: 100%;
-    width : 100%;
+    width: 100%;
     margin: 0;
     padding: 0;
- }
+}
 
-/* save button */ /* cancel button */ /* submit button */
-.save-btn,.btn-cancel,.btn-submit{
-    background:#1814F3;
+/* save button */
+/* cancel button */
+/* submit button */
+.save-btn,
+.btn-cancel,
+.btn-submit {
+    background: #1814F3;
     color: #fff;
     font-weight: 600;
     width: 120px;
@@ -15,12 +20,15 @@ html, body {
     font-size: 20px;
     border-radius: 8px;
 }
-.save-btn:hover,.btn-cancel:hover,.btn-submit:hover{
+
+.save-btn:hover,
+.btn-cancel:hover,
+.btn-submit:hover {
     color: #fff;
 }
 
 /* add button */
-.btn-add{
+.btn-add {
     font-weight: 600;
     height: 48px;
     font-size: 16px;
@@ -30,16 +38,18 @@ html, body {
     align-items: center;
     display: flex;
 }
-.btn-add:hover{
-    color:#1814F3;
-    border-color:#1814F3;
+
+.btn-add:hover {
+    color: #1814F3;
+    border-color: #1814F3;
 }
-.btn:focus{
+
+.btn:focus {
     box-shadow: none;
 }
 
 /* attach button */
-.btn-attach{
+.btn-attach {
     padding: 10px;
     font-weight: 500;
     height: 38px;
@@ -50,32 +60,47 @@ html, body {
     align-items: center;
     display: flex;
 }
+
 /* hidden choose file */
-.choose-file{
+.choose-file {
     display: none;
 }
 
+/* dialog button */
+.btn-dialog {
+    background: #1814F3;
+    color: #fff;
+    font-weight: 600;
+    min-width: 120px;
+    height: 40px;
+    font-size: 16px;
+    border-radius: 8px;
+}
 
+.btn-dialog:hover {
+    color: #fff;
+    border-color: #1814F3;
+}
 
 /* delete button */
-.btn-delete{
+.btn-delete {
     font-weight: 600;
     height: 48px;
     font-size: 16px;
     border-radius: 8px;
-    color:#ec645e;
-    border:1px solid #ffdad8;
+    color: #ec645e;
+    border: 1px solid #ffdad8;
     align-items: center;
     display: flex;
 }
-.btn-delete:hover{
-    color:#ec645e;
-    border-color:#ec645e;
+
+.btn-delete:hover {
+    color: #ec645e;
+    border-color: #ec645e;
 }
 
 /* action button */
-.btn-form-action
-{
+.btn-form-action {
     width: 36px;
     height: 38px;
     border: 1px solid #B7C1C8;
@@ -88,16 +113,18 @@ html, body {
 
 /* form start */
 
-.form-section{
+.form-section {
     margin-top: 20px;
     background-color: #fff;
     border-radius: 25px;
     min-height: calc(100dvh - 185px);
 }
-.form-section hr{
+
+.form-section hr {
     padding: 0;
 }
-.form-section .form-section-title{
+
+.form-section .form-section-title {
     font-size: 20px;
     font-weight: 600;
     text-align: left;
@@ -114,91 +141,110 @@ html, body {
     font-weight: 500;
 
 }
-.form-section .nav-tabs .nav-link.active{
+
+.form-section .nav-tabs .nav-link.active {
     border-bottom: 3px solid #1814F3;
-    color:#1814F3;
+    color: #1814F3;
+}
+
+/* dialog box */
+.modal .modal-content {
+    border: none;
+    border-radius: 8px;
 }
 
 
 /* moreinfo tab*/
-.tab-pane,.form-area{
+.tab-pane,
+.form-area {
     padding: 30px;
 }
 
 /* form inputs ans forms sections */
-.form-row>.col, .form-row>[class*=col-] {
+.form-row>.col,
+.form-row>[class*=col-] {
     padding-right: 15px;
     padding-left: 15px;
 }
-.form-row{
+
+.form-row {
     margin-right: -15px;
     margin-left: -15px;
 }
-.form-control{
+
+.form-control {
     height: 50px;
     border-radius: 8px;
 }
-.form-select{
-    border: 1px solid #DFEAF2!important;
-    border-radius: 8px!important;
+
+.form-select {
+    border: 1px solid #DFEAF2 !important;
+    border-radius: 8px !important;
     height: 50px;
 }
-.tab-select{
-    border:none!important;
-    height: 30px!important;
+
+.tab-select {
+    border: none !important;
+    height: 30px !important;
 }
-.form-control:focus,.form-select:focus,.form-select.focus
-{
-    border-color: #1814F3!important;
-    box-shadow: none!important;
+
+.form-control:focus,
+.form-select:focus,
+.form-select.focus {
+    border-color: #1814F3 !important;
+    box-shadow: none !important;
 }
 
 /* upload image and preview */
+
 .upload-profile-image {
     position: relative;
     margin-bottom: 30px;
 }
-.edit-profile-image{
+.dropdown-item{
+    cursor: pointer;
+}
+
+.edit-profile-image {
     position: absolute;
     top: 85px;
     z-index: 1;
     left: 100px;
 }
+.edit-profile-image label{
+    margin-bottom: 0;
+}
+
 .inner-form-section #upload-image {
-            display: none;
+    display: none;
 }
-.inner-form-section .upload-profile-image label {
-                display: inline-block;
-                width: 34px;
-                height: 34px;
-                cursor: pointer;
-                font-weight: normal;
-                transition: all .2s ease-in-out;
-}
-    
+
+
 .profile-image-preview {
-        width: 132px;
-        height: 132px;
-        position: relative;
-        border-radius: 100%;
+    width: 132px;
+    height: 132px;
+    position: relative;
+    border-radius: 100%;
 }
+
 .profile-image-preview #image-preview {
-            width: 100%;
-            height: 100%;
-            border-radius: 100%;
-            background-size: cover;
-            background-repeat: no-repeat;
-            background-position: center;
-        }
+    width: 100%;
+    height: 100%;
+    border-radius: 100%;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+}
 
 
 
 
 /* contact details section */
-.contact-details .details-area{
+.contact-details .details-area {
     margin-top: 30px;
 }
-.contact-details .details-area textarea{
+
+.contact-details .details-area textarea {
     width: 100%;
     padding: 10px;
     min-height: 100px;
@@ -207,65 +253,75 @@ html, body {
     outline: none;
     border: 1px solid #DFEAF2;
 }
-.contact-details .details-area label{
+
+.contact-details .details-area label {
     color: #232323;
     font-size: 16px;
     font-weight: 400;
 }
-.contact-details .details-area .card{
+
+.contact-details .details-area .card {
     border: 1px solid #DFEAF2;
     border-radius: 8px;
     flex-direction: column;
     margin-top: 0;
     padding: 0;
 }
-.contact-details .details-area .card .row{
+
+.contact-details .details-area .card .row {
     padding: 15px;
     border-bottom: 1px solid #F2F4F7;
 }
 
-.contact-details .details-area .add-contact-details input{
+.contact-details .details-area .add-contact-details input {
     width: calc(100% - 130px);
     height: 48px;
 }
 
 
 /* account table */
-.form-section table
-{
+.form-section table {
     border: 1px solid #B7C1C8;
-    border-radius: 16px!important;;
+    border-radius: 16px !important;
+    ;
     border-collapse: separate;
-    border-spacing: 0;   
-    overflow: scroll; 
+    border-spacing: 0;
+    overflow: scroll;
 }
-.form-section table th{
+
+.form-section table th {
     border: none;
     border-bottom: 1px solid #B7C1C8;
     font-weight: 16px;
     color: #718EBF;
     font-weight: 500;
 }
-.form-section table td,.form-section table th{
+
+.form-section table td,
+.form-section table th {
     border-left: 1px solid #F2F4F7;
 }
-.form-section table td:first-child,.form-section table th:first-child{
+
+.form-section table td:first-child,
+.form-section table th:first-child {
     border-left: none;
 }
-.form-section table tr{
+
+.form-section table tr {
     border: none;
     border-bottom: 1px solid #F2F4F7;
 }
-.form-section table tr:last-child{
+
+.form-section table tr:last-child {
     border-bottom: none;
 }
 
 
-.form-section .table .check
-{
-    width: 40px!important;
+.form-section .table .check {
+    width: 40px !important;
 }
-.form-section table .form-control{
+
+.form-section table .form-control {
     border: none;
     height: 40px;
     padding-top: 0;
@@ -273,55 +329,66 @@ html, body {
     padding-left: 0;
     height: 20px;
 }
-.company-heading{
+
+.company-heading {
     width: 500px;
 
 }
-#payment_entry_details td{
+
+#payment_entry_details td {
     padding-top: 5px;
     padding-bottom: 5px;
 }
-#payment_entry_details .form-control{
+
+#payment_entry_details .form-control {
     border-radius: none;
     height: 30px;
 }
-#payment_entry_details select,input{
+
+#payment_entry_details select,
+input {
     opacity: 1;
 }
+
 /* empty table  */
 #empty_table {
     height: 100px;
 }
+
 select {
     text-indent: 5px;
-  }
-.custom-select{
-    padding:0;
 }
-table td{
-    vertical-align: middle!important;
+
+.custom-select {
+    padding: 0;
 }
-table input{
-    padding-left: 8px!important;
+
+table td {
+    vertical-align: middle !important;
+}
+
+table input {
+    padding-left: 8px !important;
 }
 
 /* hide number type input arrow */
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
+    -webkit-appearance: none;
+    margin: 0;
 }
 
 /* for mandatory field */
-.red{
+.red {
     color: red;
 }
 
 /* error message */
-.error-message{
+.error-message {
     color: red;
     font-size: 14px;
 }
+
 /* set overlay loading time */
 .overlay {
     position: fixed;
@@ -329,12 +396,16 @@ input::-webkit-inner-spin-button {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: #ffffffa3; /* Semi-transparent black */
-    z-index: 1000; /* Ensure the overlay is on top of other content */
-    display: none; /* Initially hidden */
-   
+    background-color: #ffffffa3;
+    /* Semi-transparent black */
+    z-index: 1000;
+    /* Ensure the overlay is on top of other content */
+    display: none;
+    /* Initially hidden */
+
 }
-.overlay-content{
+
+.overlay-content {
     position: absolute;
     width: 100%;
     top: 50%;
@@ -345,42 +416,46 @@ input::-webkit-inner-spin-button {
 
 
 /* custom selectbpx css override */
-.ss-content{
-    height: auto!important;
-    border: solid 1px #DFEAF2!important;
+.ss-content {
+    height: auto !important;
+    border: solid 1px #DFEAF2 !important;
 }
-.ss-content .ss-search input:focus{
+
+.ss-content .ss-search input:focus {
     box-shadow: none;
 }
-.ss-content .ss-list .ss-option{
+
+.ss-content .ss-list .ss-option {
     border-radius: 8px;
 }
 
-.ss-content .ss-list .ss-option:hover{
+.ss-content .ss-list .ss-option:hover {
     background-color: #ffffff00;
     color: #4d4d4d;
 }
 
 /* responsive  */
 
-@media screen and (max-width:767px){
+@media screen and (max-width:767px) {
 
-    .form-section{
+    .form-section {
         margin-bottom: 80px;
         height: auto;
     }
-    
+
 }
-@media screen and (max-width:576px){
+
+@media screen and (max-width:576px) {
 
     .save-btn {
         width: 100px;
         height: 40px;
         font-size: 18px;
     }
-    
+
 }
-@media screen and (max-width:576px){
+
+@media screen and (max-width:576px) {
     .save-btn {
         width: 85px;
         height: 35px;

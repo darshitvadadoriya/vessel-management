@@ -1,8 +1,7 @@
 $(document).ready(function () {
 
 
-    // Create an instance of Notyf
-    var notyf = new Notyf();
+
     var files = []
     var phone_list = []
     var email_list = []
@@ -15,13 +14,27 @@ $(document).ready(function () {
     var phone_data_list
     var company_select_list = []
     var customer_profile_img
-
-
+    var old_account_list = []
+    var old_phone_list = []
+    var old_email_list = []
+    var new_email_list
+    var new_phone_list
+    var updated_form_data = {};
     var old_form_data = {};
+    var customer_name
 
-    //  country select field 
 
 
+    // Create an instance of Notyf
+    var notyf = new Notyf({
+        types: [
+            {
+                type: 'alert',
+                background: '#ff9800',
+                icon: "<i class='fas fa-exclamation-triangle' style='font-size:22px;color:#ffffff;'></i>"
+            }
+        ]
+    });
 
 
     //  upload customer image
@@ -53,9 +66,14 @@ $(document).ready(function () {
     })
 
     // on click delete icon to delete particular clicked row
-    $(document).on('click', '.delete', function () {
+    $(document).on('click', '#delete_row', function () {
         $(this).parent().remove()
         $(".checkall").prop("checked", "false");
+        if($("#account_table tr").length==0)
+        {
+            $("#account_table").append(`<tr id="empty_table"></tr>`)
+            account_lst = []
+        }
     })
 
 
@@ -65,9 +83,12 @@ $(document).ready(function () {
 
     })
 
-    // add_row("","")
+
     // add row button to add new row in account table
     function add_row() {
+        $("#empty_table").remove() //remove blank and default row
+
+
         var company_id = "company_id" + $('#customer-accounts tbody tr').length
         var account_id = "account_id" + $('#customer-accounts tbody tr').length
 
@@ -88,17 +109,23 @@ $(document).ready(function () {
             </tr>`)
 
 
+        // $("#" + company_id).append(`<option"></option>`)
+        // $.each(company_select_list, function (i, company) {
+        //     $("#" + company_id).append(`<option value="${company}">${company}</option>`)
 
-        $.each(company_select_list, function (i, company) {
-            $("#" + company_id).append(`<option value="${company}">${company}</option>`)
+        // })
+        get_company(function (data) {
+            $("#" + company_id).append(`<option></option>`)
+            data.forEach(function (company) {
+                $("#" + company_id).append(`<option value="${company.name}">${company.name}</option>`);
+            });
+        });
 
-        })
         // set accounts company wise
         get_account(function (data) {
-            console.log(data);
             $("#" + account_id).empty()
+            $("#" + account_id).append(`<option></option>`)
             data.forEach(function (account) {
-
                 $("#" + account_id).append(`<option value="${account.name}">${account.name}</option>`)
             });
 
@@ -108,9 +135,8 @@ $(document).ready(function () {
 
         $("#" + company_id).change(function () {
             company_value = $("#" + company_id).val()
-
+            $("#" + account_id).append(`<option"></option>`)
             get_account(function (data) {
-                console.log(data);
                 $("#" + account_id).empty()
                 data.forEach(function (account) {
 
@@ -125,7 +151,7 @@ $(document).ready(function () {
 
     // get company data from company master on page load time
     get_company_details()
-    console.log(company_select_list);
+
     //set company
     function get_company_details() {
         company_select_list = []
@@ -173,12 +199,15 @@ $(document).ready(function () {
 
                 customer_id = customer_info.name
                 customer_accounts = customer_info.accounts
+                customer_name = customer_info.customer_name
+
                 customer_profile_img = customer_info.image && customer_info.image.includes("https") ? customer_info.image : (customer_info.image ? window.location.origin + customer_info.image : window.location.origin + "/assets/vessel/files/images/default_user.jpg")
 
-                console.log(customer_info);
+                customer_info.image ? $("#remove_profile").show() : $("#remove_profile").hide() //hide and show remove button
+
                 $("#page_title").html(customer_info.customer_name)
                 $("#user_id").val(customer_id)
-                $('#image-preview').css('background-image', 'url(' + customer_profile_img + ')')
+                $('#image-preview').css('background-image', 'url(' + encodeURI(customer_profile_img) + ')')
                 $("#customer_name").val(customer_info.customer_name)
                 $("#country").val(customer_info.custom_country)
                 $("#address").val(customer_info.custom_address)
@@ -187,20 +216,21 @@ $(document).ready(function () {
                 $("#person_in_charge").val(customer_info.custom_person_in_charge)
                 $("#remarks").val(customer_info.custom_remarks)
                 $("#status").val(customer_info.disabled)
-                
 
-                // setTimeout(()=>{
+
+                old_account_list = [] //old account blank array
+
                 $.each(customer_accounts, function (index, data) {
+                    
                     add_row()
 
-                    var id = index + 1
+                    var id = index
                     setTimeout(() => {
 
                         $("#company_id" + id).val(data.company)
                         company_value = $("#company_id" + id).val()
 
                         get_account(function (data) {
-                            console.log(data);
                             $("#account_id" + id).empty()
                             data.forEach(function (account) {
 
@@ -216,10 +246,10 @@ $(document).ready(function () {
 
                     }, 150)
 
-
+                    old_account_list.push({ 'company': data.company, "account": data.account })
 
                 })
-                // },1000)
+
 
 
 
@@ -229,6 +259,9 @@ $(document).ready(function () {
 
                     old_form_data[field.name] = field.value;
                 });
+
+
+
 
             },
             error: function (xhr, status, error) {
@@ -252,18 +285,20 @@ $(document).ready(function () {
                 doc_name: customer_id
             },
             success: function (data) {
-            
-                console.log(data);
-                email_data_list = data.message.emails
-                
-                phone_data_list = data.message.phones
-                contact_id = data.message.contact_id
 
+                email_data_list = data.message.emails
+
+                phone_data_list = data.message.phones
+                contact_id = data.message.contact_id ? data.message.contact_id : ""
+                console.log(contact_id);
                 $.each(phone_data_list, function (i, data) {
                     $(`<div class="row w-100 justify-content-between phone_row">
                                         <div class="phone">${data}</div>
                                         <div class="delete"><img src="/assets/vessel/files/images/delete.png" alt="delete"></div>
                                     </div>`).insertBefore("#customer_phone_input")
+
+
+                    old_phone_list.push({ "phone_nos": data, "parentfield": "phone_nos", "parenttype": "Contact" }); // generate old list of phone no
                 })
 
                 $.each(email_data_list, function (i, data) {
@@ -271,6 +306,8 @@ $(document).ready(function () {
                         <div class="email">${data}</div>
                         <div class="delete"><img src="/assets/vessel/files/images/delete.png" alt="delete"></div>
                     </div>`).insertBefore("#customer_email_input")
+
+                    old_email_list.push({ "email_ids": data, "parentfield": "email_ids", "parenttype": "Contact" }); // generate old list of email
                 })
 
 
@@ -307,7 +344,7 @@ $(document).ready(function () {
 
 
     function get_account(callback, companyval) {
-        var filters = JSON.stringify([["company", "=", companyval]])
+
 
         $.ajax({
             url: "/api/resource/Account",
@@ -315,7 +352,7 @@ $(document).ready(function () {
             dataType: "json",
             data: {
                 fields: JSON.stringify(["name"]),
-                filters: filters,
+                filters: JSON.stringify([["company", "=", companyval], ["account_type", "in", ["Payable", "Receivable", "Bank"]], ["is_group", "=", "0"]]),
                 limit_page_length: "None"
             },
             success: function (data) {
@@ -344,6 +381,7 @@ $(document).ready(function () {
             success: function (data) {
                 var country_list = data.data
                 $("#country").empty()
+                $("#country").append(`<option></option>`)
                 country_list.forEach(function (country, i) {
                     // countryoptions
                     $("#country").append(`<option value="${country.name}">${country.name}</option>`)
@@ -374,7 +412,7 @@ $(document).ready(function () {
 
 
         // Compare old form data with current form data and store updated fields
-        var updated_form_data = {};
+        updated_form_data = {};
 
         $.each(form_data, function (key, value) {
 
@@ -383,69 +421,96 @@ $(document).ready(function () {
             }
         });
 
-        console.log(updated_form_data);
-
         // phone section data
+        phone_list = []
+        new_phone_list = []
         $("#customer_phone .phone_row").each(function (i, data) {
             var phone_no = $(data).find(".phone").text();
-            // if (!phone_list.includes(phone_no) && !phone_data_list.includes(phone_no)) {
-            phone_list.push({ "phone_nos": phone_no, "parentfield": "phone_nos", "parenttype": "Contact", "parent": contact_id }); // push unique value in phone_list
-            // }
+            phone_list.push({"phone_nos": phone_no, "parentfield": "phone_nos", "parenttype": "Contact"}); // push unique value in phone_list
+            new_phone_list.push(phone_no)
         });
 
-        // form_data["phone"] = phone_list
-        console.log(phone_list);
 
         //email data
+        email_list = []
+        new_email_list = []
         $("#customer_email .email_row").each(function (i, data) {
             var email_data = $(data).find(".email").text();
-            //  if (!email_list.includes(email_data) && !email_data_list.includes(email_data)) {
-            email_list.push({ "email_ids": email_data, "parentfield": "email_ids", "parenttype": "Contact", "parent": contact_id }); // push unique value in email_list
-            // }
+            email_list.push({"email_ids": email_data, "parentfield": "email_ids", "parenttype": "Contact",}); // push unique value in email_list
+            new_email_list.push(email_data)
         });
-        console.log(email_list);
 
 
 
-        console.log(contact_id);
-        console.log("Contact----id");
-
-        $.ajax({
-            url: "/api/method/vessel.api.customer.update_contact_email_ids",
-            type: "PUT",
-            data: {
-                "contact_name": contact_id,
-                "new_email_ids": JSON.stringify(email_list)
-            },
-            success: function (response) {
-                console.log(response);
-            },
-            error: function (xhr, status, error) {
-                // Handle the error response here
-                console.dir(xhr); // Print the XHR object for more details
+        function update_emails() {
+            $.ajax({
+                url: "/api/method/vessel.api.customer.update_contact_email_ids",
+                type: "POST",
+                data: {
+                    "contact_name": contact_id,
+                    "new_email_ids": JSON.stringify(email_list)
+                },
+                success: function (response) {
+                    console.log(response);
+                },
+                error: function (xhr, status, error) {
+                    // Handle the error response here
+                    console.dir(xhr); // Print the XHR object for more details
 
 
-            }
-        })
-
-    
-        $.ajax({
-            url: "/api/method/vessel.api.customer.update_contact_phone_nos",
-            type: "PUT",
-            data: {
-                "contact_name": JSON.stringify(contact_id),
-                "new_phone_nos": JSON.stringify(phone_list)
-            },
-            success: function (response) {
-                console.log(response);
-            },
-            error: function (xhr, status, error) {
-                // Handle the error response here
-                console.dir(xhr); // Print the XHR object for more details
+                }
+            })
+        }
 
 
-            }
-        })
+        function update_phone(contact_id,customer_name,customer_id, phone_list) {
+      
+            $.ajax({
+                url: "/api/method/vessel.api.customer.update_contact_phone_nos",
+                type: "POST",
+                data: {
+                    "contact_id": JSON.stringify(contact_id),
+                    "new_phone_nos": JSON.stringify(phone_list),
+                    "customer_name": JSON.stringify(customer_name),
+                    "customer_id": JSON.stringify(customer_id)
+                    
+                },
+                success: function(response) {
+                    console.log(response);
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error: " + error);
+                    console.dir(xhr);
+                }
+            });
+        }
+
+      
+
+        function create_contact(){
+            $.ajax({
+                url: "/api/method/vessel.api.customer.create_contact",
+                type: "POST",
+                dataType: "json",
+                contentType: "application/json",
+                data: JSON.stringify({
+                    "customer_id": customer_id,
+                    "customer_name": customer_name,
+                    "phone": new_phone_list,
+                    "email": new_email_list
+                }),
+                
+                success: function(response) {
+                    console.log(response);
+                },
+            
+                error: function (xhr, status, error) {
+            
+                console.log(xhr)
+                }
+            })
+        }
+            
 
 
 
@@ -456,23 +521,65 @@ $(document).ready(function () {
         $('#account_table tr').each(function (index) {
             var companyvalue = $("#company_id" + index).val();
             var accountvalue = $("#account_id" + index).val();
-            console.log(companyvalue);
-            if (index <= 0) {
-                console.log("first row is blank") //if first row is blank default
-            }
-            else {
+            if(companyvalue && accountvalue)
+            {
                 account_list()
             }
+                      
             function account_list() {
                 account_lst.push({ 'company': companyvalue, "account": accountvalue })
             }
 
         });
-        if (account_lst) {
+        if (compareaccounts()) {
             console.log(account_lst);
-            updated_form_data["accounts"] = account_lst
+            console.log("ACCOUNRT_DATA");
+            updated_form_data["accounts"] = account_lst //set account list in update form data
         }
-        console.log(updated_form_data);
+        else{
+            updated_form_data["accounts"] = account_lst //set account list in update form data
+        }
+
+
+        // compare phone no
+        function comparephone() {
+            let updated = false;
+
+            $.each(phone_list, function (i) {
+                if (JSON.stringify(phone_list[i]) !== JSON.stringify(old_phone_list[i])) {
+                    updated = true;
+                    return false;
+                }
+            });
+
+            return updated ? true : false;
+        }
+        //compare email lists
+        function compareemail() {
+            let updated = false;
+
+            $.each(phone_list, function (i) {
+                if (JSON.stringify(email_list[i]) !== JSON.stringify(old_email_list[i])) {
+                    updated = true;
+                    return false;
+                }
+            });
+
+            return updated ? true : false;
+        }
+
+        //  compare account old and new array
+        function compareaccounts() {
+            let updated = false;
+            $.each(account_lst, function (i) {
+                if (JSON.stringify(account_lst[i]) !== JSON.stringify(old_account_list[i])) {
+                    updated = true;
+                    return false;
+                }
+            })
+            return updated ? true : false;
+        }
+
 
 
 
@@ -487,15 +594,43 @@ $(document).ready(function () {
             $('#customer_type_error').remove(); // Remove any existing error message
             $('#customer_type').after('<span id="customer_type_error" class="error-message">Please email is mandatory.</span>');
         }
-        else {
-            if (files.length > 0) {
-                var file_data = files[0]
-                upload_file(file_data); // Pass the first file to the upload_file function
-            } else {
+
+
+        if (files.length > 0) {
+            var file_data = files[0]
+            upload_file(file_data); // Pass the first file to the upload_file function
+        } else {
+           
+            if (compareaccounts() || Object.keys(updated_form_data).length !== 0 || compareemail() || comparephone()) {
+
+                if(!contact_id)
+                {
+                    create_contact()
+                }
+                else{
+                    update_emails(contact_id,email_list)
+                    update_phone(contact_id,customer_name,customer_id, phone_list)
+                }
                 update_customer(updated_form_data) // save data without image
+               
+            }
+            // else if(compareemail())
+            // {
+            //     update_emails()
+            // }
+            // else if(comparephone())
+            // {
+            //     update_phone()
+            // }
+            else {
+                notyf.success({
+                    type: 'alert',
+                    message: "Changes are not available",
+                    duration: 5000
+                })
             }
         }
-        console.log(updated_form_data);
+
 
         $("#customer_name").on("input", function () {
             $('#customer_name_error').remove(); // Remove customer name error message
@@ -506,7 +641,7 @@ $(document).ready(function () {
 
 
         function upload_file(files) {
-            console.log(files)
+
             var file_data = new FormData();
             file_data.append('file', files);
             file_data.append('file_name', files.name);
@@ -520,77 +655,22 @@ $(document).ready(function () {
                 contentType: false,
                 data: file_data, // Assuming form_data contains a file object
                 success: function (response) {
+                    delete_profile()
                     var profile_image_url = response.message.file_url
                     updated_form_data["image"] = profile_image_url;
-                    update_customer(updated_form_data)
-
-
-                    // delete old file
-                    $.ajax({
-                        type: 'DELETE',
-                        url: '/api/method/vessel.api.updateuser.delete_old_file',
-                        data: {
-                            file_url: customer_profile_img,
-                            attached_to_name: customer_id,
-                            attached_to_field: "image",
-                            attached_to_doctype: "Customer"
-                        },
-                        success: function (deleteResponse) {
-                            console.log(deleteResponse);
-                        },
-                        error: function (xhr, status, error) {
-                            console.dir(xhr)
-
-                        }
-                    });
-
+                    // update_customer(updated_form_data)
 
                 },
                 error: function (xhr, status, error) {
                     // Handle the error response here
-                   
+
                     console.dir(xhr); // Print the XHR object for more details
 
 
                 }
             })
         }
-        console.log(updated_form_data);
 
-
-        function update_customer(updated_form_data) {
-            $(".overlay").show()
-            $(".overlay-content").text("Please Wait....")
-            $.ajax({
-                url: "/api/resource/Customer/" + customer_id,
-                type: "PUT",
-                dataType: "json",
-                data: JSON.stringify(updated_form_data),
-                success: function (data) {
-
-                    setTimeout(() => {
-                        $(".overlay").hide()
-                        window.location.reload()
-                    }, 3000);
-                    notyf.success({
-                        message: "Update customer successfully",
-                        duration: 5000
-                    })
-
-                },
-                error: function (xhr, status, error) {
-                    // Handle the error response here
-                   
-                    console.dir(xhr); // Print the XHR object for more details
-                    if (xhr.responseJSON.exc_type == "DuplicateEntryError") {
-                        notyf.error({
-                            message: "customer already added",
-                            duration: 5000
-                        })
-                    }
-                }
-            })
-        }
     })
 
 
@@ -603,35 +683,109 @@ $(document).ready(function () {
         });
     })
 
-  
-    
 
-    $("#delete").click(function(){
+    // update_customer details
+    function update_customer(updated_form_data) {
+        $(".overlay").show()
+        $(".overlay-content").text("Please Wait....")
+        $.ajax({
+            url: "/api/resource/Customer/" + customer_id,
+            type: "PUT",
+            dataType: "json",
+            data: JSON.stringify(updated_form_data),
+            success: function (data) {
 
-            // delete file
-            $.ajax({
+                setTimeout(() => {
+                    $(".overlay").hide()
+                    // window.location.reload()
+                }, 1500);
+                notyf.success({
+                    message: "Update customer successfully",
+                    duration: 5000
+                })
+
+            },
+            error: function (xhr, status, error) {
+                // Handle the error response here
+                $(".overlay").hide()
+                var error_msg = xhr.responseJSON.exception.split(":")[1]
+
+                notyf.error({
+                    message: error_msg,
+                    duration: 5000
+                });
+            }
+        })
+    }
+
+
+    $("#delete").click(function () {
+
+        $(".overlay").show()
+        $(".overlay-content").text("Please Wait....")
+
+        // delete file
+        $.ajax({
             url: "/api/resource/Customer/" + customer_id,
             type: "DELETE",
             dataType: "json",
-            
+
             success: function (data) {
-                console.log(data);
+
+
+
                 notyf.success({
                     message: "Deleted record  successfully",
                     duration: 5000
                 })
                 setTimeout(() => {
-                        window.location.href = "/logistic/customer"
-                }, 3000);
-    
+                    window.location.href = "/logistic/customer"
+                    $(".overlay").hide()
+                }, 1500);
+
             },
             error: function (xhr, status, error) {
                 // Handle the error response here
                 console.dir(xhr); // Print the XHR object for more details
-                
+
             }
         })
     })
+
+
+
+    // remove image from profile
+    // delete image
+    $("#remove_profile").click(function () {
+        update_customer(updated_form_data)
+        delete_profile(remove = 1)
+    })
+
+
+    // delete profile_image
+    function delete_profile(remove = 0) {
+
+        // delete old file
+        $.ajax({
+            type: 'DELETE',
+            url: '/api/method/vessel.api.updateuser.delete_old_file',
+            data: {
+                file_url: customer_profile_img,
+                attached_to_name: customer_id,
+                attached_to_field: "image",
+                attached_to_doctype: "Customer",
+                remove: remove
+            },
+            success: function (deleteResponse) {
+
+            },
+            error: function (xhr, status, error) {
+                //   window.location.reload()
+                console.dir(xhr)
+
+            }
+        });
+    }
 
 })
 

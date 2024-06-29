@@ -61,6 +61,37 @@ html, body {
     outline: none;
     padding-left: 45px;
  }
+
+
+
+ #search-results {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    position: fixed;
+    width: 270px;
+    border-radius: 10px;
+    background: white;
+    border: 1px solid #ccc;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 1000;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    display: none;
+}
+
+#search-results li {
+    padding: 10px;
+    width: 270px;
+    cursor: pointer;
+    
+}
+
+#search-results li:hover {
+    background: #f0f0f0;
+}   
+
+
  input[type="search"]::-webkit-search-cancel-button{
      display: none; 
     }
@@ -84,6 +115,39 @@ html, body {
     object-fit: cover;
     object-position: center;
 }
+#notification-area {
+    min-height: 300px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    position: fixed;
+    width: 270px;
+    border-radius: 10px;
+    background: white;
+    border: 1px solid #ccc;
+    overflow-y: auto;
+    max-height: 300px;
+    z-index: 1000;
+    top: 65px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    right: 80px;
+    display: none; /* Initially hidden */
+}
+.notification .notify-list-item{
+    padding: 15px;
+    width: 270px;
+    cursor: pointer;
+}
+.notification .notify-list-item p{
+    font-size: 12px;
+    opacity: 0.5;
+    margin: 0;
+}
+.notification .notify-list-item:hover{
+    background: #f0f0f0;
+}
+
+
 /* dropdown */
 .dropdown-menu{
     border-radius: 8px;
@@ -93,6 +157,10 @@ html, body {
 .hidden{
     display: none;
 }
+/* scroll */
+::-webkit-scrollbar {
+    width: 50px;
+  }
 
 /* responsive */
 @media screen and (max-width:767px){

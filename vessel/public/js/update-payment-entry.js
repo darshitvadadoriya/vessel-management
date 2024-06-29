@@ -319,6 +319,7 @@ $(document).ready(function () {
 
             if (payment_entry.docstatus == 1) {
                 $("#save").remove()
+                $("#delete").hide()
                 $(".action-btn-group").append(`<button class="btn btn-cancel" id="cancel">Cancel</button>`)
                 // for not woring on child table to set settimeout
                 setTimeout(() => {
@@ -334,6 +335,7 @@ $(document).ready(function () {
                     $('form').find('input, textarea, select').prop('disabled', true);
                 }, 50);
                 $("#save").hide()
+                $("#delete").hide()
                 $("#add_new_row").css({ "pointer-events": "none", "opacity": "0.5" })
                 $("#delete_row").css({ "pointer-events": "none", "opacity": "0.5" })
             }

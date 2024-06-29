@@ -23,7 +23,76 @@ $(document).ready(function(){
          }
      }
 
+    //  searchbar
 
+    var search_list = [
+        {"User List":"/user"},
+        {"New User":"/user/new-user"},
+        {"Customer List":"/logistic/customer"},
+        {"New Customer":"/logistic/customer/new-customer"},
+        {"Account List":"/accounts/account"},
+        {"New Account":"/accounts/account/new-account"},
+        {"Company List":"/accounts/company"},
+        {"New Company":"/accounts/company/new-company"},
+        {"Payment Entry List":"/accounts/payment-entry"},
+        {"New Payment Entry":"/accounts/payment-entry/new-payment-entry"},
+        {"Balance Summary Report":"/analytics/balance-summary"}, 
+    ]
+
+    
+        $('#search').on('input', function() {
+            const query = $(this).val().toLowerCase();
+            const resultsContainer = $('#search-results');
+            resultsContainer.empty().hide();
+    
+            if (query) {
+                const filteredList = search_list.filter(item => {
+                    const key = Object.keys(item)[0];
+                    return key.toLowerCase().includes(query);
+                });
+    
+                if (filteredList.length > 0) {
+                    filteredList.forEach(item => {
+                        const key = Object.keys(item)[0];
+                        const li = $('<li></li>').text(key);
+                        li.on('click', function() {
+                            window.location.href = item[key];
+                        });
+                        resultsContainer.append(li);
+                    });
+                } else {
+                    const noResult = $('<li></li>').text('No result found');
+                    resultsContainer.append(noResult);
+                }
+                resultsContainer.show();
+            }
+        });
+    
+        // Hide the results when clicking outside the search bar
+        $(document).on('click', function(event) {
+            if (!$(event.target).closest('.search-bar').length) {
+                $('#search-results').hide();
+            }
+        });
+    
+        // Prevent hiding results when clicking inside the search bar
+        $('.search-bar').on('click', function(event) {
+            event.stopPropagation();
+        });
+    
+
+
+
+        // notification
+        $('.notification').click(function(){
+            $('#notification-area').toggle();   
+        });
+        
+    
+
+
+
+    
 
     //  logout
     $("#logout").click(function(){

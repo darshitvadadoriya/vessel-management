@@ -61,6 +61,7 @@ def balance_summary_report(filters):
             jea.debit,
             jea.credit,
             jea.party,
+            jea.debit - jea.credit as balance,
             jea.custom_attachments
         FROM
             `tabJournal Entry` AS je

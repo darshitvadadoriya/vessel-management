@@ -457,4 +457,79 @@ function bulk_delete(delete_list) {
     }    
 })
 
+
+
+      
+// bulk delete records
+function bulk_delete(delete_list) {
+    $.ajax({
+        url: "/api/method/vessel.api.delete.bulk_delete",
+        type: "POST",
+        contentType: "application/json",
+        dataType: "json",
+        data: JSON.stringify({
+            doctype: "Journal Entry",
+            delete_list: delete_list,
+        }),
+        success: function (response) {
+            console.log(response);
+            
+            if (response.message == true) {
+                notyf.success({
+                        message:"Data deleted successfully",
+                        duration:3000
+                });
+
+                setTimeout(()=>{
+                    window.location.href= "/accounts/payment-entry"
+                },3000)
+            }
+
+        },
+        error: function (xhr, status, error) {
+            console.dir(xhr);
+            console.log(JSON.parse(JSON.parse(xhr.responseJSON._server_messages)[0]).message);
+            var error_msg = JSON.parse(JSON.parse(xhr.responseJSON._server_messages)[0]).message.replace(/<a([^>]*)>/g, '<div style="font-weight: bold; color: white;">')
+            .replace(/<\/a>/g, '</div>');
+            
+            notyf.error({
+                message:error_msg,
+                duration:10000
+        });
+        }
+    });
+}
+
+
+
+       // on click delete to get checked data list
+       $(document).on("click","#delete", function () {
+        if(selected_list.length!=0)
+        {
+            swal({
+                title: "Are you sure?",
+                text: "Are you sure want to delete data?",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+            .then((willDelete) => {
+                if (willDelete) {
+                    var delete_list = []
+                    // get checked list from localstorage
+                    console.log(selected_list);
+                    $.each(selected_list, function (index, delete_item) {
+                        console.log(delete_item);
+                        delete_list.push(delete_item.id)
+            
+                    })
+                    console.log(delete_list)
+                    bulk_delete(delete_list)
+                } 
+            });
+        }    
+    })
+
+
+
 })

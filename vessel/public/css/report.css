@@ -109,6 +109,9 @@
 .report-filter .disable-report-filter input{
     width: 0%;
 }
+.debit_data,.credit_data{
+    text-align: right;
+}
 
 
 

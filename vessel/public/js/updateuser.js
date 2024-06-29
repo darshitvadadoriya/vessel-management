@@ -3,6 +3,7 @@ $(document).ready(function () {
     var old_form_data = {};
     var user_image //store old image url for user
     var user_id //store old userid for file delete
+    var updated_form_data = {};
     
 
      // Create an instance of Notyf
@@ -77,11 +78,12 @@ $(document).ready(function () {
                 user_image = user_info.user_image
                 user_id = user_info.name
                 var user_profile_img = user_info.user_image && user_info.user_image.includes("https") ? user_info.user_image : (user_info.user_image ? window.location.origin + user_info.user_image : window.location.origin + "/assets/vessel/files/images/default_user.jpg")
-
                 
+                user_info.user_image ? $("#remove_profile").show():$("#remove_profile").hide() //hide and show remove button
+
                 $("#page_title").html(user_info.full_name)
                 $("#user_id").val(user_info.name)
-                $('#image-preview').css('background-image', 'url(' + user_profile_img + ')')
+                $('#image-preview').css('background-image', 'url(' + encodeURI(user_profile_img) + ')')
                 $("#first_name").val(user_info.first_name)
                 $("#middle_name").val(user_info.middle_name)
                 $("#last_name").val(user_info.last_name)
@@ -120,6 +122,50 @@ $(document).ready(function () {
 
 
 
+   $("#delete").click(function(){
+    $(".overlay").show()
+    $(".overlay-content").text("Please Wait....")
+
+    if($("#logged_in_user").text() != $("#email").val())
+    {
+        // delete file
+        $.ajax({
+        url: "/api/resource/User/" + user_id,
+        type: "DELETE",
+        dataType: "json",
+        
+        success: function (data) {
+            
+            notyf.success({
+                message: "Deleted record  successfully",
+                duration: 5000
+            })
+            setTimeout(() => {
+                $(".overlay").hide()
+                    window.location.href = "/user"
+            }, 1500);
+
+        },
+        error: function (xhr, status, error) {
+            // Handle the error response here
+            console.dir(xhr); // Print the XHR object for more details
+            
+        }
+    })
+    }
+    else{
+        notyf.error({
+            message: "Logged In User can not be deleted",
+            duration: 5000
+        })
+    }
+   
+  })
+
+
+
+
+
     // click on save to update data
     $('#save').click(function (e) {
 
@@ -133,17 +179,14 @@ $(document).ready(function () {
             form_data[field.name] = field.value;
         });
 
+        updated_form_data = {};
         // Compare old form data with current form data and store updated fields
-        var updated_form_data = {};
-
         $.each(form_data, function (key, value) {
 
             if (old_form_data[key] !== value) {
                 updated_form_data[key] = value;
             }
         });
-
-        console.log(updated_form_data)
 
 
       //get today date
@@ -161,11 +204,11 @@ $(document).ready(function () {
             $('#first_name').after('<span id="first_name_error" class="error-message">Please first name is mandatory.</span>');
             return false;
         }
-        else if (!form_data['email']) {
-            $('#email_error').remove(); // Remove existing error message
-            $('#email').after('<span id="email_error" class="error-message">Please email is mandatory.</span>');
-            return false;   
-        }
+        // else if (!form_data['email']) {
+        //     $('#email_error').remove(); // Remove existing error message
+        //     $('#email').after('<span id="email_error" class="error-message">Please email is mandatory.</span>');
+        //     return false;   
+        // }
         else if(updated_form_data['birth_date'] >today_date){
             $('#date_error').remove(); // Remove existing error message
             $('#date_of_birth').after('<span id="date_error" class="error-message">Please add date before today</span>');
@@ -204,6 +247,7 @@ $(document).ready(function () {
 
         function upload_file(files) {
             
+            
             var file_data = new FormData();
             file_data.append('file', files);
             file_data.append('file_name', files.name);
@@ -217,29 +261,12 @@ $(document).ready(function () {
                 contentType: false,
                 data: file_data, // Assuming form_data contains a file object
                 success: function (response) {
-                    
-                    var profile_image_url = response.message.file_url
-                    updated_form_data["user_image"] = profile_image_url;
-                    update_user(updated_form_data)
-
-                    // delete old file
-                    $.ajax({
-                        type: 'DELETE',
-                        url: '/api/method/vessel.api.updateuser.delete_old_file',
-                        data: {
-                            file_url: user_image,
-                            attached_to_name: user_id,
-                            attached_to_field: "user_image",
-                            attached_to_doctype:"User"
-                        },
-                        success: function(deleteResponse) {
-                            console.log(deleteResponse);
-                        },
-                        error: function(xhr, status, error) {
-                            console.dir(xhr)
-                            
-                        }
-                    });
+                    delete_profile() //delete old file
+                   
+                        var profile_image_url = response.message.file_url
+                        updated_form_data["user_image"] = profile_image_url;
+                        update_user(updated_form_data)                  
+                   
                 },
                 error: function (xhr, status, error) {
                     // Handle the error response here
@@ -250,84 +277,150 @@ $(document).ready(function () {
                 }
             })
         }
+ 
 
-        
-      
-        
+})
 
-        function update_user(updated_form_data) {
-            var user_id = $('#user_id').val()
+function update_user(updated_form_data) {
+    $(".overlay").show()
+    $(".overlay-content").text("Please Wait....")
 
-            $.ajax({
-                url: "/api/resource/User/" + user_id,
-                type: "PUT",
-                dataType: "json",
-                data: JSON.stringify(updated_form_data),
-                success: function (data) {
+    var user_id = $('#user_id').val()
 
-                    notyf.success({
-                        message: "User updated successfully",
-                        duration: 5000
-                    })
-
-                },
-                error: function (xhr, status, error) {
-                    // Handle the error response here
-                    console.error('Error: ' + error); // Print the error to the console
-                    console.error('Status: ' + status); // Print the status to the console
-                    console.dir(xhr.responseJSON.exc_type); // Print the XHR object for more details
-                    if (xhr.responseJSON.exc_type == "DuplicateEntryError") {
-                        notyf.error({
-                            message: "User already added",
-                            duration: 5000
-                        })
-                    }
-                }
-            })
-        }
-    })
-
-
-
-   $("#delete").click(function(){
-
-    if($("#logged_in_user").text() != $("#email").val())
-    {
-        // delete file
-        $.ajax({
+    $.ajax({
         url: "/api/resource/User/" + user_id,
-        type: "DELETE",
+        type: "PUT",
         dataType: "json",
-        
+        data: JSON.stringify(updated_form_data),
         success: function (data) {
-            console.log(data);
+
             notyf.success({
-                message: "Deleted record  successfully",
+                message: "User updated successfully",
                 duration: 5000
             })
             setTimeout(() => {
-                    window.location.href = "/user"
-            }, 3000);
+                window.location.reload()
+                $(".overlay").hide()
+            }, 1500);
 
         },
         error: function (xhr, status, error) {
+            $(".overlay").hide()
             // Handle the error response here
+            console.error('Error: ' + error); // Print the error to the console
+            console.error('Status: ' + status); // Print the status to the console
             console.dir(xhr); // Print the XHR object for more details
-            
+            if (xhr.responseJSON.exc_type == "DuplicateEntryError") {
+                notyf.error({
+                    message: "User already added",
+                    duration: 5000
+                })
+            }
         }
     })
-    }
-    else{
-        notyf.error({
-            message: "Logged In User can not be deleted",
-            duration: 5000
-        })
-    }
+}
+
+
+
+    // remove image from profile
+    // delete image
+    $("#remove_profile").click(function(){
+        update_user(updated_form_data)
+        delete_profile(remove=1)
+    })
+
    
-  })
+
+    // delete profile_image
+    function delete_profile(remove=0){
+        
+         // delete old file
+         $.ajax({
+            type: 'DELETE',
+            url: '/api/method/vessel.api.updateuser.delete_old_file',
+            data: {
+                file_url: user_image,
+                attached_to_name: user_id,
+                attached_to_field: "user_image",
+                attached_to_doctype:"User",
+                remove:remove
+            },
+            success: function(deleteResponse) {
+                
+            },
+            error: function(xhr, status, error) {
+            //   window.location.reload()
+                console.dir(xhr)
+                
+            }
+        });
+    }
 
 
 
+
+       // update email address in user
+
+       $("#update_email").click(function(){
+        // set value in updateted email id field
+        $('#update_email_address').val($("#email").val())
+    })
+    
+    $("#update_email_id").click(function(){
+        var old_email_address = $("#email").val()
+        var updated_email_address = $("#update_email_address").val()
+        if(!updated_email_address)
+        {
+            $('#update_email_error').remove();
+            $('#update_email_address').after('<span id="update_email_error" class="error-message">Please email is mandatory.</span>');
+        }
+        else if(old_email_address == updated_email_address){
+            $('#old_email_error').remove();
+            $('#update_email_address').after('<span id="old_email_error" class="error-message">Email is not changed.</span>');
+        }
+        else{
+            $('#update_email_error').remove();
+            $('#old_email_error').remove();
+            
+            $(".overlay").show()
+            $(".overlay-content").text("Please Wait....")
+            $("#update_email_form .close").click()
+            $.ajax({
+                url: "/api/method/vessel.api.updateuser.update_email",
+                type: "POST",
+                dataType: "json",
+                data: {
+                    'doctype': 'User',
+                    'old_email': JSON.stringify(old_email_address), // 'name' instead of 'old_name' for the old document
+                    'new_email': JSON.stringify(updated_email_address)
+                },
+                success: function (data) {
+                    if(data.message)
+                    {
+                        setTimeout(() => {
+                            window.location.href = "/user" 
+                       }, 3000);
+                        notyf.success({
+                            message: "Update email successfully",
+                            duration: 5000
+                        })
+
+                    }
+     
+                },
+                error: function (xhr, status, error) {
+                    $(".overlay").hide()
+                    // Handle the error response here
+                    console.dir(xhr); // Print the XHR object for more details
+     
+                }
+            })
+
+
+        }
+    })
+
+    
     
 
 })

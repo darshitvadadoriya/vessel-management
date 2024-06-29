@@ -38,6 +38,8 @@ def get_contact(doctype,doc_name):
             'emails': emails,
             'phones': phones
         }
+    print(contacts_dict)
+    
     return contacts_dict
 
 
@@ -78,9 +80,9 @@ def update_contact_email_ids(contact_name, new_email_ids):
         
 
 @frappe.whitelist()
-def update_contact_phone_nos(contact_name, new_phone_nos):
+def update_contact_phone_nos(contact_id, new_phone_nos):
     
-    contact_name = json.loads(contact_name)
+    contact_name = json.loads(contact_id)
     phone_nos = json.loads(new_phone_nos) # getting from client side email list
 
     # get the contact document
@@ -119,7 +121,7 @@ def update_contact_phone_nos(contact_name, new_phone_nos):
 
     
 @frappe.whitelist()
-def create_contact(customer_name,phone,email):
+def create_contact(customer_name,customer_id,phone,email):
     # set in dict sets
     email_ids = [{"email_id": email_id} for email_id in email]
     phone_nos = [{"phone": phone_no} for phone_no in phone]
@@ -132,7 +134,7 @@ def create_contact(customer_name,phone,email):
         "links": [  
             {
                 "link_doctype": "Customer",  
-                "link_name": customer_name  #link with customer doc
+                "link_name": customer_id  #link with customer doc
             }
         ]
     })

@@ -240,7 +240,7 @@ website_route_rules = [
     {"from_route": "/accounts/account/new-account", "to_route": "/account/account-form"},
     {"from_route": "/accounts/payment-entry", "to_route": "/account/payment-entry-list"},
     {"from_route": "/accounts/payment-entry/new-payment-entry", "to_route": "/account/payment-entry-form"},
-    {"from_route": "/account/company/new-company", "to_route": "/company/company-form"},
+    {"from_route": "/accounts/company/new-company", "to_route": "/company/company-form"},
     {"from_route": "/accounts/company", "to_route": "/company/company-list"},
     {"from_route": "/analytics", "to_route": "/analytics/analytics"},
     {"from_route": "/login", "to_route": "/login/login"},

@@ -155,12 +155,14 @@ $(document).ready(function(){
         }
         else
         {
-            console.log("asasasasasasas");
              create_account()
         }
 
 
         function create_account(){
+            $(".overlay").show()
+            $(".overlay-content").text("Please Wait....")
+
             $.ajax({
                 url: "/api/resource/Account",
                 type: "POST",
@@ -174,17 +176,21 @@ $(document).ready(function(){
                     })
                     setTimeout(() => {
                         window.location.href = "/accounts/account/"+data.data.name
-                    }, 1500);
+                        $(".overlay").hide()
+                    }, 3000);
+                    
+                    
                 },
                 error: function (xhr, status, error) {
+                    $(".overlay").hide()
                     // Handle the error response here
                     console.dir(xhr); // Print the XHR object for more details
-                    if (xhr.responseJSON.exc_type == "DuplicateEntryError") {
-                        notyf.error({
-                            message: "Account already added",
-                            duration: 5000
-                        })
-                    }
+                    var error_msg = xhr.responseJSON.exception.split(":")[1]       
+                            
+                    notyf.error({
+                        message:error_msg,
+                        duration:5000
+                    });
     
                 }
             })
@@ -194,9 +200,6 @@ $(document).ready(function(){
   })    
 
 
-
-
-  
 
 
 

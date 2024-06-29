@@ -256,6 +256,8 @@ $(document).ready(function(){
 
   
   $("#delete").click(function(){
+    $(".overlay").show()
+    $(".overlay-content").text("Please Wait....")   
 
     // delete file
     $.ajax({
@@ -271,10 +273,13 @@ $(document).ready(function(){
         })
         setTimeout(() => {
                 window.location.href = "/accounts/account"
-        }, 1500);
+                $(".overlay").hide()
+        }, 3000);
 
     },
     error: function (xhr, status, error) {
+        $(".overlay").hide()
+        
         // Handle the error response here
         console.dir(xhr); // Print the XHR object for more details
         var error_msg = xhr.responseJSON.exception.split(":")[1]

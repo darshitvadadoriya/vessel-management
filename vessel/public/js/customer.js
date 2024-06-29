@@ -93,9 +93,11 @@ $(document).ready(function(){
 
         })
 
-        add_row()
+
         // add row button to add new row in account table
         function add_row(){
+            $("#empty_table").remove() //remove blank and default row
+
                 var company_id = "company_id" + $('#customer-accounts tbody tr').length
                 var account_id = "account_id" + $('#customer-accounts tbody tr').length
 
@@ -189,26 +191,20 @@ $(document).ready(function(){
         $('#account_table tr').each(function(index) {
             var companyvalue = $("#company_id" + index).val();
             var accountvalue = $("#account_id" + index).val();
-            if(index==0 && companyvalue=="")
-            {
-                 console.log("first row is blank") //if first row is blank default
-            }
-            else{
-                account_list()
-            }
-            function account_list()
-            {
-                if (!companyvalue || !accountvalue) {
-                    notyf.error({
-                        message:"Selecting a company and an account is mandatory.",
-                        duration:5000
-                    })
-                    return false;  // stop loop
-                }
-                else{
-                    account_lst.push({'company':companyvalue,"account":accountvalue})
-                }
-            }
+            
+               if($('#account_table tr').length>1){
+                    if (!companyvalue || !accountvalue) {
+                        notyf.error({
+                            message:"Selecting a company and an account is mandatory.",
+                            duration:5000
+                        })
+                        return false;  // stop loop
+                    }
+                    else{
+                        account_lst.push({'company':companyvalue,"account":accountvalue})
+                    }
+               }
+            
 
         });
         if(account_lst)
@@ -226,12 +222,8 @@ $(document).ready(function(){
             phone_list.push(phone_no); // Store each phone number with a key like "phone0", "phone1", etc.
         });
 
-        // form_data["phone"] = phone_list
-        console.log(phone_list); 
 
-         // phone section data
-         
-
+         // phone section data         
          $("#customer_email .email_row").each(function(i, data) {
              var email_data = $(data).find(".email").text();
              email_list.push(email_data); // Store each phone number with a key like "phone0", "phone1", etc.
@@ -316,6 +308,7 @@ $(document).ready(function(){
                     customer_name = data.data.customer_name
                     
                     customer_contact = {
+                        "customer_id": customer_id, 
                         "customer_name": customer_name,  
                         "phone": phone_list,             
                         "email": email_list              
@@ -324,7 +317,7 @@ $(document).ready(function(){
                     setTimeout(() => {
                         $(".overlay").hide()
                         window.location.href = "/logistic/customer/"+customer_id
-                    }, 2000);
+                    }, 1500);
                     notyf.success({
                         message: "New customer created",
                         duration: 5000
@@ -333,14 +326,12 @@ $(document).ready(function(){
                 },
                 error: function (xhr, status, error) {
                     $(".overlay").hide()
-                    
-                    console.dir(xhr); // Print the XHR object for more details
-                    if (xhr.responseJSON.exc_type == "DuplicateEntryError") {
-                        notyf.error({
-                            message: "customer already added",
-                            duration: 5000
-                        })
-                    }
+                    var error_msg = xhr.responseJSON.exception.split(":")[1]       
+                            
+                    notyf.error({
+                        message:error_msg,
+                        duration:5000
+                    });
                 }
             })
         }
@@ -357,42 +348,12 @@ $(document).ready(function(){
             contentType: "application/json",
             data: JSON.stringify(customer_contact),
             success: function(response) {
-                setTimeout(() => {
-                    window.location.href = "/logistic/customer/"+customer_id
-                }, 2000);
-            },
-        
-            error: function (xhr, status, error) {
-          
-                if (xhr.responseJSON.exc_type == "DuplicateEntryError") {
-                    notyf.error({
-                        message: "customer already added",
-                        duration: 5000
-                    })
-                }
-            }
-        })
-    }
-
-    function create_contact(customer_contact){
-        $.ajax({
-            url: "/api/method/vessel.api.customer.create_contact",
-            type: "POST",
-            dataType: "json",
-            contentType: "application/json",
-            data: JSON.stringify(customer_contact),
-            success: function(response) {
                
             },
         
             error: function (xhr, status, error) {
           
-                if (xhr.responseJSON.exc_type == "DuplicateEntryError") {
-                    notyf.error({
-                        message: "customer already added",
-                        duration: 5000
-                    })
-                }
+               console.log(xhr)
             }
         })
     }

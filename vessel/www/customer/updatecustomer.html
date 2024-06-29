@@ -53,19 +53,27 @@
               <div class="inner-form-section row">
                     <!-- sidebar image -->
                     <div class="col-sm-12 col-md-3 col-lg-2 justify-content-center d-flex align-content-start">
-                        <div class="upload-profile-image">
-                          <div class="edit-profile-image">
-                              <input type='file' id="upload-image" accept=".png, .jpg, .jpeg" />        
-                              <label for="upload-image">
-                                <img src="/assets/vessel/files/images/edit.png" alt="edit">
-                              </label>
-                          </div>
-                          <div class="profile-image-preview">
-                             <div id="image-preview" style="background-image: url(/assets/vessel/files/images/default_user.jpg);">
-                            </div>
-                          </div>
-                      </div>
+                      <div class="upload-profile-image">
 
+                        <div class="edit-profile-image dropdown">
+                          <img src="/assets/vessel/files/images/edit.png" alt="edit" data-toggle="dropdown">
+                          <div class="dropdown-menu">
+                            <div class="dropdown-item" for="upload-image">
+                              <label for="upload-image">
+                                Upload
+                              </label> 
+                               <input type='file' id="upload-image" accept=".png, .jpg, .jpeg" />
+                            </div>
+                            <div class="dropdown-item" id="remove_profile">Remove</div>
+                            
+                          </div>
+                        </div>
+          
+                        <div class="profile-image-preview">
+                          <div id="image-preview" style="background-image: url(/assets/vessel/files/images/default_user.jpg);" data-profile="true">
+                          </div>
+                        </div>
+                      </div>
                     </div>
                     <div class="col-sm-12 col-md-9 col-lg-10">
                         <div class="form-row">
@@ -163,20 +171,7 @@
                             </tr>
                         </thead>
                         <tbody id="account_table">
-                            <tr>
-                                <!-- <td class="check"><input type="checkbox" class="checkbox" name="checkbox" /></td>
-                                <td>
-                                   <select class="company" class="form-select" data-searchable="true">
-                                   
-                                   </select>
-                                </td>
-                                <td>
-                                   
-                                    <select class="account" class="form-select" data-searchable="true">
-                                        
-                                   </select>
-                                </td> -->
-                            </tr>
+                          <tr id="empty_table"></tr>
                             
                         </tbody>
 

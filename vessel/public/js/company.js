@@ -53,6 +53,10 @@ $(document).ready(function () {
             form_data["abbr"] = abbr
             form_data["default_currency"] = "INR"
 
+            //loading_page
+            $(".overlay").show()
+            $(".overlay-content").text("Please Wait....") 
+
             $.ajax({
                 url: "/api/resource/Company",
                 type: "POST",
@@ -60,10 +64,14 @@ $(document).ready(function () {
                 data:JSON.stringify(form_data),
                 success: function (data) {
                    console.log(data);
-                   notyf.success({
-                    message: "Company create successfully",
-                    duration: 5000
-                })
+                    notyf.success({
+                        message: "Company create successfully",
+                        duration: 5000
+                    })
+                    setTimeout(() => {
+                        $(".overlay").hide()
+                        window.location.href = "/accounts/company"
+                    }, 3000);
     
                    
                 },

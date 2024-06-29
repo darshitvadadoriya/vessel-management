@@ -31,6 +31,8 @@
 
         <div class="dropdown-menu ropdown-menu-right" aria-labelledby="action-button">
           <a class="dropdown-item" id="new_user" href="/user/new-user">New User</a>
+          <a class="dropdown-item" id="update_email" data-toggle="modal" data-target="#update_email_form">Update
+            Email</a>
           <a class="dropdown-item" id="delete">Delete</a>
         </div>
       </div>
@@ -56,14 +58,23 @@
           <!-- sidebar image -->
           <div class="col-sm-12 col-md-3 col-lg-2 justify-content-center d-flex align-content-start">
             <div class="upload-profile-image">
-              <div class="edit-profile-image">
-                <input type='file' id="upload-image" accept=".png, .jpg, .jpeg" />
-                <label for="upload-image">
-                  <img src="/assets/vessel/files/images/edit.png" alt="edit">
-                </label>
+
+              <div class="edit-profile-image dropdown">
+                <img src="/assets/vessel/files/images/edit.png" alt="edit" data-toggle="dropdown">
+                <div class="dropdown-menu">
+                  <div class="dropdown-item" for="upload-image">
+                    <label for="upload-image">
+                      Upload
+                    </label> 
+                     <input type='file' id="upload-image" accept=".png, .jpg, .jpeg" />
+                  </div>
+                  <div class="dropdown-item" id="remove_profile">Remove</div>
+                  
+                </div>
               </div>
+
               <div class="profile-image-preview">
-                <div id="image-preview" style="background-image: url(/assets/vessel/files/images/default_user.jpg);">
+                <div id="image-preview" style="background-image: url(/assets/vessel/files/images/default_user.jpg);" data-profile="true">
                 </div>
               </div>
             </div>
@@ -87,11 +98,11 @@
 
               <div class="col-md-6 col-xl-4 mb-4">
                 <label for="email">Email <span class="red">*</span></label>
-                <input type="text" class="form-control" id="email" name="email">
+                <input type="text" class="form-control" id="email" name="email" readonly>
               </div>
               <div class="col-md-6 col-xl-4 mb-4">
                 <label for="user_name">User Name</label>
-                <input type="text" class="form-control" id="user_name" name="user_name">
+                <input type="text" class="form-control" id="user_name" name="username">
               </div>
               <div class="col-md-6 col-xl-4 mb-4">
                 <label for="password">Password</label>
@@ -157,6 +168,34 @@
     <input type="hidden" id="user_id">
 
   </form>
+
+
+
+  <div class="modal fade" id="update_email_form" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header border-bottom-1">
+          <h5 class="modal-title" id="exampleModalLabel">Update Email</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form>
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="email1">Email Address</label>
+              <input type="email" class="form-control" id="update_email_address" placeholder="Enter new email">
+            </div>
+
+          </div>
+          <div class="modal-footer border-top-1 d-flex justify-content-end">
+            <div class="btn btn-dialog" id="update_email_id">Update</div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 
 </div>
 {% endblock %}
