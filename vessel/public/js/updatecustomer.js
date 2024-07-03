@@ -22,6 +22,7 @@ $(document).ready(function () {
     var updated_form_data = {};
     var old_form_data = {};
     var customer_name
+    var profile_path
 
 
 
@@ -44,26 +45,7 @@ $(document).ready(function () {
 
 
 
-    // on click add email to add new row
-    $("#add_email").click(function () {
-        var customer_email = $("#email_address_value").val()
-
-        $(`<div class="row w-100 justify-content-between email_row">
-               <div class="email">${customer_email}</div>
-               <div class="delete"><img src="/assets/vessel/files/images/delete.png" alt="delete"></div>
-           </div>`).insertBefore("#customer_email_input")
-        $("#email_address_value").val("")
-    })
-
-    // on click add phone to add new row
-    $("#add_phone").click(function () {
-        var phone_no_value = $("#phone_no_value").val()
-        $(`<div class="row w-100 justify-content-between phone_row">
-               <div class="phone">${phone_no_value}</div>
-               <div class="delete"><img src="/assets/vessel/files/images/delete.png" alt="delete"></div>
-           </div>`).insertBefore("#customer_phone_input")
-        $("#phone_no_value").val("")
-    })
+    
 
     // on click delete icon to delete particular clicked row
     $(document).on('click', '#delete_row', function () {
@@ -76,6 +58,71 @@ $(document).ready(function () {
         }
     })
 
+       // on click add email to add new row
+       $("#add_email").click(function(){
+        var email_value = $("#email_address_value").val()
+        if(email_value=="")
+            {
+                $('#email_address_error').remove();
+                $('#customer_email_input').append('<span id="email_address_error" class="error-message">Please enter email address.</span>');
+                $('#customer_email_input').css({"padding-bottom":"0"})
+                
+            }
+            else if(validateEmail(email_value)){    
+                $('#email_address_error').remove();
+                $('#customer_email_input').append('<span id="email_address_error" class="error-message">Please enter valid email address.</span>');
+            }
+            else{
+                $('#email_address_error').remove();
+                $('#customer_phone_input').css({"padding-bottom":"15px"})
+                var customer_email = $("#email_address_value").val()
+                
+                $(`<div class="row w-100 justify-content-between email_row">
+                        <div class="email">${customer_email}</div>
+                        <div class="delete"><img src="/assets/vessel/files/images/delete.png" alt="delete"></div>
+                    </div>`).insertBefore("#customer_email_input")
+                $("#email_address_value").val("")
+
+            }
+       
+    })
+
+    // on click add phone to add new row
+    $("#add_phone").click(function(){
+        var phone_value = $("#phone_no_value").val()
+        if(phone_value=="")
+        {
+            $('#phone_no_error').remove();
+            $('#customer_phone_input').append('<span id="phone_no_error" class="error-message">Please enter phone no.</span>');
+            $('#customer_phone_input').css({"padding-bottom":"0"})
+            
+        }
+        else if(phone_value.length!=10)
+            {
+                $('#phone_no_error').remove();
+                $('#customer_phone_input').append('<span id="phone_no_error" class="error-message">Please allow only 10 digits.</span>');
+                
+                
+            }
+        else
+        {
+            $('#phone_no_error').remove();
+            $('#customer_phone_input').css({"padding-bottom":"15px"})
+            var phone_no_value = $("#phone_no_value").val()
+            $(`<div class="row w-100 justify-content-between phone_row">
+                    <div class="phone">${phone_no_value}</div>
+                    <div class="delete"><img src="/assets/vessel/files/images/delete.png" alt="delete"></div>
+                </div>`).insertBefore("#customer_phone_input")
+            $("#phone_no_value").val("")
+        }
+
+       
+    })
+
+     // on click delete icon to delete particular clicked row
+     $(document).on('click', '.delete', function () {
+        $(this).parent().remove()
+    })
 
     // onclick add row to new row add in table
     $("#add_new_row").click(function () {
@@ -200,7 +247,7 @@ $(document).ready(function () {
                 customer_id = customer_info.name
                 customer_accounts = customer_info.accounts
                 customer_name = customer_info.customer_name
-
+                profile_path = customer_info.image
                 customer_profile_img = customer_info.image && customer_info.image.includes("https") ? customer_info.image : (customer_info.image ? window.location.origin + customer_info.image : window.location.origin + "/assets/vessel/files/images/default_user.jpg")
 
                 customer_info.image ? $("#remove_profile").show() : $("#remove_profile").hide() //hide and show remove button
@@ -290,7 +337,7 @@ $(document).ready(function () {
 
                 phone_data_list = data.message.phones
                 contact_id = data.message.contact_id ? data.message.contact_id : ""
-                console.log(contact_id);
+                
                 $.each(phone_data_list, function (i, data) {
                     $(`<div class="row w-100 justify-content-between phone_row">
                                         <div class="phone">${data}</div>
@@ -352,7 +399,7 @@ $(document).ready(function () {
             dataType: "json",
             data: {
                 fields: JSON.stringify(["name"]),
-                filters: JSON.stringify([["company", "=", companyval], ["account_type", "in", ["Payable", "Receivable", "Bank"]], ["is_group", "=", "0"]]),
+                filters: JSON.stringify([["company", "=", companyval], ["account_type","=","Receivable"], ["is_group", "=", "0"]]),
                 limit_page_length: "None"
             },
             success: function (data) {
@@ -532,8 +579,7 @@ $(document).ready(function () {
 
         });
         if (compareaccounts()) {
-            console.log(account_lst);
-            console.log("ACCOUNRT_DATA");
+            
             updated_form_data["accounts"] = account_lst //set account list in update form data
         }
         else{
@@ -544,16 +590,17 @@ $(document).ready(function () {
         // compare phone no
         function comparephone() {
             let updated = false;
-
+            
             $.each(phone_list, function (i) {
-                if (JSON.stringify(phone_list[i]) !== JSON.stringify(old_phone_list[i])) {
+                if (phone_list.length !== old_phone_list.length || JSON.stringify(phone_list[i]) !== JSON.stringify(old_phone_list[i])) {
                     updated = true;
                     return false;
                 }
             });
-
+                        
             return updated ? true : false;
         }
+        
         //compare email lists
         function compareemail() {
             let updated = false;
@@ -594,14 +641,16 @@ $(document).ready(function () {
             $('#customer_type_error').remove(); // Remove any existing error message
             $('#customer_type').after('<span id="customer_type_error" class="error-message">Please email is mandatory.</span>');
         }
-
+        console.log(updated_form_data);
 
         if (files.length > 0) {
             var file_data = files[0]
             upload_file(file_data); // Pass the first file to the upload_file function
+            $(".overlay").show()
+            $(".overlay-content").text("Please Wait....")
         } else {
-           
-            if (compareaccounts() || Object.keys(updated_form_data).length !== 0 || compareemail() || comparephone()) {
+          
+            if (compareaccounts() || Object.keys(updated_form_data).length !== 1 || compareemail() || comparephone()) {
 
                 if(!contact_id)
                 {
@@ -614,14 +663,7 @@ $(document).ready(function () {
                 update_customer(updated_form_data) // save data without image
                
             }
-            // else if(compareemail())
-            // {
-            //     update_emails()
-            // }
-            // else if(comparephone())
-            // {
-            //     update_phone()
-            // }
+    
             else {
                 notyf.success({
                     type: 'alert',
@@ -658,7 +700,7 @@ $(document).ready(function () {
                     delete_profile()
                     var profile_image_url = response.message.file_url
                     updated_form_data["image"] = profile_image_url;
-                    // update_customer(updated_form_data)
+                    update_customer(updated_form_data)
 
                 },
                 error: function (xhr, status, error) {
@@ -697,7 +739,7 @@ $(document).ready(function () {
 
                 setTimeout(() => {
                     $(".overlay").hide()
-                    // window.location.reload()
+                    window.location.reload()
                 }, 1500);
                 notyf.success({
                     message: "Update customer successfully",
@@ -770,7 +812,7 @@ $(document).ready(function () {
             type: 'DELETE',
             url: '/api/method/vessel.api.updateuser.delete_old_file',
             data: {
-                file_url: customer_profile_img,
+                file_url: profile_path,
                 attached_to_name: customer_id,
                 attached_to_field: "image",
                 attached_to_doctype: "Customer",
@@ -786,6 +828,14 @@ $(document).ready(function () {
             }
         });
     }
+
+     // email validation
+  function validateEmail(email) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (emailRegex.test(email) == false || email == "") {
+      return false;
+    }
+  }
 
 })
 

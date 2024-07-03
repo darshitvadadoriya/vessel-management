@@ -17,14 +17,66 @@ $(document).ready(function(){
 
     });
 
+    //get_customer and set in options
+    get_customer()
+    function get_customer() {
+        $.ajax({
+            url: "/api/resource/Customer",
+            type: "GET",
+            dataType: "json",
+            data: {
+                fields: JSON.stringify(["name", "customer_name"]),
+                filters: JSON.stringify([["disabled", "=", "0"]]),
+                limit_page_length: "None"
+            },
+            success: function (data) {
+                customer_list = data.data
+
+                $.each(customer_list, function (i, customer) {
+                  $("#customer_name").append(`<option value="${customer.name}">${customer.customer_name} - ${customer.name}</option>`)
+              })
+            },
+            error: function (xhr, status, error) {
+                // Handle the error response here
+                console.dir(xhr); // Print the XHR object for more details
+            }
+        })
+    }
+
+
+      //get_company and set in options
+      get_company()
+      function get_company() {
+          $.ajax({
+              url: "/api/resource/Company",
+              type: "GET",
+              dataType: "json",
+              data: {
+                  limit_page_length: "None"
+              },
+              success: function (data) {
+                  company_list = data.data
+  
+                  $.each(company_list, function (i, company) {
+                    $("#company").append(`<option value="${company.name}">${company.name}</option>`)
+                })
+              },
+              error: function (xhr, status, error) {
+                  // Handle the error response here
+                  console.dir(xhr); // Print the XHR object for more details
+              }
+          })
+      }
+
+
 
 
     function balance_summary_filters(){
         var filters = [];
     
         // Add name filter if not empty
-        var customer_name_filter = $('#customer_name').val().trim();
-        var company_name_filter = $('#company').val().trim();
+        var customer_name_filter = $('#customer_name').val();
+        var company_name_filter = $('#company').val();
         var from_date = $('#from_date').val();
         var to_date = $('#to_date').val();
     
@@ -102,8 +154,10 @@ $(document).ready(function(){
       }
 
 
-    //   set onload if fielter is available to set in particulat fields
-    get_filter_data()
+   setTimeout(() => {
+     //   set onload if fielter is available to set in particulat fields
+     get_filter_data()
+   }, 200);
 
 
 
@@ -113,7 +167,7 @@ $(document).ready(function(){
     show_filtered_list(filter_data)
      function show_filtered_list(filters){
         $.ajax({
-            url: "/api/method/vessel.api.account.balance_summary_report",
+            url: "/api/method/vessel.api.report.calculate_journal_entry_balances",
             type: "GET",
             dataType: "json",
             data:{
@@ -130,12 +184,13 @@ $(document).ready(function(){
                     $("#report_data").append(`<tr>
                             <td class="check-box"><input type="checkbox" class="checkall" name="checkall" /></td>
                             <td>${index+1}</td>
-                            <td class="date_data">${data.posting_date ? date_format(data.posting_date) : ''}</td>
+                            <td class="date_data"><a href="/accounts/payment-entry/${data.name}" class="reference_id">${data.posting_date ? date_format(data.posting_date) : ''}</a></td>
+                            <td class="account_data">${data.account ? data.account : ''}</td>
                             <td class="description_data">${data.user_remark ? data.user_remark : ''}</td>
-                            <td class="debit_data">${data.debit ? data.debit : '0'}</td>
-                           <td class="credit_data">${data.credit ? data.credit : '0'}</td>
-                           <td class="balance_data"></td>
-                            <td class="attached_data">${data.custom_attachments ? `<a href='${data.custom_attachments}'>${data.custom_attachments.substring(0, 25) + '...'}</a>` : ''}</td>
+                            <td class="debit_data nymbers">${data.debit ? data.debit : '0'}</td>
+                           <td class="credit_data numbers">${data.credit ? data.credit : '0'}</td>
+                           <td class="balance_data numbers">${data.balance ? data.balance : '0'}</td>
+                            <td class="attached_data file_url">${data.custom_attachments ? `<a href='${data.custom_attachments}'>${data.custom_attachments.substring(0, 25) + '...'}</a>` : ''}</td>
                         </tr>`);
                })
             },
@@ -146,6 +201,13 @@ $(document).ready(function(){
             }
         })
       }
+
+
+      $('.number').each(function() {
+        var number = parseInt($(this).text(), 10);
+        var formattedNumber = number.toLocaleString('en-IN'); // Using 'en-IN' for Indian numbering system
+        $(this).text(formattedNumber);
+    });
 
 
 
@@ -169,6 +231,8 @@ column_filters(".credit", ".credit_data");
 column_filters(".description", ".description_data");
 column_filters(".balance", ".balance_data");
 column_filters(".attachments", ".attached_data");
+column_filters(".account_input", ".account_data");
+
 
     
     
@@ -186,6 +250,22 @@ function date_format(date){
 }
 
 
+$("#refresh_report").click(function(){
+
+  var filter_data = get_filter_from_urls()    
+    console.log(filter_data);
+    show_filtered_list(filter_data)
+
+})
+
 
 
 })
+
+
+
+
+
+
+
+

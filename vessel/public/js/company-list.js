@@ -126,7 +126,7 @@ function bulk_delete(delete_list) {
                     <td class="check-box"><input type="checkbox" class="check" name="check" id="${data.company_name}" data-userid="${data.name}"/></td>
                     <td class="d-flex align-items-center">
                         <div class="user-name">
-                        ${data.company_name}
+                        <a href="/accounts/company/${data.company_name}">${data.company_name}</a>
                         </div>
                     </td>
                     
@@ -324,13 +324,16 @@ function bulk_delete(delete_list) {
    
     
      // Handle filter customername
+     let timer;
      $('#company-name').on('input', function() {
-        customer_filters() //always set before the get filter from url bexause set filter in url using this function 
-        var field_filter_data = get_filter_from_urls()
-        show_filtered_list(0,field_filter_data)
-        get_count(field_filter_data)
+        clearTimeout(timer); // Clear previous timer for not every time to load on system ( reduce load on server filter time)
+        timer = setTimeout(() => {
+            customer_filters() //always set before the get filter from url bexause set filter in url using this function 
+            var field_filter_data = get_filter_from_urls()
+            show_filtered_list(0,field_filter_data)
+            get_count(field_filter_data)
         
-
+      },500)
     });
 
 

@@ -7,6 +7,7 @@ $(document).ready(function () {
     var old_form_data = []
     var file_list = []
     var files = []
+    var currency_symbol
     var updated_form_data = {}; //updated data form
     // Create an instance of Notyf
     var notyf = new Notyf();
@@ -82,28 +83,29 @@ $(document).ready(function () {
             <tr>
                 <td class="check"><input type="checkbox" class="checkbox" name="checkbox" /></td>
                 <td>
-                    <select id="${party_id}" class="party form-select custom-select tab-select">
+                    <select id="${party_id}" class="party form-select custom-select form-control tab-select">
                         <option></option>
                      </select>
                 </td>
                 <td>
-                    <select id=${account_id} class="partytype form-select custom-select tab-select">
+                    <select id=${account_id} class="partytype form-select form-control custom-select tab-select">
                         <option></option>
                        
                      </select>
                 </td>
-                <td><input type="number" id="${debit_id}" class="form-control debit" value="0"></td>
-                <td><input type="number" id="${credit_id}" class="form-control credit" value="0"></td>
+                <td><input type="number" id="${debit_id}" class="form-control debit numbers" value="0"></td>
+                <td><input type="number" id="${credit_id}" class="form-control credit numbers" value="0"></td>
                 <td><input type="text" class="form-control"></td>
-                <td class="row align-items-center">
-                 <div>
-                    <label>
+                <td>
+                 <div class="d-flex align-items-center">
+                    <label class="d-flex align-items-center w-100">
                             <div class="" id=${file_label}><img src="/assets/vessel/files/images/attach-image.png" class="mr-2"></div>
                         </lable>
                         <input type="file" class="form-control choose-file" id="${file_id}">
                         
-                    </div>
+                    
                     <div id="${img_attached}">
+                    </div>
                     </div>
                 </td>
                 
@@ -112,7 +114,7 @@ $(document).ready(function () {
 
 
         $.each(customer_list, function (i, customer) {
-            $("#" + party_id).append(`<option value="${customer.name}">  ${customer.customer_name}</option>`)
+            $("#" + party_id).append(`<option value="${customer.name}"> ${customer.customer_name} - ${customer.name}</option>`)
         })
 
         get_bank_account(function (data) {
@@ -150,7 +152,12 @@ $(document).ready(function () {
 
 
         $("#" + file_id).change(function () {
+            document.getElementById(file_id).innerText=""
             var file_data = $(this)[0].files
+            console.log(file_data[0].name);
+            $("#" + img_attached).text(file_data[0].name.substring(0, 15) + '...')
+            
+            
             if (files.length === 0) {
                 files.push({ [file_id]: file_data });
             } else {
@@ -166,6 +173,7 @@ $(document).ready(function () {
 
                 if (!fileexists) {
                     files.push({ [file_id]: file_data });
+                    
                 }
             }
 
@@ -297,6 +305,27 @@ $(document).ready(function () {
         })
     }
 
+     //get currency icon
+     
+     function get_currency(currency) {
+ 
+         $.ajax({
+             url: "/api/resource/Currency/"+currency,
+             type: "GET",
+             dataType: "json",
+             success: function (data) {
+                
+                  currency_symbol = data.data.symbol
+                  
+             },
+             error: function (xhr, status, error) {
+                 // Handle the error response here
+                 console.dir(xhr); // Print the XHR object for more details
+ 
+             }
+         })
+     }
+
 
 
 
@@ -310,6 +339,10 @@ $(document).ready(function () {
             console.log(data);
             var payment_entry = data.data
 
+            var currency = payment_entry.total_amount_currency
+            get_currency(currency)
+            
+
             $("#page_title").html(payment_entry.title)
             $("#company").val(payment_entry.company)
             $("#mode_of_payment").val(payment_entry.mode_of_payment)
@@ -318,7 +351,7 @@ $(document).ready(function () {
             $("#total_credit").val(payment_entry.total_credit)
 
             if (payment_entry.docstatus == 1) {
-                $("#save").remove()
+                $("#save").hide()
                 $("#delete").hide()
                 $(".action-btn-group").append(`<button class="btn btn-cancel" id="cancel">Cancel</button>`)
                 // for not woring on child table to set settimeout
@@ -341,15 +374,25 @@ $(document).ready(function () {
             }
 
             if (payment_entry.docstatus == 0) {
-                $("#save").remove()
+                $("#save").hide()
                 $(".action-btn-group").append(`<button class="btn btn-submit" id="submit">Submit</button>`)
 
             }
 
             old_account_lst = []
             $.each(payment_entry.accounts, function (index, account) {
+               
+          
+
                 add_row()
                 setTimeout(() => {
+                    var debit_amount = currency_symbol+account.debit
+                    var credit_amount = currency_symbol+account.credit
+                    
+                    console.log(debit_amount);
+                    console.log(credit_amount);
+
+
                     if (account.party != "") {
                         $("#party_id" + index).val(account.party).change()
                     }
@@ -357,7 +400,7 @@ $(document).ready(function () {
                     $("#debit_id" + index).val(account.debit)
                     $("#credit_id" + index).val(account.credit)
                     if (account.custom_attachments) {
-                        $("#img_attached" + index).html(`<a href='${account.custom_attachments}'>${account.custom_attachments.substring(0, 10) + '...'}</a> <button class="btn clear" data-clear="${account.custom_attachments}" type="button">Clear</button>`)
+                        $("#img_attached" + index).html(`<a href='${account.custom_attachments}' data-fileurl="${account.custom_attachments}">${account.custom_attachments.substring(0, 10) + '...'}</a> `)
                     }
 
                 }, 200);
@@ -385,7 +428,7 @@ $(document).ready(function () {
                 // if change any form input and select than change submit to save button
                 $('form').on('change', 'input, select', function () {
                     $("#submit").remove()
-                    $("#save").remove()
+                    $("#save").hide()
                     $(".action-btn-group").append(`<button class="btn save-btn" id="save">Save</button>`)
                     console.log("asasasasasas")
                 });
@@ -459,14 +502,18 @@ $(document).ready(function () {
     });
 
 
-
+  // on input to show save button
+  $("input").on("input",function(){
+    console.log("asasasasa============");
+    $("#save").show()
+    $("#submit").hide()
+  })
 
 
 
 
     $(document).on("click", "#save", function () {
-        $(".overlay").show()
-        $(".overlay-content").text("Please Wait....")
+       
         var form_data_list = $('form').serializeArray();
         var form_data = {};
         $.each(form_data_list, function (index, field) {
@@ -489,28 +536,26 @@ $(document).ready(function () {
 
 
 
-        // Counter to track completed uploads
+        // counter to track upload image or not
         var uploadcompleted = 0;
 
-        // Array to store uploaded file URLs
+        // init uploadfile and file_list
         var uploadedFileUrls = [];
-        var file_list = []; // Ensure file_list is initialized
+        var file_list = []; 
 
 
         for (var i = 0; i < $('#payment_entry_details tr').length; i++) {
             let file_id = 'file_id' + i; // Generate file_id like 'file_id0', 'file_id1', etc.
 
-            // Check if files contains an object with the file_id as key
+            // check file id 
             let foundFile = files.find(file => file[file_id]);
 
             if (foundFile) {
                 console.log('File with ID ' + file_id + ' exists:', foundFile[file_id]);
                 uploadFile(foundFile[file_id][0], i)
 
-                // Here you can access the file or perform further actions
-            } else {
-                console.log('File with ID ' + file_id + ' does not exist');
-            }
+                
+            } 
         }
 
 
@@ -519,8 +564,10 @@ $(document).ready(function () {
 
 
 
-        // Function to handle file upload asynchronously
+        // upload file
         function uploadFile(file, index) {
+            $(".overlay").show()
+            $(".overlay-content").html("Please Wait....")
             var file_data = new FormData();
             file_data.append("file", file);
             file_data.append("file_name", file.name);
@@ -537,15 +584,14 @@ $(document).ready(function () {
 
                     // Check if response.message is valid
                     if (response.message && typeof response.message.file_url === 'string') {
-                        $("#img_attached" + index).html(`<a href='${response.message.file_url}'>${response.message.file_url.substring(0, 10) + '...'}</a> <button class="btn clear" data-clear="${response.message.file_url}" type="button">Clear</button>`);
+                        $("#img_attached" + index).html(`<a href="${response.message.file_url}" data-fileurl="${response.message.file_url}">${response.message.file_url.substring(0, 10) + '...'}</a>`);
                         file_list.push(response.message);
                         uploadedFileUrls.push(response.message.file_url);
                     } else {
                         console.error("Invalid response:", response);
-                        // Handle invalid response if needed
                     }
 
-                    // Increment completed uploads counter
+                    // if upload is completed than +1 add in uploadcompleted
                     uploadcompleted++;
 
                     // Check if all uploads are complete
@@ -558,9 +604,10 @@ $(document).ready(function () {
                             var accountvalue = $("#account_id" + index).val();
                             var debit = $("#debit_id" + index).val();
                             var credit = $("#credit_id" + index).val();
-                            var img_attached = $("#img_attached" + index + " .btn.clear").data("clear");
-
-                            if (partyvalue !== "") {
+                            var img_attached = $('#img_attached'+index+' a').data('fileurl')
+                            console.log($('#img_attached0 a').data('fileurl'));
+    
+                            if (img_attached !== "") {
                                 create_account_lst("Customer", partyvalue, accountvalue, debit, credit, img_attached);
                             } else {
                                 create_account_lst("", partyvalue, accountvalue, debit, credit, img_attached);
@@ -588,15 +635,20 @@ $(document).ready(function () {
                     }
                 },
                 error: function (xhr, status, error) {
+                    
                     console.dir(xhr);
                 }
             });
         }
 
 
+       
+
 
 
     })
+
+   
 
     $(document).on("click", "#submit", function () {
         $(".overlay").show()
@@ -632,20 +684,60 @@ $(document).ready(function () {
                 setTimeout(() => {
                     window.location.reload()
                     $(".overlay").hide()
-                }, 2500);
+                }, 1500);
 
             },
             error: function (xhr, status, error) {
                 $('#overlay').hide();
-                console.dir(xhr); // Print the XHR object for more details
-                // if (xhr.responseJSON.exc_type == "DuplicateEntryError") {
-                //     notyf.error({
-                //         message: "customer already added",
-                //         duration: 5000
-                //     })
-                // }
+                var error_msg = xhr.responseJSON.exception.split(":")[1]
+                    console.log(error_msg);
+
+                    notyf.error({
+                        message: error_msg,
+                        duration: 5000
+                    });
             }
         })
     }
+
+
+    $("#delete").click(function(){
+        $(".overlay").show()
+        $(".overlay-content").text("Please Wait....")   
+    
+        // delete file
+        $.ajax({
+        url: "/api/resource/Journal Entry/"+payment_entry_id,
+        type: "DELETE",
+        dataType: "json",
+        
+        success: function (data) {
+            console.log(data);
+            notyf.success({
+                message: "Deleted record  successfully",
+                duration: 5000
+            })
+            setTimeout(() => {
+                    window.location.href = "/accounts/payment-entry"
+                    $(".overlay").hide()
+            }, 3000);
+    
+        },
+        error: function (xhr, status, error) {
+            $(".overlay").hide()
+            
+            // Handle the error response here
+            console.dir(xhr); // Print the XHR object for more details
+            var error_msg = xhr.responseJSON.exception.split(":")[1]
+            console.log(error_msg);         
+                    
+            notyf.error({
+                message:error_msg,
+                duration:5000
+            });
+            
+        }
+    })
+    })
 
 })

@@ -126,36 +126,63 @@ $(document).ready(function(){
             form_data[field.name] = field.value;
         });
 
-        $(".error-message").remove() //remove all error message after save
-        if(!form_data["parent_account"])
-        {
-            $('#parent_account_error').remove(); //remove error message
-            $('#parent_account').after('<span id="parent_account_error" class="error-message">Parent account is mandatory.</span>');
-            
-        }
-        else if(!form_data["account_name"])
-        {
-            $('#account_name_error').remove(); 
-            $('#account_name').after('<span id="account_name_error" class="error-message">Account name is mandatory.</span>');
-        }
-        else if(!form_data["company"])
-        {
-            $('#company_error').remove(); 
+        //============= validation ==========
+        $('.error-message').remove();
+    
+        var iserror = false;
+    
+        // check field validation and showcase error
+        if (!form_data["company"]) {
             $('#company').after('<span id="company_error" class="error-message">Company name is mandatory.</span>');
+            iserror = true;
         }
-        else if(!form_data["account_type"])
-        {
-            $('#account_type_error').remove(); 
+    
+        if (!form_data["account_name"]) {
+            $('#account_name').after('<span id="account_name_error" class="error-message">Account name is mandatory.</span>');
+            iserror = true;
+        }
+    
+        if (!form_data["parent_account"]) {
+            $('#parent_account').after('<span id="parent_account_error" class="error-message">Parent account is mandatory.</span>');
+            iserror = true;
+        }
+    
+        if (!form_data["account_type"]) {
             $('#account_type').after('<span id="account_type_error" class="error-message">Account type is mandatory.</span>');
+            iserror = true;
         }
-        else if(!form_data["account_currency"])
-        {
-            $('#currency_error').remove(); 
+    
+        if (!form_data["account_currency"]) {
             $('#currency').after('<span id="currency_error" class="error-message">Currency is mandatory.</span>');
+            iserror = true;
         }
-        else
-        {
-             create_account()
+
+        // remove error message input or change value
+        $('#company').on('input change', function() {
+            $('#company_error').remove();
+        });
+    
+        $('#account_name').on('input change', function() {
+            $('#account_name_error').remove();
+        });
+    
+        $('#parent_account').on('input change', function() {
+            $('#parent_account_error').remove();
+        });
+    
+        $('#account_type').on('input change', function() {
+            $('#account_type_error').remove();
+        });
+    
+        $('#currency').on('input change', function() {
+            $('#currency_error').remove();
+        });
+        
+    
+        // if error is not fount than create new account
+        if (!iserror) {
+            $('.error-message').remove();
+            create_account();
         }
 
 

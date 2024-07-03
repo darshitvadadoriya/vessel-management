@@ -127,6 +127,8 @@ $(document).ready(function(){
 
 
     function bulk_delete(delete_list) {
+        $(".overlay").show()
+        $(".overlay-content").html("Please Wait....")
             $.ajax({
                 url: "/api/method/vessel.api.delete.bulk_delete",
                 type: "POST",
@@ -147,6 +149,7 @@ $(document).ready(function(){
                     });
 
                     setTimeout(()=>{
+                        $(".overlay").show()
                         window.location.href= "/logistic/customer"
                    },2000)
                     }
@@ -154,7 +157,13 @@ $(document).ready(function(){
         
                 },
                 error: function (xhr, status, error) {
-                    console.dir(xhr);
+                    $(".overlay").hide()
+                    var error_msg = xhr.responseJSON.exception.split(":")[1]       
+                            
+                    notyf.error({
+                        message:error_msg,
+                        duration:5000
+                    });
                 }
             });
         }
@@ -434,6 +443,7 @@ $(document).ready(function(){
     
     // on click delete to get checked data list
         $(document).on("click","#delete", function () {
+
             if(selected_list.length!=0)
             {
                 swal({

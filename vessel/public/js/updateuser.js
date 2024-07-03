@@ -163,6 +163,20 @@ $(document).ready(function () {
   })
 
 
+    //   set after today date is disabled
+    //   get yesterday date
+        
+    let yesterday = new Date();
+    
+    yesterday.setDate(yesterday.getDate() - 1);
+
+    // Format yesterday's date to YYYY-MM-DD
+    let formattedYesterday = yesterday.toISOString().split('T')[0];
+        console.log(formattedYesterday);
+    // disabled dates after today
+    $("#birth_date").attr('max', formattedYesterday);
+    
+
 
 
 
@@ -188,51 +202,88 @@ $(document).ready(function () {
             }
         });
 
+        
+      // ====== Validations ======
 
+      let email = form_data['email'];
+      let isvalid = true; // Flag to track if all validations pass
       //get today date
-        var today = new Date();
-        var today_date = today.getFullYear() + '-' + ('0' + (today.getMonth() + 1)).slice(-2) + '-' + ('0' + today.getDate()).slice(-2);
-        
-        
+      var today = new Date();
+      var today_date = today.getFullYear() + '-' + ('0' + (today.getMonth() + 1)).slice(-2) + '-' + ('0' + today.getDate()).slice(-2);
+      
+    
 
+      // first name validation
+      if (!form_data['first_name']) {
+          $('#first_name_error').remove(); // remove existing error message
+          $('#first_name').after('<span id="first_name_error" class="error-message">Please first name is mandatory.</span>');
+          isvalid = false;
+      }
+      
 
-        // error handler (validation)
-        // check first_name nad email address is filled
+      // email validation
+      if (!email) {
+          $('#email_error').remove(); // remove existing error message
+          $('#email').after('<span id="email_error" class="error-message">Please email is mandatory.</span>');
+          isvalid = false;
+      } else if (validateEmail(email)==false) {
+          $('#email_error').remove(); // remove existing error message
+          $('#email').after('<span id="email_error" class="error-message">Please enter valid email address.</span>');
+          isvalid = false;
+      }
+      
 
-        if (!form_data['first_name']) {
-            $('#first_name_error').remove(); // Remove existing error message
-            $('#first_name').after('<span id="first_name_error" class="error-message">Please first name is mandatory.</span>');
-            return false;
-        }
-        // else if (!form_data['email']) {
-        //     $('#email_error').remove(); // Remove existing error message
-        //     $('#email').after('<span id="email_error" class="error-message">Please email is mandatory.</span>');
-        //     return false;   
-        // }
-        else if(updated_form_data['birth_date'] >today_date){
-            $('#date_error').remove(); // Remove existing error message
-            $('#date_of_birth').after('<span id="date_error" class="error-message">Please add date before today</span>');
-            return false;
-        }
-        else {
-            $('#date_error').remove();
-            // create_user(form_data)
-        }
+     //validate phone no
+      if (form_data['phone'] != "") {
+          if (form_data['phone'].length != 10) {
+              $('#phone_error').remove(); // remove existing error message
+              $('#phone').after('<span id="phone_error" class="error-message">Valid only 10 digits in mobile.</span>');
+              isvalid = false;
+          } 
+      }
+
+      //validate mobile no
+      if (form_data['mobile_no'] != "") {
+          if (form_data['mobile_no'].length != 10) {
+              console.log("under 10 digit");
+              $('#mobile_no_error').remove(); // remove existing error message
+              $('#mobile').after('<span id="mobile_no_error" class="error-message">Valid only 10 digits in mobile.</span>');
+              isvalid = false;
+          } 
+      }
+      if(form_data['birth_date'] >today_date){
+              $('#date_error').remove(); // Remove existing error message
+              $('#birth_date').after('<span id="date_error" class="error-message">Please add date before today</span>');
+              isvalid = false;
+      }
+    
         
 
         $("#first_name").on("input", function () {
-            $('#first_name_error').remove(); // Remove first name error message
+            $('#first_name_error').remove(); 
         })
         $("#email").on("input", function () {
-            $('#email_error').remove(); // Remove emailerror message
+            $('#email_error').remove(); 
+        })
+        $("#mobile").on("input", function () {
+            $('#mobile_no_error').remove();
+        })
+        $("#phone").on("input", function () {
+            $('#phone_error').remove(); 
+        })
+        $("#birth_date").on("input", function () {
+            $('#date_error').remove(); 
         })
 
 
+       if(isvalid){
+        console.log(isvalid);
+        console.log("IS VALID");
         if (files.length > 0) {
             var file_data = files[0]
             upload_file(file_data); // Pass the first file to the upload_file function
         } else {
-            if(Object.keys(updated_form_data).length !== 0)
+            if(Object.keys(updated_form_data).length !== 0 && isvalid)
             {
                 update_user(updated_form_data) // save data without image
             }
@@ -244,6 +295,7 @@ $(document).ready(function () {
                 })
             }
         }
+       }
 
         function upload_file(files) {
             
@@ -421,6 +473,13 @@ function update_user(updated_form_data) {
     })
 
     
-    
+     // email validation
+    function validateEmail(email) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (emailRegex.test(email) == false || email == "") {
+        return false;
+        }
+    }
+        
 
 })

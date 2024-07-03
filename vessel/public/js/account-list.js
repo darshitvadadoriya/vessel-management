@@ -70,6 +70,8 @@ $(document).ready(function(){
        
 // bulk delete records
 function bulk_delete(delete_list) {
+    $(".overlay").show()
+    $(".overlay-content").html("Please Wait....")
     $.ajax({
         url: "/api/method/vessel.api.delete.bulk_delete",
         type: "POST",
@@ -89,6 +91,7 @@ function bulk_delete(delete_list) {
                 });
 
                 setTimeout(()=>{
+                    $(".overlay").hide()
                     window.location.href= "/accounts/account"
                 },2000)
             }
@@ -133,11 +136,11 @@ function bulk_delete(delete_list) {
                     <td class="check-box"><input type="checkbox" class="check" name="check" id="${data.name}" data-userid="${data.name}"/></td>
 
                     <td><a href="/accounts/account/${data.name}">${data.name}</a></td>
-                    <td>${data.company}</td>
-                    <td>${data.parent_account}</td>
-                    <td>${data.account_type}</td>
+                    <td>${data.company ? data.company : ''}</td>
+                    <td>${data.parent_account ? data.parent_account : ''}</td>
+                    <td>${data.account_type ? data.account_type : ''}</td>
                     <td class="check-box">
-                        <input type="checkbox" class="is_group" name="check" ${data.is_group === 1 ? 'checked' : ''} />
+                        <input type="checkbox" class="is_group readonly" name="check" ${data.is_group === 1 ? 'checked' : ''} />
                     </td>
                     
                    
@@ -340,13 +343,15 @@ function bulk_delete(delete_list) {
    
     
      // Handle filter accounts
+     let timer;
      $('#account-name, #company').on('input', function() {
-        
-        account_filters() //always set before the get filter from url bexause set filter in url using this function 
-        var field_filter_data = get_filter_from_urls()
-        show_filtered_list(0,field_filter_data)
-        get_count(field_filter_data)
-        
+        clearTimeout(timer); // Clear previous timer for not every time to load on system ( reduce load on server filter time)
+        timer = setTimeout(() => {
+            account_filters() //always set before the get filter from url bexause set filter in url using this function 
+            var field_filter_data = get_filter_from_urls()
+            show_filtered_list(0,field_filter_data)
+            get_count(field_filter_data)
+        },500)
 
     });
 

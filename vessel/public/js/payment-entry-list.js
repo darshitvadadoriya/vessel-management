@@ -429,6 +429,8 @@ function bulk_delete(delete_list) {
     get_filter_data()
 
 
+   
+
        // on click delete to get checked data list
    $(document).on("click","#delete", function () {
     if(selected_list.length!=0)

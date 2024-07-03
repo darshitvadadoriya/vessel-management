@@ -37,7 +37,7 @@ $(document).ready(function(){
     }
 
     // get accounts grouped for parent accoount
-    get_account(company="")
+    
     function get_account(company,callback) {
 
         $.ajax({
@@ -121,12 +121,21 @@ $(document).ready(function(){
                 $("#account_name    ").prop('disabled', true); //disabled nput
                 $("#company").prop('disabled', true); //disabled nput
 
-                var old_form_data_list = $('form').serializeArray();
+               
 
-                $.each(old_form_data_list, function (index, field) {
+                setTimeout(() => {
+                    $("#parent_account").val(account_info.parent_account)
 
-                    old_form_data[field.name] = field.value;
-                });
+
+                    // get old form data
+                    var old_form_data_list = $('form').serializeArray();
+
+                    $.each(old_form_data_list, function (index, field) {
+    
+                        old_form_data[field.name] = field.value;
+                    });
+                    
+                }, 170);
 
 
             },
@@ -185,7 +194,7 @@ $(document).ready(function(){
     setTimeout(() => {
         var company = $("#company").val()
         get_account(company)
-    }, 100);
+    }, 150);
 
 
 
@@ -222,6 +231,8 @@ $(document).ready(function(){
             })
           }
         function update_account(){
+            $(".overlay").show()
+            $(".overlay-content").text("Please Wait....")
             $.ajax({
                 url: "/api/resource/Account/" + account_id,
                 type: "PUT",
@@ -234,19 +245,19 @@ $(document).ready(function(){
                         duration: 5000
                     })
                     setTimeout(()=>{
+                        $(".overlay").hide()
                         window.location.reload()
                     },1500)
                 },
                 error: function (xhr, status, error) {
                     // Handle the error response here
-                    console.dir(xhr); // Print the XHR object for more details
-                    if (xhr.responseJSON.exc_type == "DuplicateEntryError") {
-                        notyf.error({
-                            message: "Account already added",
-                            duration: 5000
-                        })
-                    }
-    
+                    $(".overlay").hide()
+                    var error_msg = xhr.responseJSON.exception.split(":")[1]
+
+                    notyf.error({
+                        message: error_msg,
+                        duration: 5000
+                    });
                 }
             })
         }

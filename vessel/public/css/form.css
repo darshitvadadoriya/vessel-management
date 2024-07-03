@@ -389,29 +389,7 @@ input::-webkit-inner-spin-button {
     font-size: 14px;
 }
 
-/* set overlay loading time */
-.overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: #ffffffa3;
-    /* Semi-transparent black */
-    z-index: 1000;
-    /* Ensure the overlay is on top of other content */
-    display: none;
-    /* Initially hidden */
 
-}
-
-.overlay-content {
-    position: absolute;
-    width: 100%;
-    top: 50%;
-    text-align: center;
-    font-size: 22px;
-}
 
 
 

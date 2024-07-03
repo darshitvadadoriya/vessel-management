@@ -156,18 +156,22 @@ $(document).ready(function(){
         
 
 
-    // onclick delete row get checked checkbpx
-    $("#delete_row").click(function(){
-        $('.checkbox').each(function() {
-            // remove only checked checkbox
-            if($(this).prop("checked"))
-            {
-                $(this).parent().parent().remove()
-            }
-        });
-        $(".checkall").prop("checked","false"); //uncheck main checkbox
-        
-    })
+   // onclick delete row get checked checkbpx
+   $("#delete_row").click(function () {
+    $('.checkbox').each(function () {
+        // remove only checked checkbox
+        if ($(this).prop("checked")) {
+            $(this).parent().parent().remove()
+        }
+    });
+    $(".checkall").prop("checked", false);
+    if($("#account_table tr").length==0)
+        {
+            $("#account_table").append(`<tr id="empty_table"></tr>`)
+            account_lst = []
+        }
+    
+})
 
    
 
@@ -187,31 +191,31 @@ $(document).ready(function(){
 
         
         // account table grouping data
-        account_lst = []
-        $('#account_table tr').each(function(index) {
+        account_lst = [];
+        var iserror = false
+        $('.select-accounts').each(function(index) {
             var companyvalue = $("#company_id" + index).val();
             var accountvalue = $("#account_id" + index).val();
             
-               if($('#account_table tr').length>1){
-                    if (!companyvalue || !accountvalue) {
-                        notyf.error({
-                            message:"Selecting a company and an account is mandatory.",
-                            duration:5000
-                        })
-                        return false;  // stop loop
-                    }
-                    else{
-                        account_lst.push({'company':companyvalue,"account":accountvalue})
-                    }
-               }
+            if (!companyvalue || !accountvalue) {
+                notyf.error({
+                    message: "Selecting a company and an account is mandatory.",
+                    duration: 5000
+                });
+                iserror = true
+            } else {
+                account_lst.push({'company': companyvalue, 'account': accountvalue});
+            }
             
-
+            
         });
+
+
         if(account_lst)
         {
             form_data["accounts"] = account_lst
         }
-    
+        console.log(account_lst);
 
 
 
@@ -244,11 +248,19 @@ $(document).ready(function(){
             $('#customer_type_error').remove(); // Remove any existing error message
             $('#customer_type').after('<span id="customer_type_error" class="error-message">Please email is mandatory.</span>');
         }
+        else if(iserror)
+        {
+    
+            return false
+        }
         else {
             if (files.length > 0 ) {
                 var file_data = files[0]
                  upload_file(file_data); // Pass the first file to the upload_file function
+                 $(".overlay").show()
+                 $(".overlay-content").text("Please Wait....")
              } else {
+                
                  create_customer(form_data) // save data without image
              }
         }
@@ -263,7 +275,7 @@ $(document).ready(function(){
 
 
         function upload_file(files) {
-            console.log(files)
+            
             var file_data = new FormData();
             file_data.append('file', files);
             file_data.append('file_name', files.name);

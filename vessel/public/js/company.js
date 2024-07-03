@@ -17,6 +17,7 @@ $(document).ready(function () {
             success: function (data) {
                 var country_list = data.data
                 $("#country").empty()
+                $("#country").append(`<option></option>`)
                 country_list.forEach(function(country,i){
                     // countryoptions
                     $("#country").append(`<option value="${country.name}">${country.name}</option>`)
@@ -27,6 +28,33 @@ $(document).ready(function () {
             error: function (xhr, status, error) {
                 // Handle the error response here
                 console.dir(xhr); // Print the XHR object for more details
+            }
+        })
+    }
+
+    get_currency()
+    function get_currency(){
+        $.ajax({
+            url: "/api/resource/Currency",
+            type: "GET",
+            dataType: "json",
+            data: {
+                fields: JSON.stringify(["name"]),
+                filters: JSON.stringify([["enabled","=","1"]]),
+                limit_page_length: "None"
+            },
+            success: function (data) {  
+                console.log(data);
+                var currency_list = data.data
+                $.each(currency_list,(i,currency)=>{
+                    $("#currency").append(`<option value="${currency.name}">${currency.name}</option>`)
+                })
+
+            },
+            error: function (xhr, status, error) {
+                // Handle the error response here
+                console.dir(xhr); // Print the XHR object for more details
+
             }
         })
     }
@@ -47,7 +75,7 @@ $(document).ready(function () {
             $('#company').after('<span id="company_error" class="error-message">Please company name is mandatory.</span>');
         }
         else{
-            var abbr = $('#myText').text().split(' ').map(function(word) {
+            var abbr = $('#company').text().split(' ').map(function(word) {
                 return word.charAt(0);
             }).join('');
             form_data["abbr"] = abbr
@@ -71,7 +99,7 @@ $(document).ready(function () {
                     setTimeout(() => {
                         $(".overlay").hide()
                         window.location.href = "/accounts/company"
-                    }, 3000);
+                    }, 1500);
     
                    
                 },

@@ -37,6 +37,9 @@
     border-color: #1814F3;
     box-shadow: none;
 }
+.file_url a{
+    color: #111!important;
+}
 
 
 
@@ -109,10 +112,23 @@
 .report-filter .disable-report-filter input{
     width: 0%;
 }
-.debit_data,.credit_data{
+.debit_data,.credit_data,.balance_data{
     text-align: right;
 }
 
+
+
+/* filter input focus */
+.form-control:focus,
+.form-select:focus,
+.form-select.focus {
+    border-color: #1814F3 !important;
+    box-shadow: none !important;
+}
+
+.custom-select{
+    line-height: 1.2;
+}
 
 
 /* financial summary */
@@ -184,7 +200,9 @@
   .report-summary .green {
     color: #078E05!important;
   }
-  
+  .reference_id,.reference_id:hover{
+    color: #111;
+  }
   
 
   /* profit and loss Chart */

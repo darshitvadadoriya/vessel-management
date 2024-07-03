@@ -49,22 +49,45 @@ $(document).ready(function () {
     })
 
     $("#add_new_row").click(function () {
-        $('#posting_date_error').remove();
-        $('#company_error').remove();
-        
-        if ($("#company").val() == "") {
-            $('<span id="company_error" class="error-message">Please enter company name.</span>').insertAfter('#company');
-        }
-        else if ($("#posting_date").val() == "") {
-            $('<span id="posting_date_error" class="error-message">Please enter company name.</span>').insertAfter('#posting_date');
-        }
-        else {
-            $('#company_error').remove();
-            $('#posting_date_error').remove();
-            add_row()
+        validation()
+        if (!validation()) {
+            add_row();
         }
 
     })
+
+
+    //======== validation =======
+       function validation(){
+            $('#posting_date_error').remove();
+            $('#company_error').remove();
+            $('#mode_of_payment_error').remove();
+
+            var iserror = false;
+
+            if ($("#company").val() == "") {
+                $('<span id="company_error" class="error-message">Company is mandatory</span>').insertAfter('#company');
+                iserror = true;
+            } 
+            if ($("#posting_date").val() == "") {
+                $('<span id="posting_date_error" class="error-message">Posting Date is mandatory.</span>').insertAfter('#posting_date');
+                iserror = true;
+            }
+            if ($("#mode_of_payment").val() == "") {
+                $('<span id="mode_of_payment_error" class="error-message">Mode of Payment is mandatory.</span>').insertAfter('#mode_of_payment');
+                iserror = true;
+            }
+
+            if (!iserror){
+                $(".error-message").remove
+            }
+
+            return iserror
+       }
+
+        
+
+
 
     function add_row() {
         $("#empty_table").remove()
@@ -85,7 +108,7 @@ $(document).ready(function () {
                      </select>
                 </td>
                 <td>
-                    <select id=${account_id} class="partytype form-select custom-select tab-select">
+                    <select id=${account_id} class="account_type form-select custom-select tab-select">
                         <option></option>
                        
                      </select>
@@ -93,15 +116,16 @@ $(document).ready(function () {
                 <td><input type="number" id="${debit_id}" class="form-control debit" value="0"></td>
                 <td><input type="number" id="${credit_id}" class="form-control credit" value="0"></td>
                 <td><input type="text" class="form-control"></td>
-                <td class="row align-items-center">
-                    <div>
-                    <label>
-                            <div id=${file_label}><img src="/assets/vessel/files/images/attach-image.png" class="mr-2"></div>
+                <td>
+                    <div class="d-flex align-items-center">
+                    <label class="d-flex align-items-center w-100">
+                            <div class="" id=${file_label}><img src="/assets/vessel/files/images/attach-image.png" class="mr-2"></div>
                         </lable>
                         <input type="file" class="form-control choose-file" id="${file_id}">
                         
-                    </div>
-                     <div id="${img_attached}">
+                    
+                        <div id="${img_attached}">
+                        </div>
                     </div>
                 </td>
                 
@@ -109,9 +133,9 @@ $(document).ready(function () {
             `)
 
 
-        $.each(customer_list, function (i, customer) {
-            $("#" + party_id).append(`<option value="${customer.name}">  ${customer.customer_name}</option>`)
-        })
+            $.each(customer_list, function (i, customer) {
+                $("#" + party_id).append(`<option value="${customer.name}"> ${customer.customer_name} - ${customer.name}</option>`)
+            })
 
         get_bank_account(function (data) {
 
@@ -123,7 +147,7 @@ $(document).ready(function () {
         $("#" + party_id).change(function () {
             $("#" + account_id).empty()
             var customer_name = $(this).val()
-
+            console.log(customer_name);
             if (customer_name == "") {
                 get_bank_account(function (data) {
 
@@ -330,95 +354,80 @@ $(document).ready(function () {
 
             form_data[field.name] = field.value;
         });
-       
-
-        $('#posting_date_error').remove();
-        $('#company_error').remove();
         
-        // if ($("#company").val() == "") {
-        //     $('<span id="company_error" class="error-message">Please enter company name.</span>').insertAfter('#company');
-        // }
-        // else if ($("#posting_date").val() == "") {
-        //     $('<span id="posting_date_error" class="error-message">Please enter company name.</span>').insertAfter('#posting_date');
-        // }
-        // else if ($("#total_debit").val() == "" || $("#total_debit").val() == 0) {
-        //     $('<span id="total_debit_error" class="error-message">Total debit value cannot be 0 or blank</span>').insertAfter('#total_debit');
-        // }
-        // else if ($("#total_credit").val() == "" || $("#total_credit").val() == 0) {
-        //     $('<span id="total_credit_error" class="error-message">Total credit value cannot be 0 or blank</span>').insertAfter('#total_credit');
-        // }
-        // else {
-        $('#company_error').remove();
-        $('#posting_date_error').remove();
-
-
-         
+        if(!validation())
+        {
         
-        // Append all files to FormData
-        for (var i = 0; i < files.length; i++) {
-            // Create FormData object
-            var file_data = new FormData();
-            var file = files[i]["file_id"+i][0];
-        
-            file_data.append("file",file)
-            file_data.append("file_name",file.name)
-            file_data.append("file_url","/files/"+file.name)
-
+            // Append all files to FormData
+            for (var i = 0; i < files.length; i++) {
+                // Create FormData object
+                var file_data = new FormData();
+                var file = files[i]["file_id"+i][0];
             
-            $.ajax({
-                url: "/api/method/upload_file",
-                type: "POST",
-                processData: false,
-                contentType: false,
-                data: file_data,
-                success: function (response) {
-    
-                    file_list.push(response.message)
-                },
-                error: function (xhr, status, error) {
-                    // Handle the error response here
-                    console.dir(xhr); // Print the XHR object for more details
-                }
-            })
-        }
+                file_data.append("file",file)
+                file_data.append("file_name",file.name)
+                file_data.append("file_url","/files/"+file.name)
 
-
-setTimeout(() => {
-    
-        console.log(file_list);
-        account_lst = []
-        $('#payment_entry_details tr').each(function (index) {
-            var partyvalue = $("#party_id" + index).val();
-            var accountvalue = $("#account_id" + index).val();
-            var debit = $("#debit_id" + index).val();
-            var credit = $("#credit_id" + index).val();
-            if (partyvalue != "") {
-                create_account_lst(partytype = "Customer", partyvalue, accountvalue, debit, credit,file_list[index].file_url)
-            }
-            else {
-                create_account_lst(partytype = "", partyvalue, accountvalue, debit, credit,file_list[index].file_url)
+                
+                $.ajax({
+                    url: "/api/method/upload_file",
+                    type: "POST",
+                    processData: false,
+                    contentType: false,
+                    data: file_data,
+                    success: function (response) {
+        
+                        file_list.push(response.message)
+                    },
+                    error: function (xhr, status, error) {
+                        // Handle the error response here
+                        console.dir(xhr); // Print the XHR object for more details
+                    }
+                })
             }
 
+            setTimeout(() => {
+        
+                console.log(file_list);
+                account_lst = []
+                $('#payment_entry_details tr').each(function (index) {
+                    var partyvalue = $("#party_id" + index).val();
+                    var accountvalue = $("#account_id" + index).val();
+                    var debit = $("#debit_id" + index).val();
+                    var credit = $("#credit_id" + index).val();
+                    if(file_list.length!=0)
+                    {
 
-        });
-
-        function create_account_lst(partytype, partyvalue, accountvalue, debit, credit,file_data) {
-            account_lst.push({
-                'party_type': partytype,
-                'party': partyvalue,
-                'account': accountvalue,
-                'debit_in_account_currency': debit,
-                'credit_in_account_currency': credit,
-                'custom_attachments':file_data
-            });
-        }
-        form_data["accounts"] = account_lst
+                        if (partyvalue != "") {
+                            create_account_lst(partytype = "Customer", partyvalue, accountvalue, debit, credit,file_list[index].file_url)
+                        }
+                        else {
+                            create_account_lst(partytype = "", partyvalue, accountvalue, debit, credit,file_list[index].file_url)
+                        }
+                    }
+                   
     
-        console.log(account_lst);
-        console.log("=================================================");
-        create_payment_entry(form_data)
-    }, 300);
+                });
+                
+    
+            function create_account_lst(partytype, partyvalue, accountvalue, debit, credit,file_data) {
+                account_lst.push({
+                    'party_type': partytype,
+                    'party': partyvalue,
+                    'account': accountvalue,
+                    'debit_in_account_currency': debit,
+                    'credit_in_account_currency': credit,
+                    'custom_attachments':file_data
+                });
+            }
+            form_data["accounts"] = account_lst
+            console.log(form_data);
+            create_payment_entry(form_data)
+        }, 300);
+    
+        }
 
+        
     })
 
     function create_payment_entry(form_data) {
@@ -452,14 +461,23 @@ setTimeout(() => {
                     })
                 }
                 else {
-
+                    console.dir(xhr);
                     var error_msg = xhr.responseJSON.exception.split(":")[1]
-                    console.log(error_msg);
-
-                    notyf.error({
-                        message: error_msg,
-                        duration: 5000
-                    });
+                    
+                    if(error_msg == " Accounts table cannot be blank.")
+                    {
+                        notyf.error({
+                            message: "Please fill all mandatory fields in the table.",
+                            duration: 5000
+                        });
+                    }
+                    else
+                    {
+                        notyf.error({
+                            message: error_msg,
+                            duration: 5000
+                        });
+                    }
                 }
             }
         })
