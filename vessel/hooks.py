@@ -228,6 +228,13 @@ app_license = "mit"
 # 	"Logging DocType Name": 30  # days to retain logs
 # }
 
+
+fixtures = [
+    {
+        "dt": "Role Profile",
+    },
+]
+
 website_route_rules = [
     {"from_route": "/admin", "to_route": "/admin/admin"},
     {"from_route": "/user/new-user", "to_route": "/user/user"},

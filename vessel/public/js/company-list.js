@@ -90,7 +90,7 @@ function bulk_delete(delete_list) {
 
                 setTimeout(()=>{
                     window.location.href= "/accounts/company"
-                },2000)
+                },1500)
             }
 
         },

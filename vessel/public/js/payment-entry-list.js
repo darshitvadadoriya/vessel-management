@@ -90,7 +90,7 @@ function bulk_delete(delete_list) {
 
                 setTimeout(()=>{
                     window.location.href= "/accounts/payment-entry"
-                },2000)
+                },1500)
             }
 
         },
@@ -484,7 +484,7 @@ function bulk_delete(delete_list) {
 
                 setTimeout(()=>{
                     window.location.href= "/accounts/payment-entry"
-                },3000)
+                },1500)
             }
 
         },

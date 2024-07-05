@@ -136,7 +136,11 @@ $(document).ready(function () {
 
             if (files.length > 0) {
                 var file_data = files[0];
+                $(".overlay").show()
+            $(".overlay-content").html("Please Wait....")
+        
                 upload_file(file_data); // if file is available for upload than call
+                
             } else {
                 create_user(form_data); // save data without image
             }
@@ -172,7 +176,7 @@ $(document).ready(function () {
      
 
         function upload_file(files) {
-            console.log(files)
+            
             var file_data = new FormData();
             file_data.append('file', files);
             file_data.append('file_name', files.name);

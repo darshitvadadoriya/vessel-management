@@ -100,7 +100,7 @@ $(document).ready(function () {
         var img_attached = "img_attached" + $('#payment_entry_details tr').length
 
         $("#payment_entry_details").append(`
-            <tr>
+            <tr class="payment_row">
                 <td class="check"><input type="checkbox" class="checkbox" name="checkbox" /></td>
                 <td>
                     <select id="${party_id}" class="party form-select custom-select tab-select">
@@ -354,76 +354,124 @@ $(document).ready(function () {
 
             form_data[field.name] = field.value;
         });
+
+      
         
         if(!validation())
         {
-        
-            // Append all files to FormData
-            for (var i = 0; i < files.length; i++) {
-                // Create FormData object
-                var file_data = new FormData();
-                var file = files[i]["file_id"+i][0];
-            
-                file_data.append("file",file)
-                file_data.append("file_name",file.name)
-                file_data.append("file_url","/files/"+file.name)
 
-                
-                $.ajax({
-                    url: "/api/method/upload_file",
-                    type: "POST",
-                    processData: false,
-                    contentType: false,
-                    data: file_data,
-                    success: function (response) {
-        
-                        file_list.push(response.message)
-                    },
-                    error: function (xhr, status, error) {
-                        // Handle the error response here
-                        console.dir(xhr); // Print the XHR object for more details
-                    }
+            if($('#payment_entry_details payment_row').length<=0)
+            {
+                notyf.error({
+                    message: "Please fill all mandatory fields in table",
+                    duration: 3000
                 })
             }
 
-            setTimeout(() => {
-        
-                console.log(file_list);
-                account_lst = []
-                $('#payment_entry_details tr').each(function (index) {
-                    var partyvalue = $("#party_id" + index).val();
-                    var accountvalue = $("#account_id" + index).val();
-                    var debit = $("#debit_id" + index).val();
-                    var credit = $("#credit_id" + index).val();
-                    if(file_list.length!=0)
-                    {
 
-                        if (partyvalue != "") {
-                            create_account_lst(partytype = "Customer", partyvalue, accountvalue, debit, credit,file_list[index].file_url)
+            // counter to track upload image or not
+            var uploadcompleted = 0;
+
+            // init uploadfile and file_list
+            var uploadedFileUrls = [];
+            var file_list = []; 
+
+
+            for (var i = 0; i < $('#payment_entry_details tr').length; i++) {
+                let file_id = 'file_id' + i; // Generate file_id like 'file_id0', 'file_id1', etc.
+
+                // check file id 
+                let foundFile = files.find(file => file[file_id]);
+
+                if (foundFile) {
+                    
+                    uploadFile(foundFile[file_id][0], i)                
+                } 
+            }
+
+
+
+
+
+
+
+        // upload file
+        function uploadFile(file, index) {
+            $(".overlay").show()
+            $(".overlay-content").html("Please Wait....")
+            var file_data = new FormData();
+            file_data.append("file", file);
+            file_data.append("file_name", file.name);
+            file_data.append("file_url", "/files/" + file.name);
+
+            $.ajax({
+                url: "/api/method/upload_file",
+                type: "POST",
+                processData: false,
+                contentType: false,
+                data: file_data,
+                success: function (response) {
+                    
+
+                    // Check if response.message is valid
+                    if (response.message && typeof response.message.file_url === 'string') {
+                        $("#img_attached" + index).html(`<a href="${response.message.file_url}" data-fileurl="${response.message.file_url}">${response.message.file_url.substring(0, 10) + '...'}</a>`);
+                        file_list.push(response.message);
+                        uploadedFileUrls.push(response.message.file_url);
+                    } else {
+                        console.error("Invalid response:", response);
+                    }
+
+                    // if upload is completed than +1 add in uploadcompleted
+                    uploadcompleted++;
+
+                    // Check if all uploads are complete
+                    if (uploadcompleted === files.length || files.length>=0) {
+
+                        // get updated account table details prepare object
+                        account_lst = [];
+                        $('#payment_entry_details tr').each(function (index) {
+                            var partyvalue = $("#party_id" + index).val();
+                            var accountvalue = $("#account_id" + index).val();
+                            var debit = $("#debit_id" + index).val();
+                            var credit = $("#credit_id" + index).val();
+                            var img_attached = $('#img_attached'+index+' a').data('fileurl')
+                            
+    
+                            if (img_attached !== "" || img_attached !== undefined) {
+                                create_account_lst("Customer", partyvalue, accountvalue, debit, credit, img_attached);
+                            } else {
+                                create_account_lst("", partyvalue, accountvalue, debit, credit, img_attached);
+                            }
+                        });
+
+                        function create_account_lst(partytype, partyvalue, accountvalue, debit, credit, custom_attachments) {
+                            account_lst.push({
+                                'party_type': partytype,
+                                'party': partyvalue,
+                                'account': accountvalue,
+                                'debit_in_account_currency': debit,
+                                'credit_in_account_currency': credit,
+                                'custom_attachments': custom_attachments
+                            });
                         }
-                        else {
-                            create_account_lst(partytype = "", partyvalue, accountvalue, debit, credit,file_list[index].file_url)
-                        }
+
+                        
+                        form_data["accounts"] = account_lst;                       
+
+                        create_payment_entry(form_data);
+
                     }
                    
-    
-                });
-                
-    
-            function create_account_lst(partytype, partyvalue, accountvalue, debit, credit,file_data) {
-                account_lst.push({
-                    'party_type': partytype,
-                    'party': partyvalue,
-                    'account': accountvalue,
-                    'debit_in_account_currency': debit,
-                    'credit_in_account_currency': credit,
-                    'custom_attachments':file_data
-                });
-            }
-            form_data["accounts"] = account_lst
-            console.log(form_data);
-            create_payment_entry(form_data)
-        }, 300);
+                },
+                error: function (xhr, status, error) {
+                    
+                    console.dir(xhr);
+                }
+            });
+        }
+
+
     
         }
 
@@ -439,7 +487,7 @@ $(document).ready(function () {
             dataType: "json",
             data: JSON.stringify(form_data),
             success: function (data) {
-                console.log(data);
+                
                 notyf.success({
                     message: "Payment Entry created successfully",
                     duration: 5000

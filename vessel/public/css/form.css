@@ -440,3 +440,15 @@ input::-webkit-inner-spin-button {
         font-size: 15px;
     }
 }
+@media screen and (max-width:500px){
+    .contact-details .details-area .add-contact-details input {
+        width: calc(100% - 50px);
+    }
+    .add_phone,.add_email{
+        display: none;
+    }
+    #add_phone:after,#add_email:after{
+        content: "+";
+        font-size: 24px;
+    }
+}

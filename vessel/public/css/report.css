@@ -16,7 +16,8 @@
     margin-top: 20px;
     background-color: #fff;
     border-radius: 16px;
-    min-height: calc(100dvh - 180px);
+    max-height: calc(100dvh - 180px);
+    overflow: auto;
     
 
 }

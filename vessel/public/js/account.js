@@ -3,16 +3,16 @@ $(document).ready(function(){
     var notyf = new Notyf();
 
     
-    // if is group parent account field is disable
-    $("#is_group").on("change",function(){
-        if($("#is_group").is(':checked')){
-            $("#parent_account_input").hide()
-            $("#parent_account").val("")
-        }
-        else{
-            $("#parent_account_input").show()
-        }
-    })
+    // // if is group parent account field is disable
+    // $("#is_group").on("change",function(){
+    //     if($("#is_group").is(':checked')){
+    //         $("#currency_input").hide()
+    //         $("#parent_account").val("")
+    //     }
+    //     else{
+    //         $("#currency_input").show()
+    //     }
+    // })
 
 
     // get accounts grouped for parent accoount
@@ -125,6 +125,7 @@ $(document).ready(function(){
 
             form_data[field.name] = field.value;
         });
+        form_data["is_group"] = $("#is_group").is(':checked') ? '1' : '0';
 
         //============= validation ==========
         $('.error-message').remove();
@@ -185,6 +186,7 @@ $(document).ready(function(){
             create_account();
         }
 
+        console.log(form_data);
 
         function create_account(){
             $(".overlay").show()
@@ -204,7 +206,7 @@ $(document).ready(function(){
                     setTimeout(() => {
                         window.location.href = "/accounts/account/"+data.data.name
                         $(".overlay").hide()
-                    }, 3000);
+                    }, 1500);
                     
                     
                 },

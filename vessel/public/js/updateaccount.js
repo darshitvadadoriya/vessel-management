@@ -17,22 +17,22 @@ $(document).ready(function(){
 
 
     
-    // if is group parent account field is disable
+    // if is group currency field is hidden
     $("#is_group").on("change",function(){
         is_group()
     })
-    // if is group is checked than parent account is hide and blank
-    
+
+    // if is group is checked than currency is hide and blank
     function is_group(){
         if($("#is_group").is(':checked')){
-            $("#parent_account_input").hide()
+            $("#currency_input").hide()
             $("#parent_account").val("")
             $("#account_name").prop('disabled', true);
             $("#company").prop('disabled', true);
             $("#currency").prop('disabled', true);
         }
         else{
-            $("#parent_account_input").show()
+            $("#currency_input").show()
         }
     }
 
@@ -106,7 +106,7 @@ $(document).ready(function(){
                 fields: JSON.stringify(["name","is_group","company","parent_account","account","account_currency"]),
             },
             success: function (data) {  
-                
+                console.log(data.data);
                 
                 var account_info = data.data
                 console.log(account_info.is_group);
@@ -117,8 +117,8 @@ $(document).ready(function(){
                 $("#company").val(account_info.company)
                 $("#account_type").val(account_info.account_type)
                 $("#currency").val(account_info.account_currency)
-                is_group() //if account is checked than parent acccount is hide
-                $("#account_name    ").prop('disabled', true); //disabled nput
+                is_group() //if account is checked than currency is hide
+                $("#account_name").prop('disabled', true); //disabled nput
                 $("#company").prop('disabled', true); //disabled nput
 
                
@@ -285,7 +285,7 @@ $(document).ready(function(){
         setTimeout(() => {
                 window.location.href = "/accounts/account"
                 $(".overlay").hide()
-        }, 3000);
+        }, 1500);
 
     },
     error: function (xhr, status, error) {

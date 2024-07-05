@@ -73,7 +73,7 @@ $(document).ready(function () {
 
                     setTimeout(()=>{
                         window.location.href= "/user"
-                    },2000)
+                    },1500)
                 }
 
             },

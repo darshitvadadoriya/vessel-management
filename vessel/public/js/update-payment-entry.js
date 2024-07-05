@@ -552,9 +552,7 @@ $(document).ready(function () {
 
             if (foundFile) {
                 console.log('File with ID ' + file_id + ' exists:', foundFile[file_id]);
-                uploadFile(foundFile[file_id][0], i)
-
-                
+                uploadFile(foundFile[file_id][0], i)                
             } 
         }
 
@@ -720,7 +718,7 @@ $(document).ready(function () {
             setTimeout(() => {
                     window.location.href = "/accounts/payment-entry"
                     $(".overlay").hide()
-            }, 3000);
+            }, 1500);
     
         },
         error: function (xhr, status, error) {

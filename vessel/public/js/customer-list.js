@@ -151,7 +151,7 @@ $(document).ready(function(){
                     setTimeout(()=>{
                         $(".overlay").show()
                         window.location.href= "/logistic/customer"
-                   },2000)
+                   },1500)
                     }
                     
         

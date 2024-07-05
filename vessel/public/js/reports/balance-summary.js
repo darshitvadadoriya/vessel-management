@@ -184,7 +184,8 @@ $(document).ready(function(){
                     $("#report_data").append(`<tr>
                             <td class="check-box"><input type="checkbox" class="checkall" name="checkall" /></td>
                             <td>${index+1}</td>
-                            <td class="date_data"><a href="/accounts/payment-entry/${data.name}" class="reference_id">${data.posting_date ? date_format(data.posting_date) : ''}</a></td>
+                            <td class="id_data"><a href="/accounts/payment-entry/${data.name}" class="reference_id">${data.name ? date_format(data.name) : ''}</a></td>
+                            <td class="date_data">${data.posting_date ? date_format(data.posting_date) : ''}</td>
                             <td class="account_data">${data.account ? data.account : ''}</td>
                             <td class="description_data">${data.user_remark ? data.user_remark : ''}</td>
                             <td class="debit_data nymbers">${data.debit ? data.debit : '0'}</td>

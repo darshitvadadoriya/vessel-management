@@ -298,7 +298,8 @@ $(document).ready(function () {
        }
 
         function upload_file(files) {
-            
+            $(".overlay").show()
+            $(".overlay-content").html("Please Wait....")
             
             var file_data = new FormData();
             file_data.append('file', files);
@@ -322,7 +323,7 @@ $(document).ready(function () {
                 },
                 error: function (xhr, status, error) {
                     // Handle the error response here
-                  
+                    $(".overlay").hide()
                     console.dir(xhr); // Print the XHR object for more details
 
 
@@ -450,8 +451,8 @@ function update_user(updated_form_data) {
                     if(data.message)
                     {
                         setTimeout(() => {
-                            window.location.href = "/user" 
-                       }, 3000);
+                            window.location.href = "/user/"+updated_email_address
+                       }, 5000);
                         notyf.success({
                             message: "Update email successfully",
                             duration: 5000
