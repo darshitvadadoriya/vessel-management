@@ -72,7 +72,7 @@ body{
 /* login section image */
 .vessel-login-image
 {
-    background: url('/files/vessel-login.png');
+    background: url('/assets/vessel/files/images/vessel-login.png');
     background-repeat: no-repeat;
     background-size: cover;
     border-top-right-radius: 15px;
